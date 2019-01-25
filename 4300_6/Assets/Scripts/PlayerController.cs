@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// get input
-// move player accordingly
-// fire a projectile if there was input for it
-// if health < 1 ==> die
-
 public class PlayerController : MonoBehaviour
 {
     // Attributes
@@ -14,10 +9,12 @@ public class PlayerController : MonoBehaviour
     // Inspector variables
     [SerializeField] bool isLeftPlayer = true;
     [SerializeField] float dragForce = 0.1f;
-    [SerializeField] float movementForceMultiplier = 1;
-    [SerializeField] float screenEdgeBufferDistance = 0.5f;
-    [SerializeField] float screenEdgeBufferForceMultiplier = 1;
-    [SerializeField] float firingFrequency = 1; // Smaller is quicker. 2 => 2/second = 0.5 for instance.
+    [SerializeField] float defaultMovementVelocity = 7;
+    [SerializeField] float screenEdgeBufferDistance = 1f;
+    [SerializeField] float screenEdgeBufferForce = 25f;
+    [SerializeField] float firingFrequency = 0.25f; // Smaller is quicker. 0.25 => 4 bullets/second for instance.
+    [SerializeField] float horizontalSpeedLimit = 5.5f;
+    [SerializeField] float spriteWidthInPixels = 100;
 
     // References
     [SerializeField] GameObject bulletPrefab = null;
@@ -26,9 +23,11 @@ public class PlayerController : MonoBehaviour
     float horizontalInput = 0;
     Rigidbody2D playerRigidbody = null;
     Vector2 playerVelocity = new Vector2();
-    float horizontalScreenHalfSizeInMeters = 9.8f;
+    float horizontalScreenHalfSizeInMeters = 8.8f;
     float verticalScreenHalfSizeInMeters = 5;
     float firingTimer = 0;
+    bool inSideBuffer = false;
+    float movementVelocity;
     #endregion
 
     // Private methods
@@ -47,21 +46,24 @@ public class PlayerController : MonoBehaviour
     }
     void ApplyDrag()
     {
-        playerVelocity = playerRigidbody.velocity;
-        if (Mathf.Abs(playerVelocity.x) > 0.05f)
+        if (horizontalInput == 0)
         {
-            if (playerVelocity.x < 0)
+            playerVelocity = playerRigidbody.velocity;
+            if (Mathf.Abs(playerVelocity.x) > 0.05f)
             {
-                playerRigidbody.velocity += new Vector2(-dragForce, 0);
+                if (playerVelocity.x < 0)
+                {
+                    playerRigidbody.velocity += new Vector2(dragForce, 0);
+                }
+                else
+                {
+                    playerRigidbody.velocity += new Vector2(-dragForce, 0);
+                }
             }
             else
             {
-                playerRigidbody.velocity += new Vector2(dragForce, 0);
+                playerRigidbody.velocity = new Vector2(0, playerVelocity.y);
             }
-        }
-        else
-        {
-            playerRigidbody.velocity = new Vector2(0, playerVelocity.y);
         }
     }
     void ApplyBufferForces()
@@ -69,26 +71,24 @@ public class PlayerController : MonoBehaviour
         // If entering bottom buffer zone.
         if (transform.position.y < (-verticalScreenHalfSizeInMeters + screenEdgeBufferDistance))
         {
-            float distanceFromThreshold = Vector2.Distance(transform.position, new Vector2(transform.position.x, -verticalScreenHalfSizeInMeters + screenEdgeBufferDistance));
-            playerRigidbody.AddForce(new Vector2(0, screenEdgeBufferForceMultiplier * distanceFromThreshold));
+            playerRigidbody.AddForce(new Vector2(0, screenEdgeBufferForce));
         }
         // If entering top buffer zone.
         else if (transform.position.y > (verticalScreenHalfSizeInMeters - screenEdgeBufferDistance))
         {
-            float distanceFromThreshold = Vector2.Distance(transform.position, new Vector2(transform.position.x, verticalScreenHalfSizeInMeters - screenEdgeBufferDistance));
-            playerRigidbody.AddForce(new Vector2(0, -screenEdgeBufferForceMultiplier * distanceFromThreshold));
+            playerRigidbody.AddForce(new Vector2(0, -screenEdgeBufferForce));
         }
         // If entering left buffer zone.
         else if (transform.position.x < (-horizontalScreenHalfSizeInMeters + screenEdgeBufferDistance))
         {
-            float distanceFromThreshold = Vector2.Distance(transform.position, new Vector2(-horizontalScreenHalfSizeInMeters + screenEdgeBufferDistance , transform.position.y));
-            playerRigidbody.AddForce(new Vector2(screenEdgeBufferForceMultiplier * distanceFromThreshold, 0));
+            playerRigidbody.AddForce(new Vector2(screenEdgeBufferForce, 0));
+            inSideBuffer = true;
         }
         // If entering right buffer zone.
         else if (transform.position.x > (horizontalScreenHalfSizeInMeters - screenEdgeBufferDistance))
         {
-            float distanceFromThreshold = Vector2.Distance(transform.position, new Vector2(horizontalScreenHalfSizeInMeters - screenEdgeBufferDistance, transform.position.y));
-            playerRigidbody.AddForce(new Vector2(-screenEdgeBufferForceMultiplier * distanceFromThreshold, 0));
+            playerRigidbody.AddForce(new Vector2(-screenEdgeBufferForce , 0));
+            inSideBuffer = true;
         }
     }
     #endregion
@@ -98,17 +98,56 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
+        movementVelocity = defaultMovementVelocity;
     }
 
     private void FixedUpdate()
     {
+        ApplyBufferForces();
+
         if (horizontalInput != 0)
         {
-            playerRigidbody.AddForce(new Vector2(horizontalInput * movementForceMultiplier, 0));
+            if (!inSideBuffer)
+            {
+                playerRigidbody.velocity = new Vector2(movementVelocity * horizontalInput, playerRigidbody.velocity.y);
+            }
         }
+        else
+        {
+            playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+        }
+        inSideBuffer = false; // Reset bool.
 
         ApplyDrag();
-        ApplyBufferForces();
+
+        // Limit horizontal movement speed to prevent gravity from accelerating the players too much
+        if (Mathf.Abs(playerRigidbody.velocity.y) > horizontalSpeedLimit)
+        {
+            if (playerRigidbody.velocity.y < 0)
+            {
+                playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, -horizontalSpeedLimit);
+            }
+            else
+            {
+                playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, horizontalSpeedLimit);
+            }
+        }
+
+        // Limit player movement to half the screen horizontally
+        if (isLeftPlayer)
+        {
+            if (transform.position.x + spriteWidthInPixels /(100/2) >= 0)
+            {
+                transform.position = new Vector3(-spriteWidthInPixels /(100/2),transform.position.y,transform.position.z);
+            }
+        }
+        else
+        {
+            if (transform.position.x - spriteWidthInPixels / (100 / 2) <= 0)
+            {
+                transform.position = new Vector3(spriteWidthInPixels / (100 / 2), transform.position.y, transform.position.z);
+            }
+        }
     }
 
     private void Update()
@@ -116,13 +155,18 @@ public class PlayerController : MonoBehaviour
         // Handle input
         if (isLeftPlayer)
         {
+            // Horizontal movement
             horizontalInput = Input.GetAxisRaw("Horizontal_LeftPlayer");
+
+            // Parachute
             if (Input.GetButtonDown("Parachute_LeftPlayer"))
             {
                 // Inverts gravity
                 playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
             }
-            if (Input.GetButton("Fire_LeftPlayer"))
+
+            // Handle firing input. Handles both button holding and tapping
+            if (Input.GetButtonDown("Fire_LeftPlayer"))
             {
                 if (firingTimer > firingFrequency)
                 {
@@ -130,18 +174,46 @@ public class PlayerController : MonoBehaviour
                     firingTimer = 0;
                 }
             }
+            else
+            {
+                if (Input.GetButton("Fire_LeftPlayer"))
+                {
+                    if (firingTimer > firingFrequency)
+                    {
+                        InstantiateBullet();
+                        firingTimer = 0;
+                    }
+                }
+            }
 
         }
         else
         {
             horizontalInput = Input.GetAxisRaw("Horizontal_RightPlayer");
+            
             if (Input.GetButtonDown("Parachute_RightPlayer"))
             {
                 playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
             }
-            if (Input.GetButton("Fire_RightPlayer"))
+            
+            if (Input.GetButtonDown("Fire_RightPlayer"))
             {
-                InstantiateBullet();
+                if (firingTimer > firingFrequency)
+                {
+                    InstantiateBullet();
+                    firingTimer = 0;
+                }
+            }
+            else
+            {
+                if (Input.GetButton("Fire_RightPlayer"))
+                {
+                    if (firingTimer > firingFrequency)
+                    {
+                        InstantiateBullet();
+                        firingTimer = 0;
+                    }
+                }
             }
         }
 
