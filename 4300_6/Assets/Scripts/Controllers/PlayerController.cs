@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,9 +16,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float firingFrequency = 0.25f; // Smaller is quicker. 0.25 => 4 bullets/second for instance.
     [SerializeField] float horizontalSpeedLimit = 5.5f;
     [SerializeField] float spriteWidthInPixels = 100;
+    [SerializeField] float health = 1;
 
     // References
     [SerializeField] GameObject bulletPrefab = null;
+    [SerializeField] Image healthImage = null;
 
     // Private variables
     float horizontalInput = 0;
@@ -30,19 +33,37 @@ public class PlayerController : MonoBehaviour
     float movementVelocity;
     #endregion
 
+    // Public methods
+    #region Public Methods
+    public void DamageOnce(float damage)
+    {
+        health -= damage;
+        healthImage.fillAmount = health;
+    }
+    public void LifePickup()
+    {
+
+    }
+    public void SpeedPickup()
+    {
+
+    }
+    #endregion
+
     // Private methods
     #region Private methods
     void InstantiateBullet()
     {
+        Vector3 position;
         if (isLeftPlayer)
         {
-            Instantiate(bulletPrefab, transform.position, new Quaternion());
+            position = transform.position + new Vector3(0.5f,0,0);
         }
         else
         {
-            Quaternion direction = Quaternion.Euler(0,180,0);
-            GameObject newBullet = Instantiate(bulletPrefab, transform.position, direction);
+            position = transform.position + new Vector3(-0.5f, 0, 0);
         }
+        Instantiate(bulletPrefab, position, new Quaternion()).GetComponent<BulletController>().Init(isLeftPlayer);
     }
     void ApplyDrag()
     {
@@ -215,6 +236,12 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+        }
+
+        // Handle losing condition
+        if (health <= 0)
+        {
+            GameManager.instance.GameOver();
         }
 
         // Update firing timer

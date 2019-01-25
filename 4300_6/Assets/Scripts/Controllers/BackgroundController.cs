@@ -26,8 +26,8 @@ public class BackgroundController : MonoBehaviour
     void SetUpLerpVariables()
     {
 
-        targetPosition = new Vector3(0, -spriteHeight / 100, 0);
-        lerpStartPositions[0] = new Vector3(0, spriteHeight / 100, 0);
+        targetPosition = new Vector3(0, spriteHeight / 100, 0);
+        lerpStartPositions[0] = new Vector3(0, -spriteHeight / 100, 0);
         lerpStartPositions[1] = new Vector3();
         for (int i = 0; i < 2; i++)
         {
@@ -37,7 +37,7 @@ public class BackgroundController : MonoBehaviour
     }
     void SetUpScrollingSprite1ForLooping(int i)
     {
-        lerpStartPositions[i] = new Vector3(0, spriteHeight / 100, 0);
+        lerpStartPositions[i] = new Vector3(0, -spriteHeight / 100, 0);
         scrollingSprites[i].transform.position = lerpStartPositions[i];
         lerpStartTime[i] = Time.time;
         journeyLengths[i] = Vector3.Distance(targetPosition, scrollingSprites[i].transform.position);
@@ -50,7 +50,7 @@ public class BackgroundController : MonoBehaviour
     private void Start()
     {
         // Set up Scrolling_0_Sprite off the screen at the top.
-        scrollingSprites[0].transform.position += new Vector3(0, spriteHeight / 100, 0); // /100 because 1 unit = 100px
+        scrollingSprites[0].transform.position -= new Vector3(0, spriteHeight / 100, 0); // /100 because 1 unit = 100px
 
         SetUpLerpVariables();
     }
@@ -64,7 +64,7 @@ public class BackgroundController : MonoBehaviour
             float journeyFractionCovered = distanceCovered / journeyLengths[i];
             scrollingSprites[i].transform.position = Vector3.Lerp(lerpStartPositions[i], targetPosition, journeyFractionCovered);
 
-            if (scrollingSprites[i].transform.position.y <= -(spriteHeight / 100) + 0.05f)
+            if (scrollingSprites[i].transform.position.y >= (spriteHeight / 100) - 0.05f)
             {
                 if (firstScrollingLoop && scrollingSprites[i] == scrollingSprites[1])
                 {
