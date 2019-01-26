@@ -27,11 +27,11 @@ public class BulletController : MonoBehaviour
     {
         if (isLeftPlayerBullet)
         {
-            bulletRigidbody2D.velocity = Vector2.right * GameManager.instance.bulletSpeed;
+            bulletRigidbody2D.velocity = Vector2.right * GameManager.instance.leftPlayerBulletSpeed;
         }
         else
         {
-            bulletRigidbody2D.velocity = -Vector2.right * GameManager.instance.bulletSpeed;
+            bulletRigidbody2D.velocity = -Vector2.right * GameManager.instance.rightPlayerBulletSpeed;
         }
     }
 

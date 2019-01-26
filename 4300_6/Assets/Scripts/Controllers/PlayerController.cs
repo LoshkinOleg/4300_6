@@ -3,37 +3,69 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
+    The class can either be set up as a left or right player.
+    Player's movement is either velocity based when outside of the buffer zones or force based when inside the buffer zones.
+*/
+
 public class PlayerController : MonoBehaviour
 {
+    // Classes and Enums
+    #region Classes and Enums
+    private enum HorizontalBuffer
+    {
+        NONE,
+        LEFT,
+        RIGHT
+    }
+    private enum VerticalBuffer
+    {
+        NONE,
+        TOP,
+        BOTTOM
+    }
+    #endregion
+
     // Attributes
     #region Attributes
     // Inspector variables
     [SerializeField] bool isLeftPlayer = true;
     [SerializeField] float dragForce = 0.1f;
-    [SerializeField] float defaultMovementVelocity = 7;
-    [SerializeField] float screenEdgeBufferDistance = 1f;
+    [SerializeField] float movementVelocity = 7;
+    [SerializeField] float movementForce = 1;
+    [SerializeField] float screenEdgeBufferDistance = 1.5f;
     [SerializeField] float screenEdgeBufferForce = 25f;
     [SerializeField] float firingFrequency = 0.25f; // Smaller is quicker. 0.25 => 4 bullets/second for instance.
     [SerializeField] float horizontalSpeedLimit = 5.5f;
-    [SerializeField] float spriteWidthInPixels = 100;
+    [SerializeField] float spriteWidthInPixels = 100; // Used to prevent the sprite from being able to go all the way to the center and clip with the other player if he's also in the center.
     [SerializeField] float health = 1;
 
     // References
     [SerializeField] GameObject bulletPrefab = null;
     [SerializeField] Image healthImage = null;
-
-    // Private variables
-    float horizontalInput = 0;
     Rigidbody2D playerRigidbody = null;
-    Vector2 playerVelocity = new Vector2();
+
+    // PRIVATE VARIABLES
+    #region Private variables
+    // Input related
+    float horizontalInput = 0;
+
+    // Movement related
+    bool movingUsingVelocity = true;
+
+    // Buffers related
     float horizontalScreenHalfSizeInMeters = 8.8f;
     float verticalScreenHalfSizeInMeters = 5;
+    HorizontalBuffer currentHorizontalBuffer = HorizontalBuffer.NONE;
+    VerticalBuffer currentVerticalBuffer = VerticalBuffer.NONE;
+    bool canMoveHorizontally = true; // Prevents player from bumping against the wall when maintaining a horizontal movement direction.
+
+    // Firing related
     float firingTimer = 0;
-    bool inSideBuffer = false;
-    float movementVelocity;
+    #endregion
     #endregion
 
-    // Public methods
+    // PUBLIC METHODS
     #region Public Methods
     public void DamageOnce(float damage)
     {
@@ -42,15 +74,24 @@ public class PlayerController : MonoBehaviour
     }
     public void LifePickup()
     {
-
+        health += GameManager.instance.healthPickupValue;
+        if (health > 1)
+        {
+            health = 1;
+        }
+        healthImage.fillAmount = health;
     }
     public void SpeedPickup()
     {
-
+        GameManager.instance.SpeedUpBullets(gameObject);
+    }
+    public void TriggerStorm()
+    {
+        GameManager.instance.TriggerStorm();
     }
     #endregion
 
-    // Private methods
+    // PRIVATE METHODS
     #region Private methods
     void InstantiateBullet()
     {
@@ -69,10 +110,9 @@ public class PlayerController : MonoBehaviour
     {
         if (horizontalInput == 0)
         {
-            playerVelocity = playerRigidbody.velocity;
-            if (Mathf.Abs(playerVelocity.x) > 0.05f)
+            if (Mathf.Abs(playerRigidbody.velocity.x) > 0.05f)
             {
-                if (playerVelocity.x < 0)
+                if (playerRigidbody.velocity.x < 0)
                 {
                     playerRigidbody.velocity += new Vector2(dragForce, 0);
                 }
@@ -83,65 +123,99 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                playerRigidbody.velocity = new Vector2(0, playerVelocity.y);
+                playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
             }
         }
     }
-    void ApplyBufferForces()
+    void ApplyBufferForces() // Prevents the player from saying too close the the map edges
     {
-        // If entering bottom buffer zone.
+        switch (currentHorizontalBuffer)    
+        {
+            case HorizontalBuffer.NONE:
+                break;
+            case HorizontalBuffer.LEFT:
+                playerRigidbody.AddForce(new Vector2(screenEdgeBufferForce, 0));
+                break;
+            case HorizontalBuffer.RIGHT:
+                playerRigidbody.AddForce(new Vector2(-screenEdgeBufferForce, 0));
+                break;
+            default:
+                break;
+        }
+
+        switch (currentVerticalBuffer)
+        {
+            case VerticalBuffer.NONE:
+                break;
+            case VerticalBuffer.TOP:
+                playerRigidbody.AddForce(new Vector2(0, -screenEdgeBufferForce));
+                break;
+            case VerticalBuffer.BOTTOM:
+                playerRigidbody.AddForce(new Vector2(0, screenEdgeBufferForce));
+                break;
+            default:
+                break;
+        }
+    }
+    void UpdateBufferVariables() // Check if the player is in a buffer zone. If he is, set variables accordingly.
+    {
         if (transform.position.y < (-verticalScreenHalfSizeInMeters + screenEdgeBufferDistance))
         {
-            playerRigidbody.AddForce(new Vector2(0, screenEdgeBufferForce));
+            currentVerticalBuffer = VerticalBuffer.BOTTOM;
+            movingUsingVelocity = false;
         }
-        // If entering top buffer zone.
         else if (transform.position.y > (verticalScreenHalfSizeInMeters - screenEdgeBufferDistance))
         {
-            playerRigidbody.AddForce(new Vector2(0, -screenEdgeBufferForce));
+            currentVerticalBuffer = VerticalBuffer.TOP;
+            movingUsingVelocity = false;
         }
-        // If entering left buffer zone.
-        else if (transform.position.x < (-horizontalScreenHalfSizeInMeters + screenEdgeBufferDistance))
+        else
         {
-            playerRigidbody.AddForce(new Vector2(screenEdgeBufferForce, 0));
-            inSideBuffer = true;
+            currentVerticalBuffer = VerticalBuffer.NONE;
+            movingUsingVelocity = true;
         }
-        // If entering right buffer zone.
+
+        if (transform.position.x < (-horizontalScreenHalfSizeInMeters + screenEdgeBufferDistance))
+        {
+            currentHorizontalBuffer = HorizontalBuffer.LEFT;
+            movingUsingVelocity = false;
+            canMoveHorizontally = false;
+        }
         else if (transform.position.x > (horizontalScreenHalfSizeInMeters - screenEdgeBufferDistance))
         {
-            playerRigidbody.AddForce(new Vector2(-screenEdgeBufferForce , 0));
-            inSideBuffer = true;
+            currentHorizontalBuffer = HorizontalBuffer.RIGHT;
+            movingUsingVelocity = false;
+            canMoveHorizontally = false;
+        }
+        else
+        {
+            currentHorizontalBuffer = HorizontalBuffer.NONE;
+            movingUsingVelocity = true;
         }
     }
-    #endregion
-
-    // Inherited methods
-    #region Inherited methods
-    private void Start()
+    void Move()
     {
-        playerRigidbody = GetComponent<Rigidbody2D>();
-        movementVelocity = defaultMovementVelocity;
-    }
-
-    private void FixedUpdate()
-    {
-        ApplyBufferForces();
-
-        if (horizontalInput != 0)
+        if (movingUsingVelocity)
         {
-            if (!inSideBuffer)
+            if (horizontalInput != 0)
             {
                 playerRigidbody.velocity = new Vector2(movementVelocity * horizontalInput, playerRigidbody.velocity.y);
+            }
+            else
+            {
+                playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
             }
         }
         else
         {
-            playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+            if (horizontalInput != 0)
+            {
+                playerRigidbody.AddForce(new Vector2(movementForce * horizontalInput,0));
+            }
         }
-        inSideBuffer = false; // Reset bool.
-
-        ApplyDrag();
-
-        // Limit horizontal movement speed to prevent gravity from accelerating the players too much
+    }
+    void ApplySpeedLimit()
+    {
         if (Mathf.Abs(playerRigidbody.velocity.y) > horizontalSpeedLimit)
         {
             if (playerRigidbody.velocity.y < 0)
@@ -153,22 +227,49 @@ public class PlayerController : MonoBehaviour
                 playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, horizontalSpeedLimit);
             }
         }
-
-        // Limit player movement to half the screen horizontally
+    }
+    void RestrictPlayerMovementZone() // Prevents the left player from going on the right side of the screen and vice versa
+    {
         if (isLeftPlayer)
         {
-            if (transform.position.x + spriteWidthInPixels /(100/2) >= 0)
+            if (transform.position.x + (spriteWidthInPixels/100)/2 >= 0)
             {
-                transform.position = new Vector3(-spriteWidthInPixels /(100/2),transform.position.y,transform.position.z);
+                if (horizontalInput > 0)
+                {
+                    playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+                }
+                transform.position = new Vector3((-spriteWidthInPixels/100) / 2,transform.position.y,transform.position.z);
             }
         }
         else
         {
-            if (transform.position.x - spriteWidthInPixels / (100 / 2) <= 0)
+            if (transform.position.x - (spriteWidthInPixels / 100) / 2 <= 0)
             {
-                transform.position = new Vector3(spriteWidthInPixels / (100 / 2), transform.position.y, transform.position.z);
+                if (horizontalInput < 0)
+                {
+                    playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+                }
+                transform.position = new Vector3((spriteWidthInPixels/100) / 2, transform.position.y, transform.position.z);
             }
         }
+    }
+    #endregion
+
+    // INHERITED METHODS
+    #region Inherited methods
+    private void Start()
+    {
+        playerRigidbody = GetComponent<Rigidbody2D>();
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateBufferVariables();
+        ApplyBufferForces();
+        Move();
+        ApplyDrag();
+        ApplySpeedLimit();
+        RestrictPlayerMovementZone();
     }
 
     private void Update()
@@ -177,7 +278,25 @@ public class PlayerController : MonoBehaviour
         if (isLeftPlayer)
         {
             // Horizontal movement
-            horizontalInput = Input.GetAxisRaw("Horizontal_LeftPlayer");
+            if (canMoveHorizontally)
+            {
+                horizontalInput = Input.GetAxisRaw("Horizontal_LeftPlayer");
+            }
+            else
+            {
+                if (Input.GetAxisRaw("Horizontal_LeftPlayer") > 0)
+                {
+                    horizontalInput = Input.GetAxisRaw("Horizontal_LeftPlayer");
+                }
+                else
+                {
+                    horizontalInput = 0;
+                    if (Input.GetButtonDown("Horizontal_LeftPlayer"))
+                    {
+                        canMoveHorizontally = true;
+                    }
+                }
+            }
 
             // Parachute
             if (Input.GetButtonDown("Parachute_LeftPlayer"))
@@ -210,8 +329,26 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            horizontalInput = Input.GetAxisRaw("Horizontal_RightPlayer");
-            
+            if (canMoveHorizontally)
+            {
+                horizontalInput = Input.GetAxisRaw("Horizontal_RightPlayer");
+            }
+            else
+            {
+                if (Input.GetAxisRaw("Horizontal_RightPlayer") < 0)
+                {
+                    horizontalInput = Input.GetAxisRaw("Horizontal_RightPlayer");
+                }
+                else
+                {
+                    horizontalInput = 0;
+                    if (Input.GetButtonDown("Horizontal_RightPlayer"))
+                    {
+                        canMoveHorizontally = true;
+                    }
+                }
+            }
+
             if (Input.GetButtonDown("Parachute_RightPlayer"))
             {
                 playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
@@ -241,7 +378,7 @@ public class PlayerController : MonoBehaviour
         // Handle losing condition
         if (health <= 0)
         {
-            GameManager.instance.GameOver();
+            GameManager.instance.GameOver(gameObject);
         }
 
         // Update firing timer

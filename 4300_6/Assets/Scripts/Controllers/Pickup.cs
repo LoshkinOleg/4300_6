@@ -34,6 +34,11 @@ public class Pickup : MonoBehaviour
                         GameManager.instance.leftPlayer.GetComponent<PlayerController>().SpeedPickup();
                     }
                     break;
+                case Type.STORM:
+                    {
+                        GameManager.instance.leftPlayer.GetComponent<PlayerController>().TriggerStorm();
+                    }
+                    break;
             }
 
         }
@@ -49,6 +54,11 @@ public class Pickup : MonoBehaviour
                 case Type.SPEED_UP:
                     {
                         GameManager.instance.rightPlayer.GetComponent<PlayerController>().SpeedPickup();
+                    }
+                    break;
+                case Type.STORM:
+                    {
+                        GameManager.instance.rightPlayer.GetComponent<PlayerController>().TriggerStorm();
                     }
                     break;
             }
