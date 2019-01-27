@@ -39,14 +39,17 @@ public class LightningBoltController : MonoBehaviour
             lightningBoltSprite.enabled = true;
             playingLightningBoltAnimation = true;
 
-            // Damage players if applicable
-            if (Mathf.Abs(transform.position.x - GameManager.instance.leftPlayer.transform.position.x) < lightningHitArea)
+            if (gameObject != null) // Prevents the bit of code from being ran if the coroutine has done being exectuted after the scene change.
             {
-                GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().DamageOnce(lightningDamage);
-            }
-            else if (Mathf.Abs(transform.position.x - GameManager.instance.rightPlayer.transform.position.x) < lightningHitArea)
-            {
-                GameManager.instance.rightPlayer.GetComponent<RightPlayer>().DamageOnce(lightningDamage);
+                // Damage players if applicable
+                if (Mathf.Abs(transform.position.x - GameManager.instance.leftPlayer.transform.position.x) < lightningHitArea)
+                {
+                    GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().DamageOnce(lightningDamage);
+                }
+                else if (Mathf.Abs(transform.position.x - GameManager.instance.rightPlayer.transform.position.x) < lightningHitArea)
+                {
+                    GameManager.instance.rightPlayer.GetComponent<RightPlayer>().DamageOnce(lightningDamage);
+                }
             }
         }
     }

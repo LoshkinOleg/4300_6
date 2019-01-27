@@ -8,10 +8,24 @@ public class MenuFunctions : MonoBehaviour
     // References
     [SerializeField] GameObject mainMenuPanel = null;
     [SerializeField] GameObject creditsMenuPanel = null;
+    [SerializeField] GameObject howToPlayPanel = null;
 
     public void Play()
     {
         SceneManager.LoadScene("Level1");
+    }
+
+    public void DisplayHowToPlay()
+    {
+        if (howToPlayPanel != null && mainMenuPanel != null)
+        {
+            mainMenuPanel.SetActive(false);
+            howToPlayPanel.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("MenuFunctions.cs: Trying to interact with a non existant panel.");
+        }
     }
 
     public void Quit()

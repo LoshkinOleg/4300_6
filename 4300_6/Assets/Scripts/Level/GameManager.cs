@@ -219,6 +219,11 @@ public class GameManager : MonoBehaviour
         {
             TMPro.TMP_Text winnerText = GameObject.FindGameObjectWithTag("WinnerText").GetComponent<TMPro.TMP_Text>();
             spawnPickups = false;
+            Destroy(GameObject.FindGameObjectWithTag("Health_Pickup"));
+            Destroy(GameObject.FindGameObjectWithTag("Shield_Pickup"));
+            Destroy(GameObject.FindGameObjectWithTag("Speedup_Pickup"));
+            Destroy(GameObject.FindGameObjectWithTag("Slowdown_Pickup"));
+            Destroy(GameObject.FindGameObjectWithTag("Storm_Pickup"));
 
             if (loser == leftPlayer)
             {
