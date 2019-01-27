@@ -5,6 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public enum SoundType
+    {
+        BULLET_DESTRUCTION,
+        PICKUP,
+        PLAYER_HIT,
+        SHIELD_HIT,
+        SHOTGUN_FIRE,
+        THUNDER
+    }
+
     // Attributes
     #region Attributes
     // Inspector variables
@@ -32,6 +42,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject lightningBoltPrefab = null;
     [SerializeField] GameObject leftShieldPrefab = null;
     [SerializeField] GameObject rightShieldPrefab = null;
+    [SerializeField] AudioSource sound_bulletDestructuion = null;
+    [SerializeField] AudioSource sound_pickup = null;
+    [SerializeField] AudioSource sound_playerHit = null;
+    [SerializeField] AudioSource sound_shieldHit = null;
+    [SerializeField] AudioSource sound_shotgunFire = null;
+    [SerializeField] AudioSource sound_thunder = null;
     static GameManager _instance = null;
     GameObject _leftPlayer = null;
     GameObject _rightPlayer = null;
@@ -142,6 +158,41 @@ public class GameManager : MonoBehaviour
             Instantiate(leftShieldPrefab);
         }
     }
+    public void PlaySound(SoundType type)
+    {
+        switch (type)
+        {
+            case SoundType.BULLET_DESTRUCTION:
+                {
+                    sound_bulletDestructuion.PlayOneShot(sound_bulletDestructuion.clip);
+                }break;
+            case SoundType.PICKUP:
+                {
+                    sound_pickup.PlayOneShot(sound_pickup.clip);
+                }
+                break;
+            case SoundType.PLAYER_HIT:
+                {
+                    sound_playerHit.PlayOneShot(sound_playerHit.clip);
+                }
+                break;
+            case SoundType.SHIELD_HIT:
+                {
+                    sound_shieldHit.PlayOneShot(sound_shieldHit.clip);
+                }
+                break;
+            case SoundType.SHOTGUN_FIRE:
+                {
+                    sound_shotgunFire.PlayOneShot(sound_shotgunFire.clip);
+                }
+                break;
+            case SoundType.THUNDER:
+                {
+                    sound_thunder.PlayOneShot(sound_thunder.clip);
+                }
+                break;
+        }
+    }
     #endregion
 
     // Private methods
@@ -155,7 +206,7 @@ public class GameManager : MonoBehaviour
         int randomNumber = Random.Range(0, 100);
         if (randomNumber <= chanceForPickupToSpawnPerSecond)
         {
-            int randomPickup = 4;  // Random.Range(0, 5);
+            int randomPickup = Random.Range(0, 5);
 
             switch (randomPickup)
             {

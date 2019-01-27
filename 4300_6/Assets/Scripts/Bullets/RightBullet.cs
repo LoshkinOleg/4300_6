@@ -21,6 +21,8 @@ public class RightBullet : MonoBehaviour
     {
         isPlayingDestructionAnimation = true;
 
+        GameManager.instance.PlaySound(GameManager.SoundType.BULLET_DESTRUCTION);
+
         bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
         bulletCollider.enabled = false;
         destructionSprite.SetActive(true);
@@ -37,6 +39,8 @@ public class RightBullet : MonoBehaviour
     {
         bulletRigidbody2D = GetComponent<Rigidbody2D>();
         bulletCollider = GetComponent<CircleCollider2D>();
+
+        GameManager.instance.PlaySound(GameManager.SoundType.SHOTGUN_FIRE);
     }
 
     private void FixedUpdate()
@@ -53,6 +57,9 @@ public class RightBullet : MonoBehaviour
         if (collision.gameObject.tag == "LeftShield")
         {
             collision.gameObject.GetComponent<LeftShield>().Hit();
+
+            GameManager.instance.PlaySound(GameManager.SoundType.SHIELD_HIT);
+
             StartCoroutine(DestroyBullet());
         }
 

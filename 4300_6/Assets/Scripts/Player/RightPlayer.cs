@@ -70,6 +70,8 @@ public class RightPlayer : MonoBehaviour
     {
         health -= damage;
         healthImage.fillAmount = health;
+
+        GameManager.instance.PlaySound(GameManager.SoundType.PLAYER_HIT);
     }
     public void LifePickup()
     {

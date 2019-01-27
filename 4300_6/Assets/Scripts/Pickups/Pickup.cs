@@ -85,6 +85,7 @@ public class Pickup : MonoBehaviour
                     break;
             }
         }
+        GameManager.instance.PlaySound(GameManager.SoundType.PICKUP);
         Destroy(gameObject);
     }
 

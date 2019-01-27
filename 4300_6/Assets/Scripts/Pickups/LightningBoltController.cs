@@ -39,6 +39,8 @@ public class LightningBoltController : MonoBehaviour
             lightningBoltSprite.enabled = true;
             playingLightningBoltAnimation = true;
 
+            GameManager.instance.PlaySound(GameManager.SoundType.THUNDER);
+
             if (gameObject != null) // Prevents the bit of code from being ran if the coroutine has done being exectuted after the scene change.
             {
                 // Damage players if applicable
@@ -70,7 +72,7 @@ public class LightningBoltController : MonoBehaviour
     {
         if (playingLightningBoltAnimation)
         {
-            StartCoroutine(DestroySelfAfterSeconds(1));
+            StartCoroutine(DestroySelfAfterSeconds(0.2f));
         }
     }
 }

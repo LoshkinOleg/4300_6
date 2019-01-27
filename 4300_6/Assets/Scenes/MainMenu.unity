@@ -997,7 +997,14 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: "Credits:\n\nCoding:\n- Oleg Loshkin\n\nVisual Assets:\n- Capt L\xE9a Myriam\n\nSound
-    Effects:\n\nMusic:\n\nAll sound effects and music are licenced under\n\"\"\nlicence."
+    Effects:\n- lensflare8642 from freesound.org\n- ForTheHorde68 from freesound.org\n-
+    Dirtjm from freesound.org\n- coolguy244e from freesound.org\n- Omar Alvarado from
+    freesound.org\n- SamsterBirdies from freesound.org\n\nMusic:\nThrough The Fire
+    and Flames by Dragonforce\n\nAll sound effects are licenced under\n\"CC0 1.0 Universal
+    (CC0 1.0)\r Public Domain Dedication\",\n\"Attribution-NonCommercial 3.0 Unported
+    (CC BY-NC 3.0)\"\nlicences.\n\nThe music is under the copyright\n\"\u2117 This
+    Compilation 2016 Spinefarm Records, a Universal Music Company \xA9 2016 Spinefarm
+    Records, a Universal Music Company\""
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1074,11 +1081,11 @@ MonoBehaviour:
     lineCount: 15
     pageCount: 1
     materialCount: 1
-  m_havePropertiesChanged: 0
+  m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
   m_hasFontAssetChanged: 0
   m_subTextObjects:
