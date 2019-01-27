@@ -90,7 +90,7 @@ public class RightPlayer : MonoBehaviour
     }
     public void TriggerStorm()
     {
-        GameManager.instance.TriggerStorm();
+        GameManager.instance.TriggerStorm(gameObject);
     }
     public void ShieldUp()
     {

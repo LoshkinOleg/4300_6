@@ -46,7 +46,7 @@ public class LightningBoltController : MonoBehaviour
             }
             else if (Mathf.Abs(transform.position.x - GameManager.instance.rightPlayer.transform.position.x) < lightningHitArea)
             {
-                GameManager.instance.rightPlayer.GetComponent<LeftPlayer>().DamageOnce(lightningDamage);
+                GameManager.instance.rightPlayer.GetComponent<RightPlayer>().DamageOnce(lightningDamage);
             }
         }
     }

@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     static GameManager _instance = null;
     GameObject _leftPlayer = null;
     GameObject _rightPlayer = null;
+    StormAnimation[] leftStormAnimations = new StormAnimation[4];
+    StormAnimation[] rightStormAnimations = new StormAnimation[4];
 
     // Public properties
     public static GameManager instance => _instance;
@@ -58,8 +60,10 @@ public class GameManager : MonoBehaviour
     float leftPlayerSlowDownTimer = 0;
     float rightPlayerSlowDownTimer = 0;
     // Storm related
-    float stormTimer = 0;
-    bool stormTriggered = false;
+    float leftStormTimer = 0;
+    bool leftStormTriggered = false;
+    float rightStormTimer = 0;
+    bool rightStormTriggered = false;
     // General pickup related
     bool spawnPickups = true;
     float pickupSpawnCooldown = 0;
@@ -106,10 +110,26 @@ public class GameManager : MonoBehaviour
             _leftPlayerBulletSpeed = slowdownBulletSpeed;
         }
     }
-    public void TriggerStorm()
+    public void TriggerStorm(GameObject player)
     {
-        stormTriggered = true;
-        stormTimer = 0;
+        if (player.tag == "LeftPlayer")
+        {
+            rightStormTimer = 0;
+            rightStormTriggered = true;
+            foreach (var item in rightStormAnimations)
+            {
+                item.PlayAnimation();
+            }
+        }
+        else
+        {
+            leftStormTimer = 0;
+            leftStormTriggered = true;
+            foreach (var item in leftStormAnimations)
+            {
+                item.PlayAnimation();
+            }
+        }
     }
     public void ShieldUp(GameObject player)
     {
@@ -135,7 +155,7 @@ public class GameManager : MonoBehaviour
         int randomNumber = Random.Range(0, 100);
         if (randomNumber <= chanceForPickupToSpawnPerSecond)
         {
-            int randomPickup = Random.Range(0, 5);
+            int randomPickup = 4;  // Random.Range(0, 5);
 
             switch (randomPickup)
             {
@@ -174,11 +194,23 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
 
-        int randomNumber = Random.Range(0, 100);
-        if (randomNumber < chanceForLightningBoltToSpawnPerSecond)
+        if (leftStormTriggered)
         {
-            float randomPosition = Random.Range((-gameViewHorizontalDistanceInMeters / 2.0f) + 1f, (gameViewHorizontalDistanceInMeters / 2.0f) - 1f);
-            Instantiate(lightningBoltPrefab, new Vector3(randomPosition, 0, 0), new Quaternion());
+            int randomNumber = Random.Range(0, 100);
+            if (randomNumber < chanceForLightningBoltToSpawnPerSecond)
+            {
+                float randomPosition = Random.Range((-gameViewHorizontalDistanceInMeters / 2.0f) + 1f, 0);
+                Instantiate(lightningBoltPrefab, new Vector3(randomPosition, 0, 0), new Quaternion());
+            }
+        }
+        else if (rightStormTriggered)
+        {
+            int randomNumber = Random.Range(0, 100);
+            if (randomNumber < chanceForLightningBoltToSpawnPerSecond)
+            {
+                float randomPosition = Random.Range(0, (gameViewHorizontalDistanceInMeters / 2.0f) - 1f);
+                Instantiate(lightningBoltPrefab, new Vector3(randomPosition, 0, 0), new Quaternion());
+            }
         }
     }
     void OnScoreLoaded(Scene scene, LoadSceneMode mode) // Displays the winner when the "Score" scene is loaded.
@@ -210,6 +242,17 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        GameObject[] leftStormGOs = GameObject.FindGameObjectsWithTag("LeftStorm");
+        for (int i = 0; i < leftStormGOs.Length; i++)
+        {
+            leftStormAnimations[i] = leftStormGOs[i].GetComponent<StormAnimation>();
+        }
+        GameObject[] rightStormGOs = GameObject.FindGameObjectsWithTag("RightStorm");
+        for (int i = 0; i < rightStormGOs.Length; i++)
+        {
+            rightStormAnimations[i] = rightStormGOs[i].GetComponent<StormAnimation>();
+        }
+
         _leftPlayer = GameObject.FindGameObjectWithTag("LeftPlayer");
         _rightPlayer = GameObject.FindGameObjectWithTag("RightPlayer");
         _leftPlayerBulletSpeed = defaultBulletSpeed;
@@ -239,13 +282,34 @@ public class GameManager : MonoBehaviour
         }
 
         // Handle the storm mechanic.
-        if (stormTriggered)
+        if (leftStormTriggered)
         {
-            stormTimer += Time.fixedDeltaTime;
-            if (stormTimer > stormDuration) // Disable storm if the timer has ran out.
+            leftStormTimer += Time.fixedDeltaTime;
+            if (leftStormTimer > stormDuration) // Disable storm if the timer has ran out.
             {
-                stormTriggered = false;
-                stormTimer = 0;
+                foreach (var item in leftStormAnimations)
+                {
+                    item.PlayAnimation(); // Launches stop storm animation
+                }
+                leftStormTriggered = false;
+                leftStormTimer = 0;
+            }
+            else // Run a CheckForLightningBoltSpawn()
+            {
+                StartCoroutine(CheckForLightningBoltSpawn());
+            }
+        }
+        if (rightStormTriggered)
+        {
+            rightStormTimer += Time.fixedDeltaTime;
+            if (rightStormTimer > stormDuration) // Disable storm if the timer has ran out.
+            {
+                foreach (var item in rightStormAnimations)
+                {
+                    item.PlayAnimation(); // Launches stop storm animation
+                }
+                rightStormTriggered = false;
+                rightStormTimer = 0;
             }
             else // Run a CheckForLightningBoltSpawn()
             {

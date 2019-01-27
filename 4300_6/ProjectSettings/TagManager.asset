@@ -16,6 +16,8 @@ TagManager:
   - LightningBolt
   - LeftShield
   - RightShield
+  - LeftStorm
+  - RightStorm
   layers:
   - Default
   - TransparentFX
