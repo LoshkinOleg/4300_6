@@ -85,9 +85,17 @@ public class PlayerController : MonoBehaviour
     {
         GameManager.instance.SpeedUpBullets(gameObject);
     }
+    public void SlowDown()
+    {
+        GameManager.instance.SlowDownBullets(gameObject);
+    }
     public void TriggerStorm()
     {
         GameManager.instance.TriggerStorm();
+    }
+    public void ShieldUp()
+    {
+        GameManager.instance.ShieldUp(gameObject);
     }
     #endregion
 

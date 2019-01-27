@@ -8,21 +8,32 @@ public class GameManager : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
+    // Bullet Speedup/SlowDown related
     [SerializeField] float _defaultBulletSpeed = 10;
-    [SerializeField] float defaultPickupSpawnCooldown = 4;
-    [SerializeField] float chanceForPickupToSpawnPerSecond = 10;
-    [SerializeField] float _healthPickupValue = 0.5f;
-    [SerializeField] float speedupPickupValue = 20;
+    [SerializeField] float speedupBulletSpeed = 20;
     [SerializeField] float speedupPickupTime = 5;
+    [SerializeField] float slowdownBulletSpeed = 5;
+    [SerializeField] float slowdownPickupTime = 5;
+    // Storm related
     [SerializeField] float stormDuration = 7;
-    [SerializeField] float gameViewHorizontalDistanceInMeters = 17.78f;
     [SerializeField] float chanceForLightningBoltToSpawnPerSecond = 3;
+    // Health pickup related
+    [SerializeField] float _healthPickupValue = 0.5f;
+    // Generally pickup related
+    [SerializeField] float chanceForPickupToSpawnPerSecond = 10;
+    [SerializeField] float defaultPickupSpawnCooldown = 4;
 
     // References
     [SerializeField] GameObject lifePickupPrefab = null;
-    [SerializeField] GameObject speedPickupPrefab = null;
+    [SerializeField] GameObject shieldPickupPrefab = null;
+    [SerializeField] GameObject speedupPickupPrefab = null;
+    [SerializeField] GameObject slowdownPickupPrefab = null;
     [SerializeField] GameObject stormPickupPrefab = null;
     [SerializeField] GameObject lightningBoltPrefab = null;
+    [SerializeField] GameObject shieldPrefab = null;
+    static GameManager _instance = null;
+    GameObject _leftPlayer = null;
+    GameObject _rightPlayer = null;
 
     // Public properties
     public static GameManager instance => _instance;
@@ -34,21 +45,27 @@ public class GameManager : MonoBehaviour
     public float rightPlayerBulletSpeed => _rightPlayerBulletSpeed;
 
     // Private variables and references
-    static GameManager _instance = null;
-    GameObject _leftPlayer = null;
-    GameObject _rightPlayer = null;
+    // Bullet Speedup/Slowdown related
     float _leftPlayerBulletSpeed;
     float _rightPlayerBulletSpeed;
-    float pickupSpawnCooldown = 0;
-    bool decidingWhetherToSpawnPickup = false;
-    bool stormTriggered = false;
-    float stormTimer = 0;
     bool leftPlayerIsSpeedup = false;
     bool rightPlayerIsSpeedup = false;
     float leftPlayerSpeedupTimer = 0;
     float rightPlayerSpeedupTimer = 0;
-    GameObject loser = null;
+    bool leftPlayerIsSlowedDown = false;
+    bool rightPlayerIsSlowedDown = false;
+    float leftPlayerSlowDownTimer = 0;
+    float rightPlayerSlowDownTimer = 0;
+    // Storm related
+    float stormTimer = 0;
+    bool stormTriggered = false;
+    // General pickup related
     bool spawnPickups = true;
+    float pickupSpawnCooldown = 0;
+    bool decidingWhetherToSpawnPickup = false;
+    // Other general variables
+    GameObject loser = null;
+    float gameViewHorizontalDistanceInMeters = 17.78f;
     #endregion
 
     // Public methods
@@ -64,13 +81,28 @@ public class GameManager : MonoBehaviour
         {
             leftPlayerIsSpeedup = true;
             leftPlayerSpeedupTimer = speedupPickupTime;
-            _leftPlayerBulletSpeed = speedupPickupValue;
+            _leftPlayerBulletSpeed = speedupBulletSpeed;
         }
         else
         {
             rightPlayerIsSpeedup = true;
             rightPlayerSpeedupTimer = speedupPickupTime;
-            _rightPlayerBulletSpeed = speedupPickupValue;
+            _rightPlayerBulletSpeed = speedupBulletSpeed;
+        }
+    }
+    public void SlowDownBullets(GameObject player)
+    {
+        if (player.tag == "LeftPlayer")
+        {
+            rightPlayerIsSlowedDown = true;
+            rightPlayerSlowDownTimer = slowdownPickupTime;
+            _rightPlayerBulletSpeed = slowdownBulletSpeed;
+        }
+        else
+        {
+            leftPlayerIsSlowedDown = true;
+            leftPlayerSlowDownTimer = slowdownPickupTime;
+            _leftPlayerBulletSpeed = slowdownBulletSpeed;
         }
     }
     public void TriggerStorm()
@@ -78,13 +110,23 @@ public class GameManager : MonoBehaviour
         stormTriggered = true;
         stormTimer = 0;
     }
+    public void ShieldUp(GameObject player)
+    {
+        if (player.gameObject.tag == "RightPlayer")
+        {
+            Instantiate(shieldPrefab).GetComponent<ShieldController>().targetLeftPlayer = false;
+        }
+        else
+        {
+            Instantiate(shieldPrefab);
+        }
+    }
     #endregion
 
     // Private methods
     #region Private methods
-    IEnumerator CheckForPickupSpawn()
+    IEnumerator CheckForPickupSpawn() // Generates a random number and if said number is smaller than chanceForPickupToSpawnPerSecond, spawns a random pickup.
     {
-
         decidingWhetherToSpawnPickup = true;
 
         yield return new WaitForSeconds(1);
@@ -92,25 +134,42 @@ public class GameManager : MonoBehaviour
         int randomNumber = Random.Range(0, 100);
         if (randomNumber <= chanceForPickupToSpawnPerSecond)
         {
-            int randomPickup = Random.Range(0, 3);
-            if (randomPickup == 0)
+            int randomPickup = Random.Range(0, 5);
+
+            switch (randomPickup)
             {
-                Instantiate(lifePickupPrefab, new Vector3(0, 6, 0), new Quaternion());
-            }
-            else if(randomPickup == 1)
-            {
-                Instantiate(speedPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
-            }
-            else
-            {
-                Instantiate(stormPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
+                case 0:
+                    {
+                        Instantiate(lifePickupPrefab, new Vector3(0, 6, 0), new Quaternion());
+                    }
+                    break;
+                case 1:
+                    {
+                        Instantiate(shieldPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
+                    }
+                    break;
+                case 2:
+                    {
+                        Instantiate(speedupPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
+                    }
+                    break;
+                case 3:
+                    {
+                        Instantiate(slowdownPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
+                    }
+                    break;
+                case 4:
+                    {
+                        Instantiate(stormPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
+                    }
+                    break;
             }
             pickupSpawnCooldown = defaultPickupSpawnCooldown;
         }
 
         decidingWhetherToSpawnPickup = false;
     }
-    IEnumerator CheckForLightningBoltSpawn()
+    IEnumerator CheckForLightningBoltSpawn() // Generates a random number and if said number is smaller than chanceForLightningBoltToSpawnPerSecond, spawns a lightning bolt at a random X location.
     {
         yield return new WaitForSeconds(1);
 
@@ -121,7 +180,7 @@ public class GameManager : MonoBehaviour
             Instantiate(lightningBoltPrefab, new Vector3(randomPosition, 0, 0), new Quaternion());
         }
     }
-    void OnScoreLoaded(Scene scene, LoadSceneMode mode)
+    void OnScoreLoaded(Scene scene, LoadSceneMode mode) // Displays the winner when the "Score" scene is loaded.
     {
         if (scene.name == "Score")
         {
@@ -162,13 +221,14 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Handle pickup spawning.
         if (spawnPickups)
         {
-            if (pickupSpawnCooldown > 0)
+            if (pickupSpawnCooldown > 0) // Decrement cooldown
             {
                 pickupSpawnCooldown -= Time.fixedDeltaTime;
             }
-            else
+            else // Run a CheckForPickupSpawn()
             {
                 if (!decidingWhetherToSpawnPickup)
                 {
@@ -177,24 +237,26 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        // Handle the storm mechanic.
         if (stormTriggered)
         {
             stormTimer += Time.fixedDeltaTime;
-            if (stormTimer > stormDuration)
+            if (stormTimer > stormDuration) // Disable storm if the timer has ran out.
             {
                 stormTriggered = false;
                 stormTimer = 0;
             }
-            else
+            else // Run a CheckForLightningBoltSpawn()
             {
                 StartCoroutine(CheckForLightningBoltSpawn());
             }
         }
 
+        // Handle bullet speedup mechanic.
         if (leftPlayerIsSpeedup)
         {
             leftPlayerSpeedupTimer -= Time.fixedDeltaTime;
-            if (leftPlayerSpeedupTimer < 0)
+            if (leftPlayerSpeedupTimer < 0) // Reset the bullet speed if timer has ran out.
             {
                 _leftPlayerBulletSpeed = defaultBulletSpeed;
                 leftPlayerIsSpeedup = false;
@@ -207,6 +269,26 @@ public class GameManager : MonoBehaviour
             {
                 _rightPlayerBulletSpeed = defaultBulletSpeed;
                 rightPlayerIsSpeedup = false;
+            }
+        }
+
+        // Handle bullet slowdown mechanic.
+        if (leftPlayerIsSlowedDown)
+        {
+            leftPlayerSlowDownTimer -= Time.fixedDeltaTime;
+            if (leftPlayerSlowDownTimer < 0) // Reset the bullet speed if timer has ran out.
+            {
+                _leftPlayerBulletSpeed = defaultBulletSpeed;
+                leftPlayerIsSlowedDown = false;
+            }
+        }
+        if (rightPlayerIsSlowedDown)
+        {
+            rightPlayerSlowDownTimer -= Time.fixedDeltaTime;
+            if (rightPlayerSlowDownTimer < 0)
+            {
+                _rightPlayerBulletSpeed = defaultBulletSpeed;
+                rightPlayerIsSlowedDown = false;
             }
         }
     }

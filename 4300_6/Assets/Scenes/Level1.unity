@@ -157,11 +157,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 7919855754514528731, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: m_TagString
-      value: GameController
-      objectReference: {fileID: 0}
     - target: {fileID: 7919855754514528729, guid: 3d8f3d880964b854ca3f16cad849b58e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -216,72 +211,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: lifePickup
-      value: 
-      objectReference: {fileID: 4323740266736981398, guid: 32c93fbc23e791849b7e41374167c1e0,
-        type: 3}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: speedPickup
-      value: 
-      objectReference: {fileID: 7561157662321798908, guid: 4317c9fbbab34c643822382841d5ae01,
-        type: 3}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: chanceForPickupToSpawnPerFrame
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: defaultPickupSpawnCooldown
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: lifePickupPrefab
-      value: 
-      objectReference: {fileID: 4323740266736981398, guid: 32c93fbc23e791849b7e41374167c1e0,
-        type: 3}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: speedPickupPrefab
-      value: 
-      objectReference: {fileID: 7561157662321798908, guid: 4317c9fbbab34c643822382841d5ae01,
-        type: 3}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: lightningBoltPrefab
-      value: 
-      objectReference: {fileID: 8651878451569179181, guid: af5f60c437c4999499a732b23db8a145,
-        type: 3}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: stormPickupPrefab
-      value: 
-      objectReference: {fileID: 4323740266736981398, guid: 657087bd198e1e14d8141ad6ec105043,
-        type: 3}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: chanceForPickupToSpawnPerSecond
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: chanceForLightningBoltToSpawnPerSecond
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: speedupPickupValue
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7919855754514528730, guid: 3d8f3d880964b854ca3f16cad849b58e,
-        type: 3}
-      propertyPath: stormDuration
-      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d8f3d880964b854ca3f16cad849b58e, type: 3}

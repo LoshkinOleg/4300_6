@@ -8,6 +8,7 @@ TagManager:
   - RightPlayer
   - Bullet
   - WinnerText
+  - Shield
   layers:
   - Default
   - TransparentFX
@@ -51,12 +52,15 @@ TagManager:
   - name: Pickups
     uniqueID: 1689391803
     locked: 0
-  - name: 
-    uniqueID: 3226618279
-    locked: 0
   - name: Player
     uniqueID: 795841381
     locked: 0
+  - name: ThunderBolt
+    uniqueID: 4157374025
+    locked: 0
   - name: Projectile
     uniqueID: 1048730715
+    locked: 0
+  - name: UI
+    uniqueID: 3226618279
     locked: 0

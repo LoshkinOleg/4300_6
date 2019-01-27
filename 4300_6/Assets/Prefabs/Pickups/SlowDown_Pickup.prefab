@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4737837698756057739}
   - component: {fileID: 5969104973163517785}
   m_Layer: 8
-  m_Name: Speed_Pickup
+  m_Name: SlowDown_Pickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86052ea2b3324f9449da80ba3562462d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  type: 3
   pickupSpeedLimit: 1
 --- !u!50 &4737837698756057739
 Rigidbody2D:
@@ -153,7 +153,7 @@ SpriteRenderer:
   m_SortingLayerID: 1689391803
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ec6f8b5013a6c8a40a9baf54cf778c39, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 61271e33ea33d95469eaebca8a15a7fb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

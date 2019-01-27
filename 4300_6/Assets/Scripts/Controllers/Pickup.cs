@@ -8,7 +8,9 @@ public class Pickup : MonoBehaviour
     public enum Type
     {
         LIFE,
+        SHIELD,
         SPEED_UP,
+        SLOW_DOWN,
         STORM
     }
 
@@ -29,9 +31,19 @@ public class Pickup : MonoBehaviour
                     {
                         GameManager.instance.leftPlayer.GetComponent<PlayerController>().LifePickup();
                     }break;
+                case Type.SHIELD:
+                    {
+                        GameManager.instance.leftPlayer.GetComponent<PlayerController>().ShieldUp();
+                    }
+                    break;
                 case Type.SPEED_UP:
                     {
                         GameManager.instance.leftPlayer.GetComponent<PlayerController>().SpeedPickup();
+                    }
+                    break;
+                case Type.SLOW_DOWN:
+                    {
+                        GameManager.instance.leftPlayer.GetComponent<PlayerController>().SlowDown();
                     }
                     break;
                 case Type.STORM:
@@ -51,9 +63,19 @@ public class Pickup : MonoBehaviour
                         GameManager.instance.rightPlayer.GetComponent<PlayerController>().LifePickup();
                     }
                     break;
+                case Type.SHIELD:
+                    {
+                        GameManager.instance.rightPlayer.GetComponent<PlayerController>().ShieldUp();
+                    }
+                    break;
                 case Type.SPEED_UP:
                     {
                         GameManager.instance.rightPlayer.GetComponent<PlayerController>().SpeedPickup();
+                    }
+                    break;
+                case Type.SLOW_DOWN:
+                    {
+                        GameManager.instance.rightPlayer.GetComponent<PlayerController>().SlowDown();
                     }
                     break;
                 case Type.STORM:

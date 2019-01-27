@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7919855754514528730}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,4 +43,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdf0a13c7d102cf48b2262216fbffb03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletSpeed: 10
+  _defaultBulletSpeed: 10
+  speedupBulletSpeed: 20
+  speedupPickupTime: 5
+  slowdownBulletSpeed: 5
+  slowdownPickupTime: 5
+  stormDuration: 7
+  chanceForLightningBoltToSpawnPerSecond: 3
+  _healthPickupValue: 0.5
+  chanceForPickupToSpawnPerSecond: 10
+  defaultPickupSpawnCooldown: 4
+  lifePickupPrefab: {fileID: 4323740266736981398, guid: 32c93fbc23e791849b7e41374167c1e0,
+    type: 3}
+  shieldPickupPrefab: {fileID: 4323740266736981398, guid: 6b921af5812bd7843a06b7cf154209cc,
+    type: 3}
+  speedupPickupPrefab: {fileID: 7561157662321798908, guid: 4317c9fbbab34c643822382841d5ae01,
+    type: 3}
+  slowdownPickupPrefab: {fileID: 7561157662321798908, guid: 951d91ebcdd87b74db62d8075f0556ae,
+    type: 3}
+  stormPickupPrefab: {fileID: 4323740266736981398, guid: 657087bd198e1e14d8141ad6ec105043,
+    type: 3}
+  lightningBoltPrefab: {fileID: 8651878451569179181, guid: af5f60c437c4999499a732b23db8a145,
+    type: 3}
+  shieldPrefab: {fileID: 8651878451569179181, guid: ea18ee35e489c2344937411df52d6af1,
+    type: 3}
