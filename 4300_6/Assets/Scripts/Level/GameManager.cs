@@ -30,7 +30,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject slowdownPickupPrefab = null;
     [SerializeField] GameObject stormPickupPrefab = null;
     [SerializeField] GameObject lightningBoltPrefab = null;
-    [SerializeField] GameObject shieldPrefab = null;
+    [SerializeField] GameObject leftShieldPrefab = null;
+    [SerializeField] GameObject rightShieldPrefab = null;
     static GameManager _instance = null;
     GameObject _leftPlayer = null;
     GameObject _rightPlayer = null;
@@ -114,11 +115,11 @@ public class GameManager : MonoBehaviour
     {
         if (player.gameObject.tag == "RightPlayer")
         {
-            Instantiate(shieldPrefab).GetComponent<ShieldController>().targetLeftPlayer = false;
+            Instantiate(rightShieldPrefab);
         }
         else
         {
-            Instantiate(shieldPrefab);
+            Instantiate(leftShieldPrefab);
         }
     }
     #endregion

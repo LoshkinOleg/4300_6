@@ -65,5 +65,7 @@ MonoBehaviour:
     type: 3}
   lightningBoltPrefab: {fileID: 8651878451569179181, guid: af5f60c437c4999499a732b23db8a145,
     type: 3}
-  shieldPrefab: {fileID: 8651878451569179181, guid: ea18ee35e489c2344937411df52d6af1,
+  leftShieldPrefab: {fileID: 8651878451569179181, guid: ea18ee35e489c2344937411df52d6af1,
+    type: 3}
+  rightShieldPrefab: {fileID: 8651878451569179181, guid: 3a62beed3f4e84c45817ae6a0219129a,
     type: 3}

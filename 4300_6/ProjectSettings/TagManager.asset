@@ -6,9 +6,16 @@ TagManager:
   tags:
   - LeftPlayer
   - RightPlayer
-  - Bullet
-  - WinnerText
-  - Shield
+  - LeftBullet
+  - RightBullet
+  - Health_Pickup
+  - Shield_Pickup
+  - Speedup_Pickup
+  - Slowdown_Pickup
+  - Storm_Pickup
+  - LightningBolt
+  - LeftShield
+  - RightShield
   layers:
   - Default
   - TransparentFX
@@ -18,15 +25,15 @@ TagManager:
   - UI
   - 
   - 
-  - Pickups
-  - Players
-  - Bullets
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - LeftPlayer
+  - LeftBullet
+  - RightBullet
+  - RightPlayer
+  - Pickup
+  - PickupDestructor
+  - LightningBolt
+  - LeftShield
+  - RightShield
   - 
   - 
   - 
@@ -60,6 +67,9 @@ TagManager:
     locked: 0
   - name: Projectile
     uniqueID: 1048730715
+    locked: 0
+  - name: Shield
+    uniqueID: 172365209
     locked: 0
   - name: UI
     uniqueID: 3226618279

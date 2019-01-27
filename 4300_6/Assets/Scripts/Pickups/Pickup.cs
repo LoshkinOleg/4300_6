@@ -29,26 +29,26 @@ public class Pickup : MonoBehaviour
             {
                 case Type.LIFE:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<PlayerController>().LifePickup();
+                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().LifePickup();
                     }break;
                 case Type.SHIELD:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<PlayerController>().ShieldUp();
+                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().ShieldUp();
                     }
                     break;
                 case Type.SPEED_UP:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<PlayerController>().SpeedPickup();
+                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().SpeedPickup();
                     }
                     break;
                 case Type.SLOW_DOWN:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<PlayerController>().SlowDown();
+                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().SlowDown();
                     }
                     break;
                 case Type.STORM:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<PlayerController>().TriggerStorm();
+                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().TriggerStorm();
                     }
                     break;
             }
@@ -60,27 +60,27 @@ public class Pickup : MonoBehaviour
             {
                 case Type.LIFE:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<PlayerController>().LifePickup();
+                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().LifePickup();
                     }
                     break;
                 case Type.SHIELD:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<PlayerController>().ShieldUp();
+                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().ShieldUp();
                     }
                     break;
                 case Type.SPEED_UP:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<PlayerController>().SpeedPickup();
+                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().SpeedPickup();
                     }
                     break;
                 case Type.SLOW_DOWN:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<PlayerController>().SlowDown();
+                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().SlowDown();
                     }
                     break;
                 case Type.STORM:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<PlayerController>().TriggerStorm();
+                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().TriggerStorm();
                     }
                     break;
             }

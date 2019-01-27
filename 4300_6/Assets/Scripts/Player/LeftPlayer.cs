@@ -8,7 +8,7 @@ using UnityEngine.UI;
     Player's movement is either velocity based when outside of the buffer zones or force based when inside the buffer zones.
 */
 
-public class PlayerController : MonoBehaviour
+public class LeftPlayer : MonoBehaviour
 {
     // Classes and Enums
     #region Classes and Enums
@@ -29,7 +29,6 @@ public class PlayerController : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
-    [SerializeField] bool isLeftPlayer = true;
     [SerializeField] float dragForce = 0.1f;
     [SerializeField] float movementVelocity = 7;
     [SerializeField] float movementForce = 1;
@@ -103,16 +102,7 @@ public class PlayerController : MonoBehaviour
     #region Private methods
     void InstantiateBullet()
     {
-        Vector3 position;
-        if (isLeftPlayer)
-        {
-            position = transform.position + new Vector3(0.5f,0,0);
-        }
-        else
-        {
-            position = transform.position + new Vector3(-0.5f, 0, 0);
-        }
-        Instantiate(bulletPrefab, position, new Quaternion()).GetComponent<BulletController>().Init(isLeftPlayer);
+        Instantiate(bulletPrefab, transform.position, new Quaternion());
     }
     void ApplyDrag()
     {
@@ -238,27 +228,13 @@ public class PlayerController : MonoBehaviour
     }
     void RestrictPlayerMovementZone() // Prevents the left player from going on the right side of the screen and vice versa
     {
-        if (isLeftPlayer)
+        if (transform.position.x + (spriteWidthInPixels/100)/2 >= 0)
         {
-            if (transform.position.x + (spriteWidthInPixels/100)/2 >= 0)
+            if (horizontalInput > 0)
             {
-                if (horizontalInput > 0)
-                {
-                    playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
-                }
-                transform.position = new Vector3((-spriteWidthInPixels/100) / 2,transform.position.y,transform.position.z);
+                playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
             }
-        }
-        else
-        {
-            if (transform.position.x - (spriteWidthInPixels / 100) / 2 <= 0)
-            {
-                if (horizontalInput < 0)
-                {
-                    playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
-                }
-                transform.position = new Vector3((spriteWidthInPixels/100) / 2, transform.position.y, transform.position.z);
-            }
+            transform.position = new Vector3((-spriteWidthInPixels/100) / 2,transform.position.y,transform.position.z);
         }
     }
     #endregion
@@ -282,87 +258,46 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // Handle input
-        if (isLeftPlayer)
+        // Horizontal movement
+        if (canMoveHorizontally)
         {
-            // Horizontal movement
-            if (canMoveHorizontally)
+            horizontalInput = Input.GetAxisRaw("Horizontal_LeftPlayer");
+        }
+        else
+        {
+            if (Input.GetAxisRaw("Horizontal_LeftPlayer") > 0)
             {
                 horizontalInput = Input.GetAxisRaw("Horizontal_LeftPlayer");
             }
             else
             {
-                if (Input.GetAxisRaw("Horizontal_LeftPlayer") > 0)
+                horizontalInput = 0;
+                if (Input.GetButtonDown("Horizontal_LeftPlayer"))
                 {
-                    horizontalInput = Input.GetAxisRaw("Horizontal_LeftPlayer");
-                }
-                else
-                {
-                    horizontalInput = 0;
-                    if (Input.GetButtonDown("Horizontal_LeftPlayer"))
-                    {
-                        canMoveHorizontally = true;
-                    }
+                    canMoveHorizontally = true;
                 }
             }
+        }
 
-            // Parachute
-            if (Input.GetButtonDown("Parachute_LeftPlayer"))
-            {
-                // Inverts gravity
-                playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
-            }
+        // Parachute
+        if (Input.GetButtonDown("Parachute_LeftPlayer"))
+        {
+            // Inverts gravity
+            playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
+        }
 
-            // Handle firing input. Handles both button holding and tapping
-            if (Input.GetButtonDown("Fire_LeftPlayer"))
+        // Handle firing input. Handles both button holding and tapping
+        if (Input.GetButtonDown("Fire_LeftPlayer"))
+        {
+            if (firingTimer > firingFrequency)
             {
-                if (firingTimer > firingFrequency)
-                {
-                    InstantiateBullet();
-                    firingTimer = 0;
-                }
+                InstantiateBullet();
+                firingTimer = 0;
             }
-            else
-            {
-                if (Input.GetButton("Fire_LeftPlayer"))
-                {
-                    if (firingTimer > firingFrequency)
-                    {
-                        InstantiateBullet();
-                        firingTimer = 0;
-                    }
-                }
-            }
-
         }
         else
         {
-            if (canMoveHorizontally)
-            {
-                horizontalInput = Input.GetAxisRaw("Horizontal_RightPlayer");
-            }
-            else
-            {
-                if (Input.GetAxisRaw("Horizontal_RightPlayer") < 0)
-                {
-                    horizontalInput = Input.GetAxisRaw("Horizontal_RightPlayer");
-                }
-                else
-                {
-                    horizontalInput = 0;
-                    if (Input.GetButtonDown("Horizontal_RightPlayer"))
-                    {
-                        canMoveHorizontally = true;
-                    }
-                }
-            }
-
-            if (Input.GetButtonDown("Parachute_RightPlayer"))
-            {
-                playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
-            }
-            
-            if (Input.GetButtonDown("Fire_RightPlayer"))
+            if (Input.GetButton("Fire_LeftPlayer"))
             {
                 if (firingTimer > firingFrequency)
                 {
@@ -370,19 +305,8 @@ public class PlayerController : MonoBehaviour
                     firingTimer = 0;
                 }
             }
-            else
-            {
-                if (Input.GetButton("Fire_RightPlayer"))
-                {
-                    if (firingTimer > firingFrequency)
-                    {
-                        InstantiateBullet();
-                        firingTimer = 0;
-                    }
-                }
-            }
         }
-
+        
         // Handle losing condition
         if (health <= 0)
         {

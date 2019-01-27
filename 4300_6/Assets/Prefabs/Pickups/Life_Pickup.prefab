@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4323740265555196397}
   - component: {fileID: 4323740265555196394}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,9 +91,9 @@ GameObject:
   - component: {fileID: 4323740266736981399}
   - component: {fileID: 4373499343689709935}
   - component: {fileID: 7334428131585459282}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Life_Pickup
-  m_TagString: Untagged
+  m_TagString: Health_Pickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
