@@ -59,7 +59,6 @@ public class RightPlayer : MonoBehaviour
     float verticalScreenHalfSizeInMeters = 5;
     HorizontalBuffer currentHorizontalBuffer = HorizontalBuffer.NONE;
     VerticalBuffer currentVerticalBuffer = VerticalBuffer.NONE;
-    bool canMoveHorizontally = true; // Prevents player from bumping against the wall when maintaining a horizontal movement direction.
 
     // Firing related
     float firingTimer = 0;
@@ -181,13 +180,11 @@ public class RightPlayer : MonoBehaviour
         {
             currentHorizontalBuffer = HorizontalBuffer.LEFT;
             movingUsingVelocity = false;
-            canMoveHorizontally = false;
         }
         else if (transform.position.x > (horizontalScreenHalfSizeInMeters - screenEdgeBufferDistance))
         {
             currentHorizontalBuffer = HorizontalBuffer.RIGHT;
             movingUsingVelocity = false;
-            canMoveHorizontally = false;
         }
         else
         {
@@ -263,24 +260,13 @@ public class RightPlayer : MonoBehaviour
     private void Update()
     {
         // Horizontal movement
-        if (canMoveHorizontally)
+        if (Input.GetAxisRaw("RightPlayerHorizontal_Joystick") == 0)
         {
-            horizontalInput = Input.GetAxisRaw("RightPlayerHorizontal");
+            horizontalInput = Input.GetAxisRaw("RightPlayerHorizontal_Keyboard");
         }
         else
         {
-            if (Input.GetAxisRaw("RightPlayerHorizontal") < 0)
-            {
-                horizontalInput = Input.GetAxisRaw("RightPlayerHorizontal");
-            }
-            else
-            {
-                horizontalInput = 0;
-                if (Input.GetButtonDown("RightPlayerHorizontal"))
-                {
-                    canMoveHorizontally = true;
-                }
-            }
+            horizontalInput = Input.GetAxisRaw("RightPlayerHorizontal_Joystick");
         }
 
         // Parachute
