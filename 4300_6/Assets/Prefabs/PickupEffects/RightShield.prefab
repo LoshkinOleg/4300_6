@@ -71,8 +71,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de75127da5bdba94ca9ff3cf76dea87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetLeftPlayer: 1
   hitCounter: 3
+  horizontalShieldOffsetFromPlayer: 0.7
 --- !u!1 &8651878452047420927
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0, g: 1, b: 0.015245676, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.5764706, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

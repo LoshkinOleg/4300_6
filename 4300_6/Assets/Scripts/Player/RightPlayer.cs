@@ -42,6 +42,7 @@ public class RightPlayer : MonoBehaviour
     // References
     [SerializeField] GameObject bulletPrefab = null;
     [SerializeField] Image healthImage = null;
+    [SerializeField] GameObject parachute = null;
     Rigidbody2D playerRigidbody = null;
 
     // PRIVATE VARIABLES
@@ -51,6 +52,7 @@ public class RightPlayer : MonoBehaviour
 
     // Movement related
     bool movingUsingVelocity = true;
+    bool parachuteOpen = false;
 
     // Buffers related
     float horizontalScreenHalfSizeInMeters = 8.8f;
@@ -263,18 +265,18 @@ public class RightPlayer : MonoBehaviour
         // Horizontal movement
         if (canMoveHorizontally)
         {
-            horizontalInput = Input.GetAxisRaw("Horizontal_RightPlayer");
+            horizontalInput = Input.GetAxisRaw("RightPlayerHorizontal");
         }
         else
         {
-            if (Input.GetAxisRaw("Horizontal_RightPlayer") < 0)
+            if (Input.GetAxisRaw("RightPlayerHorizontal") < 0)
             {
-                horizontalInput = Input.GetAxisRaw("Horizontal_RightPlayer");
+                horizontalInput = Input.GetAxisRaw("RightPlayerHorizontal");
             }
             else
             {
                 horizontalInput = 0;
-                if (Input.GetButtonDown("Horizontal_RightPlayer"))
+                if (Input.GetButtonDown("RightPlayerHorizontal"))
                 {
                     canMoveHorizontally = true;
                 }
@@ -282,14 +284,26 @@ public class RightPlayer : MonoBehaviour
         }
 
         // Parachute
-        if (Input.GetButtonDown("Parachute_RightPlayer"))
+        if (Input.GetButtonDown("RightPlayerParachute"))
         {
             // Inverts gravity
             playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
+
+            parachute.SetActive(!parachute.activeSelf);
+
+            if (parachuteOpen)
+            {
+                GameManager.instance.PlaySound(GameManager.SoundType.PARACHUTE_CLOSED);
+            }
+            else
+            {
+                GameManager.instance.PlaySound(GameManager.SoundType.PARACHUTE_OPEN);
+            }
+            parachuteOpen = !parachuteOpen;
         }
 
         // Handle firing input. Handles both button holding and tapping
-        if (Input.GetButtonDown("Fire_RightPlayer"))
+        if (Input.GetButtonDown("RightPlayerShoot"))
         {
             if (firingTimer > firingFrequency)
             {
@@ -299,7 +313,7 @@ public class RightPlayer : MonoBehaviour
         }
         else
         {
-            if (Input.GetButton("Fire_RightPlayer"))
+            if (Input.GetButton("RightPlayerShoot"))
             {
                 if (firingTimer > firingFrequency)
                 {

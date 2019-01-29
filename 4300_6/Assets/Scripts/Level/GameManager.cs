@@ -12,7 +12,9 @@ public class GameManager : MonoBehaviour
         PLAYER_HIT,
         SHIELD_HIT,
         SHOTGUN_FIRE,
-        THUNDER
+        THUNDER,
+        PARACHUTE_OPEN,
+        PARACHUTE_CLOSED
     }
 
     // Attributes
@@ -48,6 +50,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] AudioSource sound_shieldHit = null;
     [SerializeField] AudioSource sound_shotgunFire = null;
     [SerializeField] AudioSource sound_thunder = null;
+    [SerializeField] AudioSource sound_parachuteOpen = null;
+    [SerializeField] AudioSource sound_parachuteClosed = null;
+    [SerializeField] AudioSource music = null;
     static GameManager _instance = null;
     GameObject _leftPlayer = null;
     GameObject _rightPlayer = null;
@@ -191,6 +196,16 @@ public class GameManager : MonoBehaviour
                     sound_thunder.PlayOneShot(sound_thunder.clip);
                 }
                 break;
+            case SoundType.PARACHUTE_OPEN:
+                {
+                    sound_parachuteOpen.PlayOneShot(sound_parachuteOpen.clip);
+                }
+                break;
+            case SoundType.PARACHUTE_CLOSED:
+                {
+                    sound_parachuteClosed.PlayOneShot(sound_parachuteClosed.clip);
+                }
+                break;
         }
     }
     #endregion
@@ -206,7 +221,7 @@ public class GameManager : MonoBehaviour
         int randomNumber = Random.Range(0, 100);
         if (randomNumber <= chanceForPickupToSpawnPerSecond)
         {
-            int randomPickup = Random.Range(0, 5);
+            int randomPickup = Random.Range(0, 7);
 
             switch (randomPickup)
             {
@@ -231,6 +246,16 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 case 4:
+                    {
+                        Instantiate(stormPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
+                    }
+                    break;
+                case 5:
+                    {
+                        Instantiate(stormPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
+                    }
+                    break;
+                case 7:
                     {
                         Instantiate(stormPickupPrefab, new Vector3(0, 6, 0), new Quaternion());
                     }
@@ -270,11 +295,6 @@ public class GameManager : MonoBehaviour
         {
             TMPro.TMP_Text winnerText = GameObject.FindGameObjectWithTag("WinnerText").GetComponent<TMPro.TMP_Text>();
             spawnPickups = false;
-            Destroy(GameObject.FindGameObjectWithTag("Health_Pickup"));
-            Destroy(GameObject.FindGameObjectWithTag("Shield_Pickup"));
-            Destroy(GameObject.FindGameObjectWithTag("Speedup_Pickup"));
-            Destroy(GameObject.FindGameObjectWithTag("Slowdown_Pickup"));
-            Destroy(GameObject.FindGameObjectWithTag("Storm_Pickup"));
 
             if (loser == leftPlayer)
             {
@@ -316,6 +336,8 @@ public class GameManager : MonoBehaviour
         leftPlayerSpeedupTimer = speedupPickupTime;
         rightPlayerSpeedupTimer = speedupPickupTime;
 
+        music.PlayDelayed(0);
+
         SceneManager.sceneLoaded += OnScoreLoaded;
     }
 
@@ -343,12 +365,15 @@ public class GameManager : MonoBehaviour
             leftStormTimer += Time.fixedDeltaTime;
             if (leftStormTimer > stormDuration) // Disable storm if the timer has ran out.
             {
-                foreach (var item in leftStormAnimations)
+                if (GameObject.FindGameObjectsWithTag("LightningBolt").Length < 1)
                 {
-                    item.PlayAnimation(); // Launches stop storm animation
+                    foreach (var item in leftStormAnimations)
+                    {
+                        item.PlayAnimation(); // Launches stop storm animation
+                    }
+                    leftStormTriggered = false;
+                    leftStormTimer = 0;
                 }
-                leftStormTriggered = false;
-                leftStormTimer = 0;
             }
             else // Run a CheckForLightningBoltSpawn()
             {
@@ -360,12 +385,15 @@ public class GameManager : MonoBehaviour
             rightStormTimer += Time.fixedDeltaTime;
             if (rightStormTimer > stormDuration) // Disable storm if the timer has ran out.
             {
-                foreach (var item in rightStormAnimations)
+                if (GameObject.FindGameObjectsWithTag("LightningBolt").Length < 1)
                 {
-                    item.PlayAnimation(); // Launches stop storm animation
+                    foreach (var item in rightStormAnimations)
+                    {
+                        item.PlayAnimation(); // Launches stop storm animation
+                    }
+                    rightStormTriggered = false;
+                    rightStormTimer = 0;
                 }
-                rightStormTriggered = false;
-                rightStormTimer = 0;
             }
             else // Run a CheckForLightningBoltSpawn()
             {
