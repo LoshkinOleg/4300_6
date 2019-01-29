@@ -836,7 +836,16 @@ MonoBehaviour:
 
     - Down Arrow to shoot
 
-    - Up arrow to open/close the parachute'
+    - Up arrow to open/close the parachute
+
+
+    Gamepad:
+
+    - Left stick to move horizontally
+
+    - A button to shoot
+
+    - X button to open/close the parachute'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -882,7 +891,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 281
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -905,12 +914,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 697363836}
-    characterCount: 216
+    characterCount: 319
     spriteCount: 0
-    spaceCount: 45
-    wordCount: 46
+    spaceCount: 65
+    wordCount: 66
     linkCount: 0
-    lineCount: 11
+    lineCount: 16
     pageCount: 1
     materialCount: 1
   m_havePropertiesChanged: 0
