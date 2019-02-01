@@ -3,21 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - LeftPlayer
-  - RightPlayer
-  - LeftBullet
-  - RightBullet
-  - Health_Pickup
-  - Shield_Pickup
-  - Speedup_Pickup
-  - Slowdown_Pickup
-  - Storm_Pickup
-  - LightningBolt
-  - LeftShield
-  - RightShield
-  - LeftStorm
-  - RightStorm
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -27,15 +13,15 @@ TagManager:
   - UI
   - 
   - 
-  - LeftPlayer
-  - LeftBullet
-  - RightBullet
-  - RightPlayer
-  - Pickup
-  - PickupDestructor
-  - LightningBolt
-  - LeftShield
-  - RightShield
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
@@ -54,25 +40,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Background
-    uniqueID: 3615561425
-    locked: 0
-  - name: Pickups
-    uniqueID: 1689391803
-    locked: 0
-  - name: Player
-    uniqueID: 795841381
-    locked: 0
-  - name: ThunderBolt
-    uniqueID: 4157374025
-    locked: 0
-  - name: Projectile
-    uniqueID: 1048730715
-    locked: 0
-  - name: Shield
-    uniqueID: 172365209
-    locked: 0
-  - name: UI
-    uniqueID: 3226618279
     locked: 0

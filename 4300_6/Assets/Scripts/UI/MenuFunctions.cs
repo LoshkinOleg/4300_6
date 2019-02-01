@@ -57,4 +57,9 @@ public class MenuFunctions : MonoBehaviour
         Destroy(GameObject.FindGameObjectWithTag("GameController"));
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void Retry()
+    {
+
+    }
 }

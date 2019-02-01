@@ -8,10 +8,11 @@ public class Pickup : MonoBehaviour
     public enum Type
     {
         LIFE,
+        HEALTH,
         SHIELD,
         SPEED_UP,
-        SLOW_DOWN,
-        STORM
+        STORM,
+        JETPACK
     }
 
     // Inspector variables
@@ -19,73 +20,84 @@ public class Pickup : MonoBehaviour
     [SerializeField] float pickupSpeedLimit = 3;
 
     // References
+    [SerializeField] GameObject shieldPrefab = null;
+    [SerializeField] GameObject stormPrefab = null;
     Rigidbody2D pickupRigidbody2D = null;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "LeftPlayer")
+        if (collision.gameObject.tag == "Player1")
         {
             switch (type)
             {
                 case Type.LIFE:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().LifePickup();
+                        GameManager.instance.player1.life++;
                     }break;
+                case Type.HEALTH:
+                    {
+                        GameManager.instance.player1.health += 0.5f;
+                    }
+                    break;
                 case Type.SHIELD:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().ShieldUp();
+                        Instantiate(shieldPrefab).GetComponent<Shield>().target = GameManager.instance.player1;
                     }
                     break;
                 case Type.SPEED_UP:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().SpeedPickup();
-                    }
-                    break;
-                case Type.SLOW_DOWN:
-                    {
-                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().SlowDown();
+                        GameManager.instance.player1.SpeedBulletsUp();
                     }
                     break;
                 case Type.STORM:
                     {
-                        GameManager.instance.leftPlayer.GetComponent<LeftPlayer>().TriggerStorm();
+                        Instantiate(stormPrefab).GetComponent<Storm>().target = GameManager.instance.player2;
+                    }
+                    break;
+                case Type.JETPACK:
+                    {
+                        GameManager.instance.player1.EnterJetpackMode();
                     }
                     break;
             }
 
         }
-        else if(collision.gameObject.tag == "RightPlayer")
+        else if (collision.gameObject.tag == "Player2")
         {
             switch (type)
             {
                 case Type.LIFE:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().LifePickup();
+                        GameManager.instance.player2.life++;
+                    }
+                    break;
+                case Type.HEALTH:
+                    {
+                        GameManager.instance.player2.health += 0.5f;
                     }
                     break;
                 case Type.SHIELD:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().ShieldUp();
+                        Instantiate(shieldPrefab).GetComponent<Shield>().target = GameManager.instance.player2;
                     }
                     break;
                 case Type.SPEED_UP:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().SpeedPickup();
-                    }
-                    break;
-                case Type.SLOW_DOWN:
-                    {
-                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().SlowDown();
+                        GameManager.instance.player2.SpeedBulletsUp();
                     }
                     break;
                 case Type.STORM:
                     {
-                        GameManager.instance.rightPlayer.GetComponent<RightPlayer>().TriggerStorm();
+                        Instantiate(stormPrefab).GetComponent<Storm>().target = GameManager.instance.player1;
+                    }
+                    break;
+                case Type.JETPACK:
+                    {
+                        GameManager.instance.player2.EnterJetpackMode();
                     }
                     break;
             }
         }
-        GameManager.instance.PlaySound(GameManager.SoundType.PICKUP);
         Destroy(gameObject);
     }
 

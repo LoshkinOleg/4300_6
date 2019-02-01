@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LeftBullet : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
     // Attributes
     #region Attributes
-    // Private variables
-    bool isPlayingDestructionAnimation = false;
-
     // References
-    [SerializeField] GameObject destructionSprite = null;
+    [SerializeField] GameObject destructionSpriteGO = null;
     Rigidbody2D bulletRigidbody2D = null;
     CircleCollider2D bulletCollider = null;
+
+    // Private variables
+    bool isPlayingDestructionAnimation = false;
     #endregion
 
     // Private methods
@@ -25,7 +25,7 @@ public class LeftBullet : MonoBehaviour
 
         bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
         bulletCollider.enabled = false;
-        destructionSprite.SetActive(true);
+        destructionSpriteGO.SetActive(true);
 
         yield return new WaitForSeconds(0.5f);
 
@@ -39,8 +39,6 @@ public class LeftBullet : MonoBehaviour
     {
         bulletRigidbody2D = GetComponent<Rigidbody2D>();
         bulletCollider = GetComponent<CircleCollider2D>();
-
-        GameManager.instance.PlaySound(GameManager.SoundType.SHOTGUN_FIRE);
     }
 
     private void FixedUpdate()
@@ -53,26 +51,7 @@ public class LeftBullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Handle Shield collision
-        if (collision.gameObject.tag == "RightShield")
-        {
-            collision.gameObject.GetComponent<RightShield>().Hit();
-
-            GameManager.instance.PlaySound(GameManager.SoundType.SHIELD_HIT);
-
-            StartCoroutine(DestroyBullet());
-        }
-
-        // Handle enemy collision
-        if (collision.gameObject.tag == "RightPlayer")
-        {
-            GameManager.instance.rightPlayer.GetComponent<RightPlayer>().DamageOnce(0.1f);
-            StartCoroutine(DestroyBullet());
-        }
-        else // Handle the rest of possible collisions
-        {
-            StartCoroutine(DestroyBullet());
-        }
+        StartCoroutine(DestroyBullet());
     }
     #endregion
 

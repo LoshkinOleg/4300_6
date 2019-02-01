@@ -56,8 +56,6 @@ public class GameManager : MonoBehaviour
     static GameManager _instance = null;
     GameObject _leftPlayer = null;
     GameObject _rightPlayer = null;
-    StormAnimation[] leftStormAnimations = new StormAnimation[4];
-    StormAnimation[] rightStormAnimations = new StormAnimation[4];
 
     // Public properties
     public static GameManager instance => _instance;
@@ -137,19 +135,11 @@ public class GameManager : MonoBehaviour
         {
             rightStormTimer = 0;
             rightStormTriggered = true;
-            foreach (var item in rightStormAnimations)
-            {
-                item.PlayAnimation();
-            }
         }
         else
         {
             leftStormTimer = 0;
             leftStormTriggered = true;
-            foreach (var item in leftStormAnimations)
-            {
-                item.PlayAnimation();
-            }
         }
     }
     public void ShieldUp(GameObject player)
@@ -318,16 +308,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        GameObject[] leftStormGOs = GameObject.FindGameObjectsWithTag("LeftStorm");
-        for (int i = 0; i < leftStormGOs.Length; i++)
-        {
-            leftStormAnimations[i] = leftStormGOs[i].GetComponent<StormAnimation>();
-        }
-        GameObject[] rightStormGOs = GameObject.FindGameObjectsWithTag("RightStorm");
-        for (int i = 0; i < rightStormGOs.Length; i++)
-        {
-            rightStormAnimations[i] = rightStormGOs[i].GetComponent<StormAnimation>();
-        }
 
         _leftPlayer = GameObject.FindGameObjectWithTag("LeftPlayer");
         _rightPlayer = GameObject.FindGameObjectWithTag("RightPlayer");
@@ -367,10 +347,6 @@ public class GameManager : MonoBehaviour
             {
                 if (GameObject.FindGameObjectsWithTag("LightningBolt").Length < 1)
                 {
-                    foreach (var item in leftStormAnimations)
-                    {
-                        item.PlayAnimation(); // Launches stop storm animation
-                    }
                     leftStormTriggered = false;
                     leftStormTimer = 0;
                 }
@@ -387,10 +363,6 @@ public class GameManager : MonoBehaviour
             {
                 if (GameObject.FindGameObjectsWithTag("LightningBolt").Length < 1)
                 {
-                    foreach (var item in rightStormAnimations)
-                    {
-                        item.PlayAnimation(); // Launches stop storm animation
-                    }
                     rightStormTriggered = false;
                     rightStormTimer = 0;
                 }
