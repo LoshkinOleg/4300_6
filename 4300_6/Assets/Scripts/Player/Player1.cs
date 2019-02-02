@@ -128,9 +128,11 @@ public class Player1 : MonoBehaviour
     MovementMode _currentMovementMode = MovementMode.AIRBORNE;
     int _lives = 3;
     float _health = 1;
+    float currentBulletsSpeed;
     bool parachuteIsOpen = false;
     float fireCooldown;
     float dodgeTimer;
+    float speedupTimer;
     #endregion
 
     // PUBLIC METHODS
@@ -142,7 +144,8 @@ public class Player1 : MonoBehaviour
     }
     public void SpeedBulletsUp()
     {
-
+        currentBulletsSpeed = PickupManager.instance.speedupBulletSpeed;
+        speedupTimer = PickupManager.instance.speedupPickupTime;
     }
     public void EnterJetpackMode()
     {
@@ -199,6 +202,12 @@ public class Player1 : MonoBehaviour
                     {
                         // Normalize player velocity and add a fixed speed boost. Invert player's X velocity's direction.
                         playerRigidbody.velocity = ((Vector2)Vector3.Normalize(playerRigidbody.velocity) + Vector2.up * dodgeSpeedupMagnitude) * -Mathf.Sign(playerRigidbody.velocity.x);
+                    }
+
+                    // Handle firing input
+                    if (Input.GetButtonDown("Player1_Fire"))
+                    {
+                        Instantiate(bulletPrefab, transform.position, new Quaternion()).GetComponent<Projectile>().speed = currentBulletsSpeed;
                     }
                 }
                 break;
@@ -273,6 +282,7 @@ public class Player1 : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
         healthImage = healthImageGO.GetComponent<Image>();
         fireCooldown = 1 / firingFrequency;
+        currentBulletsSpeed = GameManager.instance.defaultBulletSpeed;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -309,9 +319,16 @@ public class Player1 : MonoBehaviour
             GameManager.instance.GameOver(gameObject);
         }
 
+        // Handle projectile speed up mechanic
+        if (speedupTimer < 0)
+        {
+            speedupTimer = GameManager.instance.defaultBulletSpeed;
+        }
+
         // Update timers
         fireCooldown -= Time.deltaTime;
         dodgeTimer -= Time.deltaTime;
+        speedupTimer -= Time.deltaTime;
     }
     #endregion
 

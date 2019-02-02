@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1128068349483611183}
   - component: {fileID: 6185217071812307235}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Parachute_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,8 +65,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 795841381
-  m_SortingLayer: 3
+  m_SortingLayerID: 1842296729
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f5df0c20273645d4bbaa72e80c3af7af, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4848834886452496592}
   - component: {fileID: 4848834886452496607}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Player_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,8 +144,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 795841381
-  m_SortingLayer: 3
+  m_SortingLayerID: 1842296729
+  m_SortingLayer: -1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 18743bc1917362549bdd6dbe0961982d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -169,10 +169,9 @@ GameObject:
   - component: {fileID: 4848834887403473506}
   - component: {fileID: 4848834887403473504}
   - component: {fileID: 4848834887403473505}
-  - component: {fileID: 6367290541034985646}
-  m_Layer: 11
-  m_Name: RightPlayer
-  m_TagString: RightPlayer
+  m_Layer: 10
+  m_Name: Player2
+  m_TagString: Player2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,28 +239,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6367290541034985646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4848834887403473507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f8fd88cf0dbd474aa4f972963aba130, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dragForce: 0.1
-  movementVelocity: 7
-  movementForce: 1
-  screenEdgeBufferDistance: 1.5
-  screenEdgeBufferForce: 25
-  firingFrequency: 0.25
-  horizontalSpeedLimit: 5.5
-  spriteWidthInPixels: 100
-  health: 1
-  bulletPrefab: {fileID: 4222088480428699918, guid: 00360c6ddfd936c4b8cb3340dab47af3,
-    type: 3}
-  healthImage: {fileID: 0}
-  parachute: {fileID: 2959749197729756005}

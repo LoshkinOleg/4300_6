@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8639902279329764571}
   - component: {fileID: 8664007867377175912}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Parachute_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,8 +65,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 795841381
-  m_SortingLayer: 3
+  m_SortingLayerID: 1842296729
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: dbfab06c448460e4aa2f1390f77853a5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4848834886452496592}
   - component: {fileID: 4848834886452496607}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Player_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,8 +144,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 795841381
-  m_SortingLayer: 3
+  m_SortingLayerID: 1842296729
+  m_SortingLayer: -1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: c1d476e456ff5174bb0258e912e3318d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -170,9 +170,9 @@ GameObject:
   - component: {fileID: 4848834887403473504}
   - component: {fileID: 4848834887403473505}
   - component: {fileID: 4848834887403473519}
-  m_Layer: 8
-  m_Name: LeftPlayer
-  m_TagString: LeftPlayer
+  m_Layer: 9
+  m_Name: Player1
+  m_TagString: Player1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -253,15 +253,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragForce: 0.1
-  movementVelocity: 7
-  movementForce: 1
-  screenEdgeBufferDistance: 1.5
-  screenEdgeBufferForce: 25
-  firingFrequency: 0.25
-  horizontalSpeedLimit: 5.5
-  spriteWidthInPixels: 100
-  health: 1
+  _groundHorizontalVelocity: 7
+  _airborneHorizontalForce: 7
+  _jetpackVelocity: 7
+  _firingFrequency: 4
+  _playerSpeedLimit: 5
+  dodgeDuration: 0.2
+  dodgeSpeedupMagnitude: 1
   bulletPrefab: {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d,
     type: 3}
-  healthImage: {fileID: 0}
-  parachute: {fileID: 325984145752485330}
+  healthImageGO: {fileID: 0}
+  parachuteGO: {fileID: 325984145752485330}

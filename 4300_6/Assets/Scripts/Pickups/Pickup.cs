@@ -15,85 +15,51 @@ public class Pickup : MonoBehaviour
         JETPACK
     }
 
+    // Attributes
+    #region Attributes
     // Inspector variables
     [SerializeField] Type type = Type.LIFE;
-    [SerializeField] float pickupSpeedLimit = 3;
 
     // References
-    [SerializeField] GameObject shieldPrefab = null;
-    [SerializeField] GameObject stormPrefab = null;
     Rigidbody2D pickupRigidbody2D = null;
+    #endregion
 
+    // Inherited methods
+    #region Inherited methods
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player1")
+        if (collision.gameObject.tag == "Player1" || collision.gameObject.tag == "Player2")
         {
             switch (type)
             {
                 case Type.LIFE:
                     {
-                        GameManager.instance.player1.life++;
-                    }break;
-                case Type.HEALTH:
-                    {
-                        GameManager.instance.player1.health += 0.5f;
-                    }
-                    break;
-                case Type.SHIELD:
-                    {
-                        Instantiate(shieldPrefab).GetComponent<Shield>().target = GameManager.instance.player1;
-                    }
-                    break;
-                case Type.SPEED_UP:
-                    {
-                        GameManager.instance.player1.SpeedBulletsUp();
-                    }
-                    break;
-                case Type.STORM:
-                    {
-                        Instantiate(stormPrefab).GetComponent<Storm>().target = GameManager.instance.player2;
-                    }
-                    break;
-                case Type.JETPACK:
-                    {
-                        GameManager.instance.player1.EnterJetpackMode();
-                    }
-                    break;
-            }
-
-        }
-        else if (collision.gameObject.tag == "Player2")
-        {
-            switch (type)
-            {
-                case Type.LIFE:
-                    {
-                        GameManager.instance.player2.life++;
+                        PickupManager.instance.Pickup_Life(collision.gameObject.tag);
                     }
                     break;
                 case Type.HEALTH:
                     {
-                        GameManager.instance.player2.health += 0.5f;
+                        PickupManager.instance.Pickup_Health(collision.gameObject.tag);
                     }
                     break;
                 case Type.SHIELD:
                     {
-                        Instantiate(shieldPrefab).GetComponent<Shield>().target = GameManager.instance.player2;
+                        PickupManager.instance.Pickup_Shield(collision.gameObject.tag);
                     }
                     break;
                 case Type.SPEED_UP:
                     {
-                        GameManager.instance.player2.SpeedBulletsUp();
+                        PickupManager.instance.Pickup_Speedup(collision.gameObject.tag);
                     }
                     break;
                 case Type.STORM:
                     {
-                        Instantiate(stormPrefab).GetComponent<Storm>().target = GameManager.instance.player1;
+                        PickupManager.instance.Pickup_Storm(collision.gameObject.tag);
                     }
                     break;
                 case Type.JETPACK:
                     {
-                        GameManager.instance.player2.EnterJetpackMode();
+                        PickupManager.instance.Pickup_Jetpack(collision.gameObject.tag);
                     }
                     break;
             }
@@ -108,16 +74,17 @@ public class Pickup : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Mathf.Abs(pickupRigidbody2D.velocity.y) > pickupSpeedLimit)
+        if (Mathf.Abs(pickupRigidbody2D.velocity.y) > PickupManager.instance.pickupSpeedLimit)
         {
             if (pickupRigidbody2D.velocity.y > 0)
             {
-                pickupRigidbody2D.velocity = new Vector2(pickupRigidbody2D.velocity.x, pickupSpeedLimit);
+                pickupRigidbody2D.velocity = new Vector2(pickupRigidbody2D.velocity.x, PickupManager.instance.pickupSpeedLimit);
             }
             else
             {
-                pickupRigidbody2D.velocity = new Vector2(pickupRigidbody2D.velocity.x, -pickupSpeedLimit);
+                pickupRigidbody2D.velocity = new Vector2(pickupRigidbody2D.velocity.x, -PickupManager.instance.pickupSpeedLimit);
             }
         }
     }
+    #endregion
 }

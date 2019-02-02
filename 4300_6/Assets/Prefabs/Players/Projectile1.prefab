@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5422948830860707200}
   - component: {fileID: 1463932393237087463}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Bullet_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,9 +65,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1048730715
-  m_SortingLayer: 5
-  m_SortingOrder: 0
+  m_SortingLayerID: 1248557665
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 279fe841dff5d514393a47a475d52f00, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -91,9 +91,9 @@ GameObject:
   - component: {fileID: 6898123001167883765}
   - component: {fileID: 2776445076889622289}
   - component: {fileID: 2462106639161874942}
-  m_Layer: 9
-  m_Name: LeftBullet
-  m_TagString: LeftBullet
+  m_Layer: 11
+  m_Name: Projectile1
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -163,7 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cadc0ba0d92262547b3961a10ccbd944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionSprite: {fileID: 8791773816685965899}
+  speed: 0
+  destructionSpriteGO: {fileID: 0}
 --- !u!1 &8791773816685965899
 GameObject:
   m_ObjectHideFlags: 0
@@ -174,7 +175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1220104295394627580}
   - component: {fileID: 341422767393974020}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Destruction_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -229,9 +230,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1048730715
-  m_SortingLayer: 5
-  m_SortingOrder: 1
+  m_SortingLayerID: 1248557665
+  m_SortingLayer: 2
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

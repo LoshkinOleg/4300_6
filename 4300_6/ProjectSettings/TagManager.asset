@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Player1
+  - Player2
   layers:
   - Default
   - TransparentFX
@@ -13,12 +15,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - PickupDestructor
+  - Player1
+  - Player2
+  - Projectile1
+  - Projectile2
+  - Pickup
   - 
   - 
   - 
@@ -38,6 +40,21 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 62541281
+    locked: 0
+  - name: Players
+    uniqueID: 1842296729
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Pickups
+    uniqueID: 3792060533
+    locked: 0
+  - name: Projectiles
+    uniqueID: 1248557665
+    locked: 0
+  - name: UI
+    uniqueID: 1702784059
     locked: 0

@@ -5,7 +5,6 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     [SerializeField] int hitCounter = 3;
-
     public GameObject target = null; // Needs to be set up upon shield instantiation.
 
     public void Hit()

@@ -6,6 +6,8 @@ public class Projectile : MonoBehaviour
 {
     // Attributes
     #region Attributes
+    public float speed;
+
     // References
     [SerializeField] GameObject destructionSpriteGO = null;
     Rigidbody2D bulletRigidbody2D = null;
@@ -20,8 +22,6 @@ public class Projectile : MonoBehaviour
     IEnumerator DestroyBullet()
     {
         isPlayingDestructionAnimation = true;
-
-        GameManager.instance.PlaySound(GameManager.SoundType.BULLET_DESTRUCTION);
 
         bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
         bulletCollider.enabled = false;
@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour
     {
         if (!isPlayingDestructionAnimation)
         {
-            bulletRigidbody2D.velocity = Vector2.right * GameManager.instance.leftPlayerBulletSpeed;
+            bulletRigidbody2D.velocity = Vector2.right * speed;
         }
     }
 
