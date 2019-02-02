@@ -21,7 +21,6 @@ public class Player1 : MonoBehaviour
     [SerializeField] float dragForce = 0.1f;
     [SerializeField] float _groundHorizontalVelocity = 7;
     [SerializeField] float _airborneHorizontalForce = 7;
-    [SerializeField] float _jetpackVelocity = 7;
     [SerializeField] float _firingFrequency = 4; // 4 projectiles / second.
     [SerializeField] float _playerSpeedLimit = 5;
     [SerializeField] float dodgeDuration = 0.2f;
@@ -55,17 +54,6 @@ public class Player1 : MonoBehaviour
         set
         {
             _airborneHorizontalForce = value;
-        }
-    }
-    public float jetpackVelocity
-    {
-        get
-        {
-            return _jetpackVelocity;
-        }
-        set
-        {
-            _jetpackVelocity = value;
         }
     }
     public float firingFrequency
@@ -133,6 +121,12 @@ public class Player1 : MonoBehaviour
     float fireCooldown;
     float dodgeTimer;
     float speedupTimer;
+    bool firing = false;
+    float horizontalInput = 0;
+    float verticalInput = 0;
+    Vector2 dodgeDirection = new Vector2();
+    bool dodging = false;
+    float jetpackTimer;
     #endregion
 
     // PUBLIC METHODS
@@ -149,7 +143,8 @@ public class Player1 : MonoBehaviour
     }
     public void EnterJetpackMode()
     {
-
+        _currentMovementMode = MovementMode.JETPACK;
+        jetpackTimer = PickupManager.instance.jetpackDuration;
     }
     #endregion
 
@@ -169,7 +164,7 @@ public class Player1 : MonoBehaviour
         {
             if (Mathf.Abs(playerRigidbody.velocity.x) > 0.05f) // Applies drag if the horizontal speed is greater than 0.05f
             {
-                playerRigidbody.velocity += new Vector2(Mathf.Sign(playerRigidbody.velocity.x) * dragForce, 0);
+                playerRigidbody.velocity += new Vector2(-Mathf.Sign(playerRigidbody.velocity.x) * dragForce, 0);
             }
             else // Stops all horizontal movement if the speed if smaller than 0.05f
             {
@@ -177,37 +172,42 @@ public class Player1 : MonoBehaviour
             }
         }
     }
-    void HandleFiringAndMovement()
+    void Move()
     {
         switch (_currentMovementMode)
         {
             case MovementMode.AIRBORNE:
                 {
                     // Handle horizontal input
-                    float horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
                     if (horizontalInput != 0)
                     {
                         playerRigidbody.AddForce(Vector2.right * horizontalInput * _airborneHorizontalForce);
                     }
 
-                    // Handle parachute input
-                    if (Input.GetButtonDown("Player1_Parachute"))
+                    if (dodgeTimer > 0 && !dodging) // Accelerates player up or down as long as the timer is greater than 0.
                     {
-                        playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
-                        parachuteGO.SetActive(!parachuteGO.activeSelf);
-                        parachuteIsOpen = !parachuteIsOpen;
-                        dodgeTimer = dodgeDuration;
+                        if (playerRigidbody.velocity.y > 0)
+                        {
+                            // Dodge down since we just closed the parachute
+                            dodgeDirection = Vector2.down;
+                        }
+                        else
+                        {
+                            // Dodge up since we just opened the parachute
+                            dodgeDirection = Vector2.up;
+                        }
+                        dodging = true;
                     }
-                    if (dodgeTimer > 0) // Accelerates player up or down as long as the timer is greater than 0.
+                    if (dodging)
                     {
-                        // Normalize player velocity and add a fixed speed boost. Invert player's X velocity's direction.
-                        playerRigidbody.velocity = ((Vector2)Vector3.Normalize(playerRigidbody.velocity) + Vector2.up * dodgeSpeedupMagnitude) * -Mathf.Sign(playerRigidbody.velocity.x);
+                        // Normalize player velocity and add a fixed speed boost.
+                        playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) + dodgeDirection * dodgeSpeedupMagnitude;
                     }
-
-                    // Handle firing input
-                    if (Input.GetButtonDown("Player1_Fire"))
+                    if (dodgeTimer < 0)
                     {
-                        Instantiate(bulletPrefab, transform.position, new Quaternion()).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                        // Reset dodge direction
+                        dodgeDirection = new Vector2();
+                        dodging = false;
                     }
                 }
                 break;
@@ -239,24 +239,14 @@ public class Player1 : MonoBehaviour
                 break;
             case MovementMode.JETPACK:
                 {
-                    // Controls all movement precisely by affecting velocity.
-                    float horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
-                    float verticalInput = Input.GetAxisRaw("Player1_Vertical");
-                    if (horizontalInput != 0)
+                    if (jetpackTimer > 0)
                     {
-                        playerRigidbody.velocity = new Vector2(_groundHorizontalVelocity * horizontalInput, playerRigidbody.velocity.y);
+                        // Controls all movement precisely by affecting velocity.
+                        playerRigidbody.velocity = Vector3.Normalize(new Vector2(horizontalInput, verticalInput)) * PickupManager.instance.jetpackVelocity;
                     }
                     else
                     {
-                        playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
-                    }
-                    if (verticalInput != 0)
-                    {
-                        playerRigidbody.velocity = new Vector2(_groundHorizontalVelocity * verticalInput, playerRigidbody.velocity.y);
-                    }
-                    else
-                    {
-                        playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, 0);
+                        _currentMovementMode = MovementMode.AIRBORNE;
                     }
                 }
                 break;
@@ -296,39 +286,43 @@ public class Player1 : MonoBehaviour
     private void FixedUpdate()
     {
         ApplySpeedLimit(); // Comes before HandleFiringAndMovement() because of the dodge mechanic that said function applies.
-        HandleFiringAndMovement();
+        Move();
         ApplyDrag();
     }
 
     private void Update()
     {
+        // Handle inputs
+        horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
+        verticalInput = Input.GetAxisRaw("Player1_Vertical");
 
-        // Handle firing input. Handles both button holding and tapping
-        if (Input.GetButtonDown("Player1_Fire"))
+        if (Input.GetButtonDown("Player1_Parachute")) // Handle parachute input
+        {
+            playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
+            parachuteGO.SetActive(!parachuteGO.activeSelf);
+            parachuteIsOpen = !parachuteIsOpen;
+            dodgeTimer = dodgeDuration;
+        }
+        if (Input.GetButtonDown("Player1_Fire")) // Handle firing input
         {
             if (fireCooldown < 0)
             {
-                InstantiateBullet();
-                fireCooldown = 1 / firingFrequency;
+                Instantiate(bulletPrefab, transform.position, new Quaternion()).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                fireCooldown = 1 / _firingFrequency;
             }
         }
-        
+
         // Handle losing condition
         if (health <= 0)
         {
             GameManager.instance.GameOver(gameObject);
         }
 
-        // Handle projectile speed up mechanic
-        if (speedupTimer < 0)
-        {
-            speedupTimer = GameManager.instance.defaultBulletSpeed;
-        }
-
         // Update timers
         fireCooldown -= Time.deltaTime;
         dodgeTimer -= Time.deltaTime;
         speedupTimer -= Time.deltaTime;
+        jetpackTimer -= Time.deltaTime;
     }
     #endregion
 

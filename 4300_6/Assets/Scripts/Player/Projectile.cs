@@ -9,6 +9,7 @@ public class Projectile : MonoBehaviour
     public float speed;
 
     // References
+    [SerializeField] GameObject projectileSpriteGO = null;
     [SerializeField] GameObject destructionSpriteGO = null;
     Rigidbody2D bulletRigidbody2D = null;
     CircleCollider2D bulletCollider = null;
@@ -26,6 +27,7 @@ public class Projectile : MonoBehaviour
         bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
         bulletCollider.enabled = false;
         destructionSpriteGO.SetActive(true);
+        projectileSpriteGO.SetActive(false);
 
         yield return new WaitForSeconds(0.5f);
 

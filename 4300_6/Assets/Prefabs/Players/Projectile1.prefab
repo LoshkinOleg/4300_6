@@ -164,7 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
-  destructionSpriteGO: {fileID: 0}
+  projectileSpriteGO: {fileID: 2463335392912139255}
+  destructionSpriteGO: {fileID: 8791773816685965899}
 --- !u!1 &8791773816685965899
 GameObject:
   m_ObjectHideFlags: 0

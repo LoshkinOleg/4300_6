@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] float _defaultBulletSpeed = 10;
 
     // References
+    [SerializeField] GameObject pickupAndCrateManagers = null;
+    [SerializeField] GameObject soundManager = null;
     static GameManager _instance = null;
     Player1 _player1 = null;
     // GameObject _player2 = null;
@@ -51,6 +53,27 @@ public class GameManager : MonoBehaviour
                 winnerText.text = "Player 1!";
             }
         }
+        else if(scene.name == "Level1")
+        {
+            if (PickupManager.instance == null && CrateManager.instance == null)
+            {
+                Instantiate(pickupAndCrateManagers);
+            }
+            else if ((PickupManager.instance != null && CrateManager.instance == null) || (PickupManager.instance == null && CrateManager.instance != null))
+            {
+                Debug.LogError("GameManager.cs: Reference to one of the managers is missing: PickupManager: " + PickupManager.instance + " ; CrateManager: " + CrateManager.instance);
+            }
+
+            _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<Player1>();
+            // _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player2>();
+        }
+        if (scene.name == "MainMenu")
+        {
+            if (SoundManager.instance == null)
+            {
+                Instantiate(soundManager);
+            }
+        }
     }
     #endregion
 
@@ -61,12 +84,6 @@ public class GameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnScoreLoaded;
-    }
-
-    private void Start()
-    {
-        _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<Player1>();
-        // _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player2>();
     }
     #endregion
 }

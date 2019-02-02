@@ -31,7 +31,7 @@ public class SoundManager : MonoBehaviour
     static SoundManager _instance = null;
 
     // Public properties
-    static SoundManager instance => _instance;
+    static public SoundManager instance => _instance;
     #endregion
 
     // Public methods
@@ -86,6 +86,7 @@ public class SoundManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+        DontDestroyOnLoad(gameObject);
     }
     #endregion
 }

@@ -14,6 +14,8 @@ public class PickupManager : MonoBehaviour
     [SerializeField] float chanceForPickupToSpawnPerSecond = 10;
     [SerializeField] float healthPickupValue = 0.5f;
     [SerializeField] float _pickupSpeedLimit = 3;
+    [SerializeField] float _jetpackDuration = 10;
+    [SerializeField] float _jetpackVelocity = 7;
 
     // References
     [SerializeField] GameObject lifePickupPrefab = null;
@@ -32,6 +34,8 @@ public class PickupManager : MonoBehaviour
     public float pickupSpeedLimit => _pickupSpeedLimit;
     public float speedupBulletSpeed => _speedupBulletSpeed;
     public float speedupPickupTime => _speedupPickupTime;
+    public float jetpackDuration => _jetpackDuration;
+    public float jetpackVelocity => _jetpackVelocity;
 
     // Private variables
     float gameViewHorizontalDistanceInMeters = 17.78f;

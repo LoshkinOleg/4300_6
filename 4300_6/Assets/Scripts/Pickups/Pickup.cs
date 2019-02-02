@@ -74,15 +74,18 @@ public class Pickup : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Mathf.Abs(pickupRigidbody2D.velocity.y) > PickupManager.instance.pickupSpeedLimit)
+        if (pickupRigidbody2D != null)
         {
-            if (pickupRigidbody2D.velocity.y > 0)
+            if (Mathf.Abs(pickupRigidbody2D.velocity.y) > PickupManager.instance.pickupSpeedLimit)
             {
-                pickupRigidbody2D.velocity = new Vector2(pickupRigidbody2D.velocity.x, PickupManager.instance.pickupSpeedLimit);
-            }
-            else
-            {
-                pickupRigidbody2D.velocity = new Vector2(pickupRigidbody2D.velocity.x, -PickupManager.instance.pickupSpeedLimit);
+                if (pickupRigidbody2D.velocity.y > 0)
+                {
+                    pickupRigidbody2D.velocity = new Vector2(pickupRigidbody2D.velocity.x, PickupManager.instance.pickupSpeedLimit);
+                }
+                else
+                {
+                    pickupRigidbody2D.velocity = new Vector2(pickupRigidbody2D.velocity.x, -PickupManager.instance.pickupSpeedLimit);
+                }
             }
         }
     }
