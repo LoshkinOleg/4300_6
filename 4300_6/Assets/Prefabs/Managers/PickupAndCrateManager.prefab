@@ -74,3 +74,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f67307b298b6fbc49b50ea1da235dc54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _crateSpeedLimit: 1
+  chanceToSpawnCratePerSecond: 25
+  crateSpriteXAxisSize: 3
+  cratePrefab: {fileID: 6194907134823173452, guid: 43e36453f6ec19245a34bb326ae71f4d,
+    type: 3}

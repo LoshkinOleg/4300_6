@@ -36,9 +36,6 @@ public class PickupManager : MonoBehaviour
     public float speedupPickupTime => _speedupPickupTime;
     public float jetpackDuration => _jetpackDuration;
     public float jetpackVelocity => _jetpackVelocity;
-
-    // Private variables
-    float gameViewHorizontalDistanceInMeters = 17.78f;
     #endregion
 
     // Public methods
@@ -102,7 +99,7 @@ public class PickupManager : MonoBehaviour
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.EnterJetpackMode();
+            GameManager.instance.player1.SetMovementMode(Player1.MovementMode.JETPACK);
         }
         else
         {

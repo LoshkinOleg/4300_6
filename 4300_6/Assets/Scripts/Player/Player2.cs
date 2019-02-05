@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player1 : MonoBehaviour
+public class Player2 : MonoBehaviour
 {
     // Classes and Enums
     #region Classes and Enums
@@ -144,8 +144,8 @@ public class Player1 : MonoBehaviour
     Vector2 dodgeDirection = new Vector2();
     bool dodging = false;
     float jetpackTimer;
-    HorizontalDirection currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-    VerticalDirection currentGunDirection = VerticalDirection.RIGHT;
+    HorizontalDirection currentPlayerSpriteDirection = HorizontalDirection.LEFT;
+    VerticalDirection currentGunDirection = VerticalDirection.LEFT;
     #endregion
 
     // PUBLIC METHODS
@@ -174,7 +174,7 @@ public class Player1 : MonoBehaviour
                 break;
             case MovementMode.GROUND:
                 {
-                    
+
                 }
                 break;
             case MovementMode.JETPACK:
@@ -192,11 +192,11 @@ public class Player1 : MonoBehaviour
     #region Private methods
     float CalculateNorm(Vector2 vector)
     {
-        return Mathf.Sqrt(Mathf.Pow(vector.x,2)+Mathf.Pow(vector.y,2));
+        return Mathf.Sqrt(Mathf.Pow(vector.x, 2) + Mathf.Pow(vector.y, 2));
     }
     void ApplyDrag()
     {
-        if (Input.GetAxisRaw("Player1_Horizontal") == 0)
+        if (Input.GetAxisRaw("Player2_Horizontal") == 0)
         {
             if (Mathf.Abs(playerRigidbody.velocity.x) > 0.05f) // Applies drag if the horizontal speed is greater than 0.05f
             {
@@ -210,7 +210,7 @@ public class Player1 : MonoBehaviour
     }
     bool CheckEnemyDirection() // Returns true if the enemy is on the right or at the same x axis, false if he is on the left.
     {
-        if ((GameManager.instance.player2.gameObject.transform.position - transform.position).x >= 0)
+        if ((GameManager.instance.player1.gameObject.transform.position - transform.position).x >= 0)
         {
             return true;
         }
@@ -328,8 +328,9 @@ public class Player1 : MonoBehaviour
         {
             case HorizontalDirection.LEFT:
                 {
-                    playerSpriteGO.transform.eulerAngles = new Vector3(0,180,0);
-                }break;
+                    playerSpriteGO.transform.eulerAngles = new Vector3(0, 180, 0);
+                }
+                break;
             case HorizontalDirection.RIGHT:
                 {
                     playerSpriteGO.transform.eulerAngles = new Vector3(0, 0, 0);
@@ -341,8 +342,9 @@ public class Player1 : MonoBehaviour
         {
             case VerticalDirection.LEFT:
                 {
-                    gunGO.transform.eulerAngles = new Vector3(0,180,0);
-                }break;
+                    gunGO.transform.eulerAngles = new Vector3(0, 180, 0);
+                }
+                break;
             case VerticalDirection.RIGHT:
                 {
                     gunGO.transform.eulerAngles = new Vector3(0, 0, 0);
@@ -360,7 +362,7 @@ public class Player1 : MonoBehaviour
                 break;
             case VerticalDirection.ANYWHERE:
                 {
-                    gunGO.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2(aimingVerticalInput,aimingHorizontalInput) * Mathf.Rad2Deg);
+                    gunGO.transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2(aimingVerticalInput, aimingHorizontalInput) * Mathf.Rad2Deg);
                 }
                 break;
         }
@@ -401,7 +403,7 @@ public class Player1 : MonoBehaviour
             case MovementMode.GROUND:
                 {
                     // Controlls horizontal movement precisely by affecting velocity.
-                    float horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
+                    float horizontalInput = Input.GetAxisRaw("Player2_Horizontal");
                     if (horizontalInput != 0)
                     {
                         playerRigidbody.velocity = new Vector2(_groundHorizontalVelocity * horizontalInput, playerRigidbody.velocity.y);
@@ -446,13 +448,9 @@ public class Player1 : MonoBehaviour
     }
     void ApplySpeedLimit()
     {
-        Vector2 velocityV2 = playerRigidbody.velocity;
-        float velocityFloat = CalculateNorm(velocityV2);
-        float slope = velocityV2.y / velocityV2.x;
-
-        if (velocityFloat > _playerSpeedLimit)
+        if (CalculateNorm(playerRigidbody.velocity) > _playerSpeedLimit)
         {
-            playerRigidbody.velocity = (Vector2)Vector3.Normalize(velocityV2) * _playerSpeedLimit;
+            playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) * _playerSpeedLimit;
         }
     }
     #endregion
@@ -488,16 +486,16 @@ public class Player1 : MonoBehaviour
     private void Update()
     {
         // Handle inputs
-        horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
-        verticalInput = Input.GetAxisRaw("Player1_Vertical");
-        aimingHorizontalInput = Input.GetAxisRaw("Player1_Aiming_Horizontal");
-        aimingVerticalInput = Input.GetAxisRaw("Player1_Aiming_Vertical");
+        horizontalInput = Input.GetAxisRaw("Player2_Horizontal");
+        verticalInput = Input.GetAxisRaw("Player2_Vertical");
+        aimingHorizontalInput = Input.GetAxisRaw("Player2_Aiming_Horizontal");
+        aimingVerticalInput = Input.GetAxisRaw("Player2_Aiming_Vertical");
 
         switch (currentMovementMode)
         {
             case MovementMode.AIRBORNE:
                 {
-                    if (Input.GetButtonDown("Player1_Parachute")) // Handle parachute input
+                    if (Input.GetButtonDown("Player2_Parachute")) // Handle parachute input
                     {
                         playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
                         parachuteGO.SetActive(!parachuteGO.activeSelf);
@@ -508,7 +506,7 @@ public class Player1 : MonoBehaviour
                 break;
             case MovementMode.GROUND:
                 {
-                    if (Input.GetButtonDown("Player1_Parachute")) // Handle parachute input
+                    if (Input.GetButtonDown("Player2_Parachute")) // Handle parachute input
                     {
                         playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
                         parachuteGO.SetActive(!parachuteGO.activeSelf);
@@ -519,7 +517,7 @@ public class Player1 : MonoBehaviour
                 break;
         }
 
-        if (Input.GetButtonDown("Player1_Fire")) // Handle firing input
+        if (Input.GetButtonDown("Player2_Fire")) // Handle firing input
         {
             firing = true;
         }

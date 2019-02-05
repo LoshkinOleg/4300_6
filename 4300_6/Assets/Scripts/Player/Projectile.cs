@@ -22,16 +22,23 @@ public class Projectile : MonoBehaviour
     #region Private methods
     IEnumerator DestroyBullet()
     {
-        isPlayingDestructionAnimation = true;
+        if (bulletRigidbody2D != null)
+        {
+            isPlayingDestructionAnimation = true;
 
-        bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
-        bulletCollider.enabled = false;
-        destructionSpriteGO.SetActive(true);
-        projectileSpriteGO.SetActive(false);
+            bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+            bulletCollider.enabled = false;
+            destructionSpriteGO.SetActive(true);
+            projectileSpriteGO.SetActive(false);
 
-        yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.5f);
 
-        Destroy(gameObject);
+            Destroy(gameObject);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0);
+        }
     }
     #endregion
 
@@ -47,13 +54,16 @@ public class Projectile : MonoBehaviour
     {
         if (!isPlayingDestructionAnimation)
         {
-            bulletRigidbody2D.velocity = Vector2.right * speed;
+            bulletRigidbody2D.velocity = transform.right * speed;
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        StartCoroutine(DestroyBullet());
+        if (!isPlayingDestructionAnimation)
+        {
+            StartCoroutine(DestroyBullet());
+        }
     }
     #endregion
 

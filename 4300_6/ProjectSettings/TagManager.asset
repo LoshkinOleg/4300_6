@@ -6,6 +6,12 @@ TagManager:
   tags:
   - Player1
   - Player2
+  - Storm_Pickup
+  - Health_Pickup
+  - Shield_Pickup
+  - Slowdown_Pickup
+  - Speedup_Pickup
+  - Destructor
   layers:
   - Default
   - TransparentFX
@@ -15,13 +21,13 @@ TagManager:
   - UI
   - 
   - 
-  - PickupDestructor
+  - Destructor
   - Player1
   - Player2
   - Projectile1
   - Projectile2
   - Pickup
-  - 
+  - Crate
   - 
   - 
   - 
@@ -43,17 +49,20 @@ TagManager:
   - name: Background
     uniqueID: 62541281
     locked: 0
+  - name: Projectiles
+    uniqueID: 1248557665
+    locked: 0
   - name: Players
     uniqueID: 1842296729
     locked: 0
-  - name: Default
-    uniqueID: 0
+  - name: Crates
+    uniqueID: 3399795763
     locked: 0
   - name: Pickups
     uniqueID: 3792060533
     locked: 0
-  - name: Projectiles
-    uniqueID: 1248557665
+  - name: Default
+    uniqueID: 0
     locked: 0
   - name: UI
     uniqueID: 1702784059

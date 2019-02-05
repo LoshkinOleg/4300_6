@@ -15,16 +15,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject soundManager = null;
     static GameManager _instance = null;
     Player1 _player1 = null;
-    // GameObject _player2 = null;
+    Player2 _player2 = null;
 
     // Public properties
     public static GameManager instance => _instance;
     public float defaultBulletSpeed => _defaultBulletSpeed;
     public Player1 player1 => _player1;
-    // public Player2 player2 => _player2;
+    public Player2 player2 => _player2;
+    public float gameViewHorizontalDistanceInMeters => _gameViewHorizontalDistanceInMeters;
+    public float gameViewVerticalDistanceInMeters => _gameViewVerticalDistanceInMeters;
+    public Vector3 averagePlayerPosition => _averagePlayerPosition;
 
     // Private variables
     GameObject loser = null;
+    float _gameViewHorizontalDistanceInMeters = 17.78f;
+    float _gameViewVerticalDistanceInMeters = 10f;
+    Vector3 _averagePlayerPosition = new Vector3();
     #endregion
 
     // Public methods
@@ -65,7 +71,7 @@ public class GameManager : MonoBehaviour
             }
 
             _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<Player1>();
-            // _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player2>();
+            _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player2>();
         }
         if (scene.name == "MainMenu")
         {
@@ -74,6 +80,18 @@ public class GameManager : MonoBehaviour
                 Instantiate(soundManager);
             }
         }
+    }
+    Vector3 FindAveragePlayerPosition()
+    {
+        // Reset targetPosition
+        Vector3 averagePosition = new Vector3();
+
+        // Find average position
+        averagePosition += player1.transform.position;
+        averagePosition += player2.transform.position;
+        averagePosition /= 2;
+
+        return averagePosition;
     }
     #endregion
 
@@ -84,6 +102,10 @@ public class GameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnScoreLoaded;
+    }
+    private void FixedUpdate()
+    {
+        _averagePlayerPosition = FindAveragePlayerPosition();
     }
     #endregion
 }
