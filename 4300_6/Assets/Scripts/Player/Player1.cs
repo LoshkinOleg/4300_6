@@ -13,15 +13,14 @@ public class Player1 : MonoBehaviour
         GROUND,
         JETPACK
     }
-    public enum HorizontalDirection
+    public enum PlayerDirection
     {
         LEFT,
         RIGHT
     }
-    public enum VerticalDirection
+    public enum GunDirection
     {
-        LEFT,
-        RIGHT,
+        FORWARD,
         UP,
         DOWN,
         ANYWHERE
@@ -144,8 +143,8 @@ public class Player1 : MonoBehaviour
     Vector2 dodgeDirection = new Vector2();
     bool dodging = false;
     float jetpackTimer;
-    HorizontalDirection currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-    VerticalDirection currentGunDirection = VerticalDirection.RIGHT;
+    PlayerDirection currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+    GunDirection currentGunDirection = GunDirection.FORWARD;
     #endregion
 
     // PUBLIC METHODS
@@ -229,14 +228,12 @@ public class Player1 : MonoBehaviour
                 if (horizontalInput > 0)
                 {
                     // H+
-                    currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
                 }
                 else
                 {
                     // H-
-                    currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-                    currentGunDirection = VerticalDirection.LEFT;
+                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
                 }
             }
             else
@@ -244,44 +241,29 @@ public class Player1 : MonoBehaviour
                 // H = 0
                 if (CheckEnemyDirection())
                 {
-                    currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
                 }
                 else
                 {
-                    currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-                    currentGunDirection = VerticalDirection.LEFT;
+                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
                 }
             }
 
             //Handle gun orientation
-            if (Mathf.Abs(aimingHorizontalInput) > Mathf.Abs(aimingVerticalInput))
-            {
-                // horizontal is biggest
-                if (aimingHorizontalInput > 0)
-                {
-                    // H+
-                    currentGunDirection = VerticalDirection.RIGHT;
-                }
-                else
-                {
-                    // H-
-                    currentGunDirection = VerticalDirection.LEFT;
-                }
-            }
-            else if (Mathf.Abs(aimingHorizontalInput) < Mathf.Abs(aimingVerticalInput))
-            {
                 // vertcial is biggest
-                if (aimingVerticalInput > 0)
-                {
-                    // V+
-                    currentGunDirection = VerticalDirection.DOWN;
-                }
-                else
-                {
-                    // V-
-                    currentGunDirection = VerticalDirection.UP;
-                }
+            if (aimingVerticalInput > 0)
+            {
+                // V+
+                currentGunDirection = GunDirection.DOWN;
+            }
+            else if (aimingVerticalInput < 0)
+            {
+                // V-
+                currentGunDirection = GunDirection.UP;
+            }
+            else
+            {
+                currentGunDirection = GunDirection.FORWARD;
             }
         }
         else
@@ -293,14 +275,12 @@ public class Player1 : MonoBehaviour
                 if (horizontalInput > 0)
                 {
                     // H+
-                    currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
                 }
                 else
                 {
                     // H-
-                    currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-                    currentGunDirection = VerticalDirection.LEFT;
+                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
                 }
             }
             else
@@ -308,61 +288,110 @@ public class Player1 : MonoBehaviour
                 // H = 0
                 if (CheckEnemyDirection())
                 {
-                    currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
                 }
                 else
                 {
-                    currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-                    currentGunDirection = VerticalDirection.LEFT;
+                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
                 }
             }
-            currentGunDirection = VerticalDirection.ANYWHERE;
+            currentGunDirection = GunDirection.ANYWHERE;
         }
     }
     void OrientSpriteAndGun()
     {
         AnalyseInputsForDirection();
 
-        switch (currentPlayerSpriteDirection)
+        if (currentMovementMode != MovementMode.GROUND)
         {
-            case HorizontalDirection.LEFT:
-                {
-                    playerSpriteGO.transform.eulerAngles = new Vector3(0,180,0);
-                }break;
-            case HorizontalDirection.RIGHT:
-                {
-                    playerSpriteGO.transform.eulerAngles = new Vector3(0, 0, 0);
-                }
-                break;
-        }
+            switch (currentPlayerSpriteDirection)
+            {
+                case PlayerDirection.LEFT:
+                    {
+                        transform.eulerAngles = new Vector3(0, 180, 0);
 
-        switch (currentGunDirection)
+                        switch (currentGunDirection)
+                        {
+                            case GunDirection.FORWARD:
+                                {
+                                    gunGO.transform.localEulerAngles = new Vector3(0, 0, 0);
+                                }
+                                break;
+                            case GunDirection.UP:
+                                {
+                                    gunGO.transform.localEulerAngles = new Vector3(0, 0, -90);
+                                }
+                                break;
+                            case GunDirection.DOWN:
+                                {
+                                    gunGO.transform.localEulerAngles = new Vector3(0, 0, 90);
+                                }
+                                break;
+                            case GunDirection.ANYWHERE:
+                                {
+                                    gunGO.transform.localEulerAngles = new Vector3(0, 180, Mathf.Atan2(aimingVerticalInput, aimingHorizontalInput) * Mathf.Rad2Deg);
+                                }
+                                break;
+                        }
+                    }
+                    break;
+                case PlayerDirection.RIGHT:
+                    {
+                        transform.eulerAngles = new Vector3(0, 0, 0);
+
+                        switch (currentGunDirection)
+                        {
+                            case GunDirection.FORWARD:
+                                {
+                                    gunGO.transform.localEulerAngles = new Vector3(0, 0, 0);
+                                }
+                                break;
+                            case GunDirection.UP:
+                                {
+                                    gunGO.transform.localEulerAngles = new Vector3(0, 0, -90);
+                                }
+                                break;
+                            case GunDirection.DOWN:
+                                {
+                                    gunGO.transform.localEulerAngles = new Vector3(0, 0, 90);
+                                }
+                                break;
+                            case GunDirection.ANYWHERE:
+                                {
+                                    gunGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(aimingVerticalInput, aimingHorizontalInput) * Mathf.Rad2Deg);
+                                }
+                                break;
+                        }
+                    }
+                    break;
+            }
+        }
+        else // If it is GROUND
         {
-            case VerticalDirection.LEFT:
+            if (aimingHorizontalInput > 0)
+            {
+                transform.localEulerAngles = new Vector3(0,0,0);
+                gunGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(aimingVerticalInput, aimingHorizontalInput) * Mathf.Rad2Deg);
+            }
+            else if (aimingHorizontalInput < 0)
+            {
+                transform.localEulerAngles = new Vector3(0, 180, 0);
+                gunGO.transform.localEulerAngles = new Vector3(180, 180, -Mathf.Atan2(aimingVerticalInput, aimingHorizontalInput) * Mathf.Rad2Deg);
+            }
+            else
+            {
+                if (CheckEnemyDirection())
                 {
-                    gunGO.transform.eulerAngles = new Vector3(0,180,0);
-                }break;
-            case VerticalDirection.RIGHT:
-                {
-                    gunGO.transform.eulerAngles = new Vector3(0, 0, 0);
+                    // enemy on the right
+                    transform.localEulerAngles = new Vector3(0, 0, 0);
+                    gunGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(aimingVerticalInput, aimingHorizontalInput) * Mathf.Rad2Deg);
                 }
-                break;
-            case VerticalDirection.UP:
+                else
                 {
-                    gunGO.transform.eulerAngles = new Vector3(0, 0, -90);
+                    // enemy on the left
+                    transform.localEulerAngles = new Vector3(0, 180, 0);
                 }
-                break;
-            case VerticalDirection.DOWN:
-                {
-                    gunGO.transform.eulerAngles = new Vector3(0, 0, 90);
-                }
-                break;
-            case VerticalDirection.ANYWHERE:
-                {
-                    gunGO.transform.eulerAngles = new Vector3(0,0,Mathf.Atan2(aimingVerticalInput,aimingHorizontalInput) * Mathf.Rad2Deg);
-                }
-                break;
+            }
         }
     }
     void Move()

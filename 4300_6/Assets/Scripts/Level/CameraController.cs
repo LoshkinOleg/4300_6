@@ -6,7 +6,8 @@ public class CameraController : MonoBehaviour
 {
     // Inspector variables
     [SerializeField] float screenEdgeBuffer = 1;
-    [SerializeField] float minimalZoom = 6.5f;
+    [SerializeField] float minimalZoom = 1;
+    [SerializeField] float maximalZoom = 5;
     [SerializeField] GameObject[] players;
 
     // References
@@ -23,10 +24,61 @@ public class CameraController : MonoBehaviour
             Vector2 distanceToPlayerV2 = players[i].transform.position - GameManager.instance.averagePlayerPosition;
             desiredSize = Mathf.Max(Mathf.Abs(distanceToPlayerV2.y), Mathf.Abs(distanceToPlayerV2.x) / mainCamera.aspect); // Pick between vertical and horizontal camera view distances
         }
-        desiredSize = Mathf.Max(desiredSize, minimalZoom);
         desiredSize += screenEdgeBuffer;
 
+        if (mainCamera.orthographicSize * mainCamera.aspect * 2 > GameManager.instance.gameViewHorizontalDistanceInMeters)
+        {
+            return desiredSize = maximalZoom;
+        }
+
+        desiredSize = Mathf.Max(desiredSize, minimalZoom);
+        desiredSize = Mathf.Min(desiredSize, maximalZoom);
+
         return desiredSize;
+    }
+    bool CheckIfCameraGoesOutsideBoundsHorizontally()
+    {
+        if (mainCamera.orthographicSize * mainCamera.aspect + Mathf.Abs(GameManager.instance.averagePlayerPosition.x) >= GameManager.instance.gameViewHorizontalDistanceInMeters / 2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    bool CheckIfCameraGoesOutsideBoundsVertically()
+    {
+        if (mainCamera.orthographicSize + Mathf.Abs(GameManager.instance.averagePlayerPosition.y) >= GameManager.instance.gameViewVerticalDistanceInMeters / 2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    void BringCameraInsideBoundsHorizontally()
+    {
+        if (GameManager.instance.averagePlayerPosition.x <= 0)
+        {
+            transform.position += new Vector3((mainCamera.orthographicSize * mainCamera.aspect) - (GameManager.instance.gameViewHorizontalDistanceInMeters / 2 + transform.position.x), 0, 0);
+        }
+        else
+        {
+            transform.position -= new Vector3(((mainCamera.orthographicSize * mainCamera.aspect) + transform.position.x) - GameManager.instance.gameViewHorizontalDistanceInMeters / 2, 0, 0);
+        }
+    }
+    void BringCameraInsideBoundsVertically()
+    {
+        if (GameManager.instance.averagePlayerPosition.y <= 0)
+        {
+            transform.position += new Vector3(0, (mainCamera.orthographicSize) - (GameManager.instance.gameViewVerticalDistanceInMeters / 2 + transform.position.y), 0);
+        }
+        else
+        {
+            transform.position -= new Vector3(0, (mainCamera.orthographicSize + transform.position.y) - (GameManager.instance.gameViewVerticalDistanceInMeters / 2), 0);
+        }
     }
     #endregion
 
@@ -39,6 +91,16 @@ public class CameraController : MonoBehaviour
     void FixedUpdate()
     {
         transform.position = GameManager.instance.averagePlayerPosition + new Vector3(0,0,transform.position.z);
+        
+        if (CheckIfCameraGoesOutsideBoundsHorizontally())
+        {
+            BringCameraInsideBoundsHorizontally();
+        }
+        if (CheckIfCameraGoesOutsideBoundsVertically())
+        {
+            BringCameraInsideBoundsVertically();
+        }
+
         mainCamera.orthographicSize = FindRequiredSize();
     }
     #endregion

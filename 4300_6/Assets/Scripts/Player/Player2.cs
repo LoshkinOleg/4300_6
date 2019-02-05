@@ -13,12 +13,12 @@ public class Player2 : MonoBehaviour
         GROUND,
         JETPACK
     }
-    public enum HorizontalDirection
+    public enum PlayerDirection
     {
         LEFT,
         RIGHT
     }
-    public enum VerticalDirection
+    public enum GunDirection
     {
         LEFT,
         RIGHT,
@@ -144,8 +144,8 @@ public class Player2 : MonoBehaviour
     Vector2 dodgeDirection = new Vector2();
     bool dodging = false;
     float jetpackTimer;
-    HorizontalDirection currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-    VerticalDirection currentGunDirection = VerticalDirection.LEFT;
+    PlayerDirection currentPlayerSpriteDirection = PlayerDirection.LEFT;
+    GunDirection currentGunDirection = GunDirection.LEFT;
     #endregion
 
     // PUBLIC METHODS
@@ -229,14 +229,14 @@ public class Player2 : MonoBehaviour
                 if (horizontalInput > 0)
                 {
                     // H+
-                    currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+                    currentGunDirection = GunDirection.RIGHT;
                 }
                 else
                 {
                     // H-
-                    currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-                    currentGunDirection = VerticalDirection.LEFT;
+                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
+                    currentGunDirection = GunDirection.LEFT;
                 }
             }
             else
@@ -244,13 +244,13 @@ public class Player2 : MonoBehaviour
                 // H = 0
                 if (CheckEnemyDirection())
                 {
-                    currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+                    currentGunDirection = GunDirection.RIGHT;
                 }
                 else
                 {
-                    currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-                    currentGunDirection = VerticalDirection.LEFT;
+                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
+                    currentGunDirection = GunDirection.LEFT;
                 }
             }
 
@@ -261,12 +261,18 @@ public class Player2 : MonoBehaviour
                 if (aimingHorizontalInput > 0)
                 {
                     // H+
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    if (currentPlayerSpriteDirection == PlayerDirection.RIGHT) // Prevents shoulder dislocation.
+                    {
+                        currentGunDirection = GunDirection.RIGHT;
+                    }
                 }
                 else
                 {
                     // H-
-                    currentGunDirection = VerticalDirection.LEFT;
+                    if (currentPlayerSpriteDirection == PlayerDirection.LEFT)
+                    {
+                        currentGunDirection = GunDirection.LEFT;
+                    }
                 }
             }
             else if (Mathf.Abs(aimingHorizontalInput) < Mathf.Abs(aimingVerticalInput))
@@ -275,12 +281,12 @@ public class Player2 : MonoBehaviour
                 if (aimingVerticalInput > 0)
                 {
                     // V+
-                    currentGunDirection = VerticalDirection.DOWN;
+                    currentGunDirection = GunDirection.DOWN;
                 }
                 else
                 {
                     // V-
-                    currentGunDirection = VerticalDirection.UP;
+                    currentGunDirection = GunDirection.UP;
                 }
             }
         }
@@ -293,14 +299,14 @@ public class Player2 : MonoBehaviour
                 if (horizontalInput > 0)
                 {
                     // H+
-                    currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+                    currentGunDirection = GunDirection.RIGHT;
                 }
                 else
                 {
                     // H-
-                    currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-                    currentGunDirection = VerticalDirection.LEFT;
+                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
+                    currentGunDirection = GunDirection.LEFT;
                 }
             }
             else
@@ -308,16 +314,16 @@ public class Player2 : MonoBehaviour
                 // H = 0
                 if (CheckEnemyDirection())
                 {
-                    currentPlayerSpriteDirection = HorizontalDirection.RIGHT;
-                    currentGunDirection = VerticalDirection.RIGHT;
+                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+                    currentGunDirection = GunDirection.RIGHT;
                 }
                 else
                 {
-                    currentPlayerSpriteDirection = HorizontalDirection.LEFT;
-                    currentGunDirection = VerticalDirection.LEFT;
+                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
+                    currentGunDirection = GunDirection.LEFT;
                 }
             }
-            currentGunDirection = VerticalDirection.ANYWHERE;
+            currentGunDirection = GunDirection.ANYWHERE;
         }
     }
     void OrientSpriteAndGun()
@@ -326,12 +332,12 @@ public class Player2 : MonoBehaviour
 
         switch (currentPlayerSpriteDirection)
         {
-            case HorizontalDirection.LEFT:
+            case PlayerDirection.LEFT:
                 {
                     playerSpriteGO.transform.eulerAngles = new Vector3(0, 180, 0);
                 }
                 break;
-            case HorizontalDirection.RIGHT:
+            case PlayerDirection.RIGHT:
                 {
                     playerSpriteGO.transform.eulerAngles = new Vector3(0, 0, 0);
                 }
@@ -340,27 +346,27 @@ public class Player2 : MonoBehaviour
 
         switch (currentGunDirection)
         {
-            case VerticalDirection.LEFT:
+            case GunDirection.LEFT:
                 {
                     gunGO.transform.eulerAngles = new Vector3(0, 180, 0);
                 }
                 break;
-            case VerticalDirection.RIGHT:
+            case GunDirection.RIGHT:
                 {
                     gunGO.transform.eulerAngles = new Vector3(0, 0, 0);
                 }
                 break;
-            case VerticalDirection.UP:
+            case GunDirection.UP:
                 {
                     gunGO.transform.eulerAngles = new Vector3(0, 0, -90);
                 }
                 break;
-            case VerticalDirection.DOWN:
+            case GunDirection.DOWN:
                 {
                     gunGO.transform.eulerAngles = new Vector3(0, 0, 90);
                 }
                 break;
-            case VerticalDirection.ANYWHERE:
+            case GunDirection.ANYWHERE:
                 {
                     gunGO.transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2(aimingVerticalInput, aimingHorizontalInput) * Mathf.Rad2Deg);
                 }
@@ -448,9 +454,13 @@ public class Player2 : MonoBehaviour
     }
     void ApplySpeedLimit()
     {
-        if (CalculateNorm(playerRigidbody.velocity) > _playerSpeedLimit)
+        Vector2 velocityV2 = playerRigidbody.velocity;
+        float velocityFloat = CalculateNorm(velocityV2);
+        float slope = velocityV2.y / velocityV2.x;
+
+        if (velocityFloat > _playerSpeedLimit)
         {
-            playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) * _playerSpeedLimit;
+            playerRigidbody.velocity = (Vector2)Vector3.Normalize(velocityV2) * _playerSpeedLimit;
         }
     }
     #endregion

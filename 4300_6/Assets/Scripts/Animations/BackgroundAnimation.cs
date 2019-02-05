@@ -30,9 +30,6 @@ public class BackgroundAnimation : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Follow players
-        transform.position = GameManager.instance.averagePlayerPosition;
-
         // Parallax
         for (int i = 0; i < 2; i++)
         {
