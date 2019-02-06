@@ -13,22 +13,24 @@ public class GameManager : MonoBehaviour
     // References
     [SerializeField] GameObject pickupAndCrateManagers = null;
     [SerializeField] GameObject soundManager = null;
+    BoxCollider2D _bottomBoundsCollider = null;
     static GameManager _instance = null;
-    Player1 _player1 = null;
-    Player2 _player2 = null;
+    Player _player1 = null;
+    Player _player2 = null;
     Rigidbody2D _player1RB = null;
     Rigidbody2D _player2RB = null;
 
     // Public properties
     public static GameManager instance => _instance;
     public float defaultBulletSpeed => _defaultBulletSpeed;
-    public Player1 player1 => _player1;
-    public Player2 player2 => _player2;
+    public Player player1 => _player1;
+    public Player player2 => _player2;
     public Rigidbody2D player1RB => _player1RB;
     public Rigidbody2D player2RB => _player2RB;
     public float gameViewHorizontalDistanceInMeters => _gameViewHorizontalDistanceInMeters;
     public float gameViewVerticalDistanceInMeters => _gameViewVerticalDistanceInMeters;
     public Vector3 averagePlayerPosition => _averagePlayerPosition;
+    public BoxCollider2D bottomBoundsCollider => _bottomBoundsCollider;
 
     // Private variables
     GameObject loser = null;
@@ -74,10 +76,12 @@ public class GameManager : MonoBehaviour
                 Debug.LogError("GameManager.cs: Reference to one of the managers is missing: PickupManager: " + PickupManager.instance + " ; CrateManager: " + CrateManager.instance);
             }
 
-            _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<Player1>();
+            _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<Player>();
             _player1RB = _player1.gameObject.GetComponent<Rigidbody2D>();
-            _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player2>();
+            _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player>();
             _player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
+
+            _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
         }
         if (scene.name == "MainMenu")
         {

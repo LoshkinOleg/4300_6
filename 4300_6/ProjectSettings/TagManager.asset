@@ -12,6 +12,7 @@ TagManager:
   - Slowdown_Pickup
   - Speedup_Pickup
   - Destructor
+  - BottomBounds
   layers:
   - Default
   - TransparentFX

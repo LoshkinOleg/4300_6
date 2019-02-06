@@ -99,7 +99,7 @@ public class PickupManager : MonoBehaviour
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.SetMovementMode(Player1.MovementMode.JETPACK);
+            GameManager.instance.player1.SetMovementMode(Player.MovementMode.JETPACK);
         }
         else
         {

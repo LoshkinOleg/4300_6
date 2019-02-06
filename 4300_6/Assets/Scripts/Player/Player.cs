@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player1 : MonoBehaviour
+public class Player : MonoBehaviour
 {
     // Classes and Enums
     #region Classes and Enums
@@ -30,6 +30,7 @@ public class Player1 : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
+    [SerializeField] bool isLeftPlayer = true;
     [SerializeField] float dragForce = 0.1f;
     [SerializeField] float _groundHorizontalVelocity = 3;
     [SerializeField] float _airborneHorizontalForce = 20;
@@ -37,13 +38,15 @@ public class Player1 : MonoBehaviour
     [SerializeField] float _playerSpeedLimit = 5;
     [SerializeField] float dodgeDuration = 0.05f;
     [SerializeField] float dodgeSpeedupMagnitude = 10;
+    [SerializeField] float stunForceMultiplier = 10;
+    [SerializeField] float stunDuration = 0.5f;
 
     // References
     [SerializeField] GameObject bulletPrefab = null;
     [SerializeField] GameObject healthImageGO = null;
     [SerializeField] GameObject parachuteGO = null;
     [SerializeField] GameObject gunGO = null;
-    [SerializeField] GameObject playerSpriteGO = null;
+    BoxCollider2D playerCollider = null;
     Rigidbody2D playerRigidbody = null;
     Image healthImage = null;
 
@@ -143,7 +146,8 @@ public class Player1 : MonoBehaviour
     Vector2 dodgeDirection = new Vector2();
     bool dodging = false;
     float jetpackTimer;
-    PlayerDirection currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+    float stunTimer;
+    PlayerDirection currentPlayerDirection;
     GunDirection currentGunDirection = GunDirection.FORWARD;
     #endregion
 
@@ -185,6 +189,27 @@ public class Player1 : MonoBehaviour
         }
         currentMovementMode = mode;
     }
+    public void Stun()
+    {
+        ToggleParachute();
+        if (playerCollider.IsTouching(GameManager.instance.bottomBoundsCollider))
+        {
+            Kill();
+        }
+        else
+        {
+            playerRigidbody.AddForce(Vector2.down * stunForceMultiplier);
+            stunTimer = stunDuration;
+        }
+    }
+    public void Kill()
+    {
+        _lives--;
+        if (lives < 1)
+        {
+            GameManager.instance.GameOver(gameObject);
+        }
+    }
     #endregion
 
     // PRIVATE METHODS
@@ -209,13 +234,27 @@ public class Player1 : MonoBehaviour
     }
     bool CheckEnemyDirection() // Returns true if the enemy is on the right or at the same x axis, false if he is on the left.
     {
-        if ((GameManager.instance.player2.gameObject.transform.position - transform.position).x >= 0)
+        if (isLeftPlayer)
         {
-            return true;
+            if ((GameManager.instance.player2.gameObject.transform.position - transform.position).x >= 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
-            return false;
+            if ((GameManager.instance.player1.gameObject.transform.position - transform.position).x >= 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
     void AnalyseInputsForDirection()
@@ -228,12 +267,12 @@ public class Player1 : MonoBehaviour
                 if (horizontalInput > 0)
                 {
                     // H+
-                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+                    currentPlayerDirection = PlayerDirection.RIGHT;
                 }
                 else
                 {
                     // H-
-                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
+                    currentPlayerDirection = PlayerDirection.LEFT;
                 }
             }
             else
@@ -241,11 +280,11 @@ public class Player1 : MonoBehaviour
                 // H = 0
                 if (CheckEnemyDirection())
                 {
-                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+                    currentPlayerDirection = PlayerDirection.RIGHT;
                 }
                 else
                 {
-                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
+                    currentPlayerDirection = PlayerDirection.LEFT;
                 }
             }
 
@@ -275,12 +314,12 @@ public class Player1 : MonoBehaviour
                 if (horizontalInput > 0)
                 {
                     // H+
-                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+                    currentPlayerDirection = PlayerDirection.RIGHT;
                 }
                 else
                 {
                     // H-
-                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
+                    currentPlayerDirection = PlayerDirection.LEFT;
                 }
             }
             else
@@ -288,11 +327,11 @@ public class Player1 : MonoBehaviour
                 // H = 0
                 if (CheckEnemyDirection())
                 {
-                    currentPlayerSpriteDirection = PlayerDirection.RIGHT;
+                    currentPlayerDirection = PlayerDirection.RIGHT;
                 }
                 else
                 {
-                    currentPlayerSpriteDirection = PlayerDirection.LEFT;
+                    currentPlayerDirection = PlayerDirection.LEFT;
                 }
             }
             currentGunDirection = GunDirection.ANYWHERE;
@@ -304,7 +343,7 @@ public class Player1 : MonoBehaviour
 
         if (currentMovementMode != MovementMode.GROUND)
         {
-            switch (currentPlayerSpriteDirection)
+            switch (currentPlayerDirection)
             {
                 case PlayerDirection.LEFT:
                     {
@@ -484,6 +523,13 @@ public class Player1 : MonoBehaviour
             playerRigidbody.velocity = (Vector2)Vector3.Normalize(velocityV2) * _playerSpeedLimit;
         }
     }
+    void ToggleParachute()
+    {
+        playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
+        parachuteGO.SetActive(!parachuteGO.activeSelf);
+        parachuteIsOpen = !parachuteIsOpen;
+        dodgeTimer = dodgeDuration;
+    }
     #endregion
 
     // INHERITED METHODS
@@ -491,10 +537,20 @@ public class Player1 : MonoBehaviour
     private void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
+        playerCollider = GetComponent<BoxCollider2D>();
         healthImage = healthImageGO.GetComponent<Image>();
         fireCooldown = 1 / firingFrequency;
         currentBulletsSpeed = GameManager.instance.defaultBulletSpeed;
         SetMovementMode(MovementMode.AIRBORNE);
+
+        if (isLeftPlayer)
+        {
+            currentPlayerDirection = PlayerDirection.RIGHT;
+        }
+        else
+        {
+            currentPlayerDirection = PlayerDirection.LEFT;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -517,46 +573,84 @@ public class Player1 : MonoBehaviour
     private void Update()
     {
         // Handle inputs
-        horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
-        verticalInput = Input.GetAxisRaw("Player1_Vertical");
-        aimingHorizontalInput = Input.GetAxisRaw("Player1_Aiming_Horizontal");
-        aimingVerticalInput = Input.GetAxisRaw("Player1_Aiming_Vertical");
-
-        switch (currentMovementMode)
+        if (stunTimer < 0)
         {
-            case MovementMode.AIRBORNE:
-                {
-                    if (Input.GetButtonDown("Player1_Parachute")) // Handle parachute input
-                    {
-                        playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
-                        parachuteGO.SetActive(!parachuteGO.activeSelf);
-                        parachuteIsOpen = !parachuteIsOpen;
-                        dodgeTimer = dodgeDuration;
-                    }
-                }
-                break;
-            case MovementMode.GROUND:
-                {
-                    if (Input.GetButtonDown("Player1_Parachute")) // Handle parachute input
-                    {
-                        playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
-                        parachuteGO.SetActive(!parachuteGO.activeSelf);
-                        parachuteIsOpen = !parachuteIsOpen;
-                        dodgeTimer = dodgeDuration;
-                    }
-                }
-                break;
-        }
+            if (isLeftPlayer)
+            {
+                horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
+                verticalInput = Input.GetAxisRaw("Player1_Vertical");
+                aimingHorizontalInput = Input.GetAxisRaw("Player1_Aiming_Horizontal");
+                aimingVerticalInput = Input.GetAxisRaw("Player1_Aiming_Vertical");
 
-        if (Input.GetButtonDown("Player1_Fire")) // Handle firing input
-        {
-            firing = true;
-        }
+                switch (currentMovementMode)
+                {
+                    case MovementMode.AIRBORNE:
+                        {
+                            if (Input.GetButtonDown("Player1_Parachute")) // Handle parachute input
+                            {
+                                ToggleParachute();
+                            }
+                        }
+                        break;
+                    case MovementMode.GROUND:
+                        {
+                            if (Input.GetButtonDown("Player1_Parachute")) // Handle parachute input
+                            {
+                                ToggleParachute();
+                            }
+                        }
+                        break;
+                }
 
+                if (Input.GetButtonDown("Player1_Fire")) // Handle firing input
+                {
+                    firing = true;
+                }
+            }
+            else
+            {
+                horizontalInput = Input.GetAxisRaw("Player2_Horizontal");
+                verticalInput = Input.GetAxisRaw("Player2_Vertical");
+                aimingHorizontalInput = Input.GetAxisRaw("Player2_Aiming_Horizontal");
+                aimingVerticalInput = Input.GetAxisRaw("Player2_Aiming_Vertical");
+
+                switch (currentMovementMode)
+                {
+                    case MovementMode.AIRBORNE:
+                        {
+                            if (Input.GetButtonDown("Player2_Parachute")) // Handle parachute input
+                            {
+                                playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
+                                parachuteGO.SetActive(!parachuteGO.activeSelf);
+                                parachuteIsOpen = !parachuteIsOpen;
+                                dodgeTimer = dodgeDuration;
+                            }
+                        }
+                        break;
+                    case MovementMode.GROUND:
+                        {
+                            if (Input.GetButtonDown("Player2_Parachute")) // Handle parachute input
+                            {
+                                playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
+                                parachuteGO.SetActive(!parachuteGO.activeSelf);
+                                parachuteIsOpen = !parachuteIsOpen;
+                                dodgeTimer = dodgeDuration;
+                            }
+                        }
+                        break;
+                }
+
+                if (Input.GetButtonDown("Player2_Fire")) // Handle firing input
+                {
+                    firing = true;
+                }
+            }
+        }
+        
         // Handle losing condition
         if (health <= 0)
         {
-            GameManager.instance.GameOver(gameObject);
+            Kill();
         }
 
         // Update timers

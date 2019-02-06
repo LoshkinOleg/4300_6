@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 4848834887403473506}
   - component: {fileID: 4848834887403473504}
   - component: {fileID: 4848834887403473505}
-  - component: {fileID: 4848834887403473519}
+  - component: {fileID: 757692163130730270}
   m_Layer: 9
   m_Name: Player1
   m_TagString: Player1
@@ -383,7 +383,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &4848834887403473519
+--- !u!114 &757692163130730270
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -395,6 +395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ea64325d5c0154e9f9912f86088869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isLeftPlayer: 1
   dragForce: 0.1
   _groundHorizontalVelocity: 3
   _airborneHorizontalForce: 20
@@ -407,7 +408,7 @@ MonoBehaviour:
   healthImageGO: {fileID: 0}
   parachuteGO: {fileID: 325984145752485330}
   gunGO: {fileID: 4557199037961504857}
-  playerSpriteGO: {fileID: 4848834886452496593}
+  playerSpriteGO: {fileID: 0}
 --- !u!1 &8801712592679848232
 GameObject:
   m_ObjectHideFlags: 0
