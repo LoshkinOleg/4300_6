@@ -11,8 +11,11 @@ public class Pickup : MonoBehaviour
         HEALTH,
         SHIELD,
         SPEED_UP,
-        STORM,
-        JETPACK
+        JETPACK,
+        SHOTGUN,
+        SNIPER,
+        BAZOOKA,
+        MINIGUN
     }
 
     // Attributes
@@ -52,14 +55,29 @@ public class Pickup : MonoBehaviour
                         PickupManager.instance.Pickup_Speedup(collision.gameObject.tag);
                     }
                     break;
-                case Type.STORM:
-                    {
-                        PickupManager.instance.Pickup_Storm(collision.gameObject.tag);
-                    }
-                    break;
                 case Type.JETPACK:
                     {
                         PickupManager.instance.Pickup_Jetpack(collision.gameObject.tag);
+                    }
+                    break;
+                case Type.SHOTGUN:
+                    {
+                        PickupManager.instance.Pickup_Shotgun(collision.gameObject.tag);
+                    }
+                    break;
+                case Type.SNIPER:
+                    {
+                        PickupManager.instance.Pickup_Sniper(collision.gameObject.tag);
+                    }
+                    break;
+                case Type.BAZOOKA:
+                    {
+                        PickupManager.instance.Pickup_Bazooka(collision.gameObject.tag);
+                    }
+                    break;
+                case Type.MINIGUN:
+                    {
+                        PickupManager.instance.Pickup_Minigun(collision.gameObject.tag);
                     }
                     break;
             }

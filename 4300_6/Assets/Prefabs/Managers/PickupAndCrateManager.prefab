@@ -75,7 +75,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _crateSpeedLimit: 1
-  chanceToSpawnCratePerSecond: 25
-  crateSpriteXAxisSize: 3
+  chanceToSpawnCratePerSecond: 10
   cratePrefab: {fileID: 6194907134823173452, guid: 43e36453f6ec19245a34bb326ae71f4d,
     type: 3}

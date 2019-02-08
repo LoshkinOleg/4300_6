@@ -7,7 +7,7 @@ public class PickupManager : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
-    [SerializeField] float _speedupBulletSpeed = 20;
+    [SerializeField] float _speedupBulletSpeedMultiplier = 3;
     [SerializeField] float _speedupPickupTime = 5;
     [SerializeField] float stormDuration = 7;
     [SerializeField] float chanceForLightningBoltToSpawnPerSecond = 3;
@@ -16,6 +16,16 @@ public class PickupManager : MonoBehaviour
     [SerializeField] float _pickupSpeedLimit = 3;
     [SerializeField] float _jetpackDuration = 10;
     [SerializeField] float _jetpackVelocity = 7;
+    [SerializeField] float _firerate_pistol = 4;
+    [SerializeField] float _firerate_shotgun = 1;
+    [SerializeField] float _firerate_sniper = 1;
+    [SerializeField] float _firerate_bazooka = 0.5f;
+    [SerializeField] float _firerate_minigun = 20;
+    [SerializeField] float _bulletSpeed_pistol = 10;
+    [SerializeField] float _bulletSpeed_shotgun = 10;
+    [SerializeField] float _bulletSpeed_sniper = 40;
+    [SerializeField] float _bulletSpeed_bazooka = 5;
+    [SerializeField] float _bulletSpeed_minigun = 10;
 
     // References
     [SerializeField] GameObject lifePickupPrefab = null;
@@ -32,10 +42,20 @@ public class PickupManager : MonoBehaviour
     // Public properties
     static public PickupManager instance => _instance;
     public float pickupSpeedLimit => _pickupSpeedLimit;
-    public float speedupBulletSpeed => _speedupBulletSpeed;
+    public float speedupBulletSpeed => _speedupBulletSpeedMultiplier;
     public float speedupPickupTime => _speedupPickupTime;
     public float jetpackDuration => _jetpackDuration;
     public float jetpackVelocity => _jetpackVelocity;
+    public float firerate_pistol => _firerate_pistol;
+    public float firerate_shotgun => _firerate_shotgun;
+    public float firerate_sniper => _firerate_sniper;
+    public float firerate_bazooka => _firerate_bazooka;
+    public float firerate_minigun => _firerate_minigun;
+    public float bulletSpeed_pistol => _bulletSpeed_pistol;
+    public float bulletSpeed_shotgun => _bulletSpeed_shotgun;
+    public float bulletSpeed_sniper => _bulletSpeed_sniper;
+    public float bulletSpeed_bazooka => _bulletSpeed_bazooka;
+    public float bulletSpeed_minigun => _bulletSpeed_minigun;
     #endregion
 
     // Public methods
@@ -84,17 +104,6 @@ public class PickupManager : MonoBehaviour
             // GameManager.instance.player2.SpeedBulletsUp();
         }
     }
-    public void Pickup_Storm(string tag)
-    {
-        if (tag == "Player1")
-        {
-            // Instantiate(stormPrefab).GetComponent<Storm>().target = GameManager.instance.player2.gameObject;
-        }
-        else
-        {
-            Instantiate(stormPrefab).GetComponent<Storm>().target = GameManager.instance.player1.gameObject;
-        }
-    }
     public void Pickup_Jetpack(string tag)
     {
         if (tag == "Player1")
@@ -104,6 +113,50 @@ public class PickupManager : MonoBehaviour
         else
         {
             // GameManager.instance.player2.EnterJetpackMode();
+        }
+    }
+    public void Pickup_Shotgun(string tag)
+    {
+        if (tag == "Player1")
+        {
+            GameManager.instance.player1.currentWeapon = Player.Weapon.SHOTGUN;
+        }
+        else
+        {
+            GameManager.instance.player2.currentWeapon = Player.Weapon.SHOTGUN;
+        }
+    }
+    public void Pickup_Sniper(string tag)
+    {
+        if (tag == "Player1")
+        {
+            GameManager.instance.player1.currentWeapon = Player.Weapon.SNIPER;
+        }
+        else
+        {
+            GameManager.instance.player2.currentWeapon = Player.Weapon.SNIPER;
+        }
+    }
+    public void Pickup_Bazooka(string tag)
+    {
+        if (tag == "Player1")
+        {
+            GameManager.instance.player1.currentWeapon = Player.Weapon.BAZOOKA;
+        }
+        else
+        {
+            GameManager.instance.player2.currentWeapon = Player.Weapon.BAZOOKA;
+        }
+    }
+    public void Pickup_Minigun(string tag)
+    {
+        if (tag == "Player1")
+        {
+            GameManager.instance.player1.currentWeapon = Player.Weapon.MINIGUN;
+        }
+        else
+        {
+            GameManager.instance.player2.currentWeapon = Player.Weapon.BAZOOKA;
         }
     }
     #endregion

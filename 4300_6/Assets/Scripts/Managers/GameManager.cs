@@ -7,9 +7,6 @@ public class GameManager : MonoBehaviour
 {
     // Attributes
     #region Attributes
-    // Inspector variables
-    [SerializeField] float _defaultBulletSpeed = 10;
-
     // References
     [SerializeField] GameObject pickupAndCrateManagers = null;
     [SerializeField] GameObject soundManager = null;
@@ -22,7 +19,6 @@ public class GameManager : MonoBehaviour
 
     // Public properties
     public static GameManager instance => _instance;
-    public float defaultBulletSpeed => _defaultBulletSpeed;
     public Player player1 => _player1;
     public Player player2 => _player2;
     public Rigidbody2D player1RB => _player1RB;
@@ -37,6 +33,7 @@ public class GameManager : MonoBehaviour
     float _gameViewHorizontalDistanceInMeters = 17.78f;
     float _gameViewVerticalDistanceInMeters = 10f;
     Vector3 _averagePlayerPosition = new Vector3();
+    bool inMainScene = false;
     #endregion
 
     // Public methods
@@ -54,6 +51,7 @@ public class GameManager : MonoBehaviour
     {
         if (scene.name == "Score")
         {
+            inMainScene = false;
             TMPro.TMP_Text winnerText = GameObject.FindGameObjectWithTag("WinnerText").GetComponent<TMPro.TMP_Text>();
 
             if (loser == player1)
@@ -80,11 +78,12 @@ public class GameManager : MonoBehaviour
             _player1RB = _player1.gameObject.GetComponent<Rigidbody2D>();
             _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player>();
             _player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
-
             _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
+            inMainScene = true;
         }
-        if (scene.name == "MainMenu")
+        else if (scene.name == "MainMenu")
         {
+            inMainScene = false;
             if (SoundManager.instance == null)
             {
                 Instantiate(soundManager);
@@ -115,7 +114,10 @@ public class GameManager : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        _averagePlayerPosition = FindAveragePlayerPosition();
+        if (inMainScene)
+        {
+            _averagePlayerPosition = FindAveragePlayerPosition();
+        }
     }
     #endregion
 }

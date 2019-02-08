@@ -25,6 +25,14 @@ public class Player : MonoBehaviour
         DOWN,
         ANYWHERE
     }
+    public enum Weapon
+    {
+        PISTOL,
+        SHOTGUN,
+        SNIPER,
+        BAZOOKA,
+        MINIGUN
+    }
     #endregion
 
     // Attributes
@@ -34,11 +42,9 @@ public class Player : MonoBehaviour
     [SerializeField] float dragForce = 0.1f;
     [SerializeField] float _groundHorizontalVelocity = 3;
     [SerializeField] float _airborneHorizontalForce = 20;
-    [SerializeField] float _firingFrequency = 4; // 4 projectiles / second.
     [SerializeField] float _playerSpeedLimit = 5;
     [SerializeField] float dodgeDuration = 0.05f;
     [SerializeField] float dodgeSpeedupMagnitude = 10;
-    [SerializeField] float stunForceMultiplier = 10;
     [SerializeField] float stunDuration = 0.5f;
 
     // References
@@ -51,50 +57,6 @@ public class Player : MonoBehaviour
     Image healthImage = null;
 
     // Properties
-    public float groundHorizontalVelocity
-    {
-        get
-        {
-            return _groundHorizontalVelocity;
-        }
-        set
-        {
-            _groundHorizontalVelocity = value;
-        }
-    }
-    public float airborneHorizontalForce
-    {
-        get
-        {
-            return _airborneHorizontalForce;
-        }
-        set
-        {
-            _airborneHorizontalForce = value;
-        }
-    }
-    public float firingFrequency
-    {
-        get
-        {
-            return _firingFrequency;
-        }
-        set
-        {
-            _firingFrequency = value;
-        }
-    }
-    public float playerSpeedLimit
-    {
-        get
-        {
-            return _playerSpeedLimit;
-        }
-        set
-        {
-            _playerSpeedLimit = value;
-        }
-    }
     public MovementMode currentMovementMode
     {
         get
@@ -104,6 +66,17 @@ public class Player : MonoBehaviour
         set
         {
             _currentMovementMode = value;
+        }
+    }
+    public Weapon currentWeapon
+    {
+        get
+        {
+            return _currentWeapon;
+        }
+        set
+        {
+            _currentWeapon = value;
         }
     }
     public int lives
@@ -117,38 +90,41 @@ public class Player : MonoBehaviour
             _lives = value;
         }
     }
-    public float health
-    {
-        get
-        {
-            return _health;
-        }
-        set
-        {
-            _health = value;
-        }
-    }
 
     // Private variables
+    #region Private variables
+    // Basic movement related
     MovementMode _currentMovementMode = MovementMode.AIRBORNE;
-    int _lives = 3;
-    float _health = 1;
-    float currentBulletsSpeed;
-    bool parachuteIsOpen = false;
-    float fireCooldown;
-    float dodgeTimer;
-    float speedupTimer;
-    bool firing = false;
     float horizontalInput = 0;
-    float verticalInput = 0;
-    float aimingHorizontalInput = 0;
-    float aimingVerticalInput = 0;
-    Vector2 dodgeDirection = new Vector2();
+    bool parachuteIsOpen = false;
+    // Dodging related
     bool dodging = false;
+    Vector2 dodgeDirection = new Vector2();
+    float dodgeTimer;
+    // Jetpack related
     float jetpackTimer;
-    float stunTimer;
+    float verticalInput = 0;
+    // Player and gun orientation related
     PlayerDirection currentPlayerDirection;
     GunDirection currentGunDirection = GunDirection.FORWARD;
+    // Speedup pickup related
+    float currentBulletsSpeed;
+    float speedupTimer;
+    // Firing related
+    Weapon _currentWeapon = Weapon.PISTOL;
+    float aimingHorizontalInput = 0;
+    float aimingVerticalInput = 0;
+    bool firing = false;
+    float currentFiringFrequency = 4;
+    float firingTimer;
+    // Stun related
+    float stunForceMultiplier = 50;
+    float stunTimer = 0;
+    BoxCollider2D lastCrateBottomHit_collider = null;
+
+    int _lives = 3;
+    float health = 1;
+    #endregion
     #endregion
 
     // PUBLIC METHODS
@@ -191,23 +167,25 @@ public class Player : MonoBehaviour
     }
     public void Stun()
     {
-        ToggleParachute();
-        if (playerCollider.IsTouching(GameManager.instance.bottomBoundsCollider))
-        {
-            Kill();
-        }
-        else
-        {
-            playerRigidbody.AddForce(Vector2.down * stunForceMultiplier);
-            stunTimer = stunDuration;
-        }
+        stunTimer = stunDuration;
+    }
+    public void HitCrateBottom(BoxCollider2D crate)
+    {
+        lastCrateBottomHit_collider = crate;
+        Stun();
     }
     public void Kill()
     {
-        _lives--;
+        lives--;
         if (lives < 1)
         {
             GameManager.instance.GameOver(gameObject);
+        }
+        else
+        {
+            health = 1;
+            healthImage.fillAmount = health;
+            transform.position = new Vector3(0, 0, 0);
         }
     }
     #endregion
@@ -447,22 +425,31 @@ public class Player : MonoBehaviour
 
                     if (dodgeTimer > 0 && !dodging) // Accelerates player up or down as long as the timer is greater than 0.
                     {
-                        if (playerRigidbody.velocity.y > 0)
+                        if (!dodging)
                         {
-                            // Dodge down since we just closed the parachute
-                            dodgeDirection = Vector2.down;
+                            if (playerRigidbody.velocity.y > 0)
+                            {
+                                // Dodge down since we just closed the parachute
+                                dodgeDirection = Vector2.down;
+                            }
+                            else
+                            {
+                                // Dodge up since we just opened the parachute
+                                dodgeDirection = Vector2.up;
+                            }
+                            dodging = true;
                         }
                         else
                         {
-                            // Dodge up since we just opened the parachute
-                            dodgeDirection = Vector2.up;
+                            // Normalize player velocity and add a fixed speed boost.
+                            playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) + dodgeDirection * dodgeSpeedupMagnitude;
                         }
-                        dodging = true;
                     }
-                    if (dodging)
+                    if (dodgeTimer < 0)
                     {
-                        // Normalize player velocity and add a fixed speed boost.
-                        playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) + dodgeDirection * dodgeSpeedupMagnitude;
+                        // Reset dodge direction
+                        dodgeDirection = new Vector2();
+                        dodging = false;
                     }
                 }
                 break;
@@ -504,11 +491,58 @@ public class Player : MonoBehaviour
     {
         if (firing)
         {
-            if (fireCooldown < 0)
+            switch (currentWeapon)
             {
-                Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
-                fireCooldown = 1 / _firingFrequency;
-                firing = false;
+                case Weapon.PISTOL:
+                    {
+                        if (firingTimer < 0)
+                        {
+                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            firingTimer = 1 / currentFiringFrequency;
+                            firing = false;
+                        }
+                    }
+                    break;
+                case Weapon.SHOTGUN:
+                    {
+                        if (firingTimer < 0)
+                        {
+                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            firingTimer = 1 / currentFiringFrequency;
+                            firing = false;
+                        }
+                    }
+                    break;
+                case Weapon.SNIPER:
+                    {
+                        if (firingTimer < 0)
+                        {
+                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            firingTimer = 1 / currentFiringFrequency;
+                            firing = false;
+                        }
+                    }
+                    break;
+                case Weapon.BAZOOKA:
+                    {
+                        if (firingTimer < 0)
+                        {
+                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            firingTimer = 1 / currentFiringFrequency;
+                            firing = false;
+                        }
+                    }
+                    break;
+                case Weapon.MINIGUN:
+                    {
+                        if (firingTimer < 0)
+                        {
+                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            firingTimer = 1 / currentFiringFrequency;
+                            firing = false;
+                        }
+                    }
+                    break;
             }
         }
     }
@@ -530,6 +564,24 @@ public class Player : MonoBehaviour
         parachuteIsOpen = !parachuteIsOpen;
         dodgeTimer = dodgeDuration;
     }
+    void ProcessStunMechanic()
+    {
+        if (stunTimer > 0)
+        {
+            playerRigidbody.gravityScale = 0;
+            if (lastCrateBottomHit_collider != null)
+            {
+                if (playerCollider.IsTouching(GameManager.instance.bottomBoundsCollider) && playerCollider.IsTouching(lastCrateBottomHit_collider))
+                {
+                    Kill();
+                }
+                else if (playerCollider.IsTouching(lastCrateBottomHit_collider))
+                {
+                    playerRigidbody.AddForce(Vector2.down * stunForceMultiplier);
+                }
+            }
+        }
+    }
     #endregion
 
     // INHERITED METHODS
@@ -539,8 +591,8 @@ public class Player : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<BoxCollider2D>();
         healthImage = healthImageGO.GetComponent<Image>();
-        fireCooldown = 1 / firingFrequency;
-        currentBulletsSpeed = GameManager.instance.defaultBulletSpeed;
+        firingTimer = 1 / currentFiringFrequency;
+        currentBulletsSpeed = PickupManager.instance.bulletSpeed_pistol;
         SetMovementMode(MovementMode.AIRBORNE);
 
         if (isLeftPlayer)
@@ -553,14 +605,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Projectile")
-        {
-            ModifyHealth(-0.1f);
-        }
-    }
-
     private void FixedUpdate()
     {
         ApplySpeedLimit();
@@ -568,15 +612,29 @@ public class Player : MonoBehaviour
         Move();
         ApplyDrag();
         Shoot();
+        ProcessStunMechanic();
     }
 
     private void Update()
     {
-        // Handle inputs
-        if (stunTimer < 0)
+        if (stunTimer <= 0)
         {
+            // Reset gravity after the player has just exited stun mode.
+            if (Mathf.Abs(playerRigidbody.gravityScale) != 2)
+            {
+                if (parachuteIsOpen)
+                {
+                    playerRigidbody.gravityScale = -2;
+                }
+                else
+                {
+                    playerRigidbody.gravityScale = 2;
+                }
+            }
+
             if (isLeftPlayer)
             {
+                // Handle inputs
                 horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
                 verticalInput = Input.GetAxisRaw("Player1_Vertical");
                 aimingHorizontalInput = Input.GetAxisRaw("Player1_Aiming_Horizontal");
@@ -602,7 +660,7 @@ public class Player : MonoBehaviour
                         break;
                 }
 
-                if (Input.GetButtonDown("Player1_Fire")) // Handle firing input
+                if (Input.GetButton("Player1_Fire")) // Handle firing input
                 {
                     firing = true;
                 }
@@ -618,7 +676,7 @@ public class Player : MonoBehaviour
                 {
                     case MovementMode.AIRBORNE:
                         {
-                            if (Input.GetButtonDown("Player2_Parachute")) // Handle parachute input
+                            if (Input.GetButtonDown("Player2_Parachute"))
                             {
                                 playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
                                 parachuteGO.SetActive(!parachuteGO.activeSelf);
@@ -629,7 +687,7 @@ public class Player : MonoBehaviour
                         break;
                     case MovementMode.GROUND:
                         {
-                            if (Input.GetButtonDown("Player2_Parachute")) // Handle parachute input
+                            if (Input.GetButtonDown("Player2_Parachute"))
                             {
                                 playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
                                 parachuteGO.SetActive(!parachuteGO.activeSelf);
@@ -640,7 +698,7 @@ public class Player : MonoBehaviour
                         break;
                 }
 
-                if (Input.GetButtonDown("Player2_Fire")) // Handle firing input
+                if (Input.GetButton("Player2_Fire"))
                 {
                     firing = true;
                 }
@@ -654,16 +712,11 @@ public class Player : MonoBehaviour
         }
 
         // Update timers
-        fireCooldown -= Time.deltaTime;
+        firingTimer -= Time.deltaTime;
         dodgeTimer -= Time.deltaTime;
         speedupTimer -= Time.deltaTime;
         jetpackTimer -= Time.deltaTime;
-        if (dodgeTimer < 0)
-        {
-            // Reset dodge direction
-            dodgeDirection = new Vector2();
-            dodging = false;
-        }
+        stunTimer -= Time.deltaTime;
     }
     #endregion
 
