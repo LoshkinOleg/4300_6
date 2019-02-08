@@ -6,11 +6,6 @@ TagManager:
   tags:
   - Player1
   - Player2
-  - Storm_Pickup
-  - Health_Pickup
-  - Shield_Pickup
-  - Slowdown_Pickup
-  - Speedup_Pickup
   - Destructor
   - BottomBounds
   layers:

@@ -7,11 +7,8 @@ public class PickupManager : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
-    [SerializeField] float _speedupBulletSpeedMultiplier = 3;
     [SerializeField] float _speedupPickupTime = 5;
-    [SerializeField] float stormDuration = 7;
-    [SerializeField] float chanceForLightningBoltToSpawnPerSecond = 3;
-    [SerializeField] float chanceForPickupToSpawnPerSecond = 10;
+    [SerializeField] float chanceForPickupToSpawnPerSecond = 100;
     [SerializeField] float healthPickupValue = 0.5f;
     [SerializeField] float _pickupSpeedLimit = 3;
     [SerializeField] float _jetpackDuration = 10;
@@ -26,23 +23,33 @@ public class PickupManager : MonoBehaviour
     [SerializeField] float _bulletSpeed_sniper = 40;
     [SerializeField] float _bulletSpeed_bazooka = 5;
     [SerializeField] float _bulletSpeed_minigun = 10;
+    [SerializeField] float _bulletDamage_pistol = 0.01f;
+    [SerializeField] float _bulletDamage_shotgun = 0.1f;
+    [SerializeField] float _bulletDamage_sniper = 0.34f;
+    [SerializeField] float _bulletDamage_bazooka = 0.2f;
+    [SerializeField] float _bulletDamage_minigun = 0.01f;
+    [SerializeField] float _bulletSpread_pistol = 3f;
+    [SerializeField] float _bulletSpread_shotgun = 0f;
+    [SerializeField] float _bulletSpread_sniper = 0f;
+    [SerializeField] float _bulletSpread_bazooka = 0f;
+    [SerializeField] float _bulletSpread_minigun = 7f;
 
     // References
-    [SerializeField] GameObject lifePickupPrefab = null;
-    [SerializeField] GameObject healthPickupPrefab = null;
-    [SerializeField] GameObject shieldPickupPrefab = null;
-    [SerializeField] GameObject speedupPickupPrefab = null;
-    [SerializeField] GameObject stormPickupPrefab = null;
-    [SerializeField] GameObject jetpackPickupPrefab = null;
-    [SerializeField] GameObject stormPrefab = null;
-    [SerializeField] GameObject lightningBoltPrefab = null;
+    [SerializeField] GameObject pickupPrefab_life = null;
+    [SerializeField] GameObject pickupPrefab_health = null;
+    [SerializeField] GameObject pickupPrefab_shield = null;
+    [SerializeField] GameObject pickupPrefab_speedup = null;
+    [SerializeField] GameObject pickupPrefab_jetpack = null;
+    [SerializeField] GameObject pickupPrefab_shotgun = null;
+    [SerializeField] GameObject pickupPrefab_sniper = null;
+    [SerializeField] GameObject pickupPrefab_bazooka = null;
+    [SerializeField] GameObject pickupPrefab_minigun = null;
     [SerializeField] GameObject shieldPrefab = null;
     static PickupManager _instance = null;
 
     // Public properties
     static public PickupManager instance => _instance;
     public float pickupSpeedLimit => _pickupSpeedLimit;
-    public float speedupBulletSpeed => _speedupBulletSpeedMultiplier;
     public float speedupPickupTime => _speedupPickupTime;
     public float jetpackDuration => _jetpackDuration;
     public float jetpackVelocity => _jetpackVelocity;
@@ -56,7 +63,21 @@ public class PickupManager : MonoBehaviour
     public float bulletSpeed_sniper => _bulletSpeed_sniper;
     public float bulletSpeed_bazooka => _bulletSpeed_bazooka;
     public float bulletSpeed_minigun => _bulletSpeed_minigun;
+    public float bulletDamage_pistol => _bulletDamage_pistol;
+    public float bulletDamage_shotgun => _bulletDamage_shotgun;
+    public float bulletDamage_sniper => _bulletDamage_sniper;
+    public float bulletDamage_bazooka => _bulletDamage_bazooka;
+    public float bulletDamage_minigun => _bulletDamage_minigun;
+    public float bulletSpread_pistol => _bulletSpread_pistol;
+    public float bulletSpread_shotgun => _bulletSpread_shotgun;
+    public float bulletSpread_sniper => _bulletSpread_sniper;
+    public float bulletSpread_bazooka => _bulletSpread_bazooka;
+    public float bulletSpread_minigun => _bulletSpread_minigun;
     #endregion
+
+    // Private variables
+    bool runningSpawnCheck = false;
+    int numberOfPickupTypes = (int)Pickup.Type.LIFE + 1;
 
     // Public methods
     #region Public methods
@@ -68,7 +89,7 @@ public class PickupManager : MonoBehaviour
         }
         else
         {
-            // GameManager.instance.player2.lives++;
+            GameManager.instance.player2.lives++;
         }
     }
     public void Pickup_Health(string tag)
@@ -79,7 +100,7 @@ public class PickupManager : MonoBehaviour
         }
         else
         {
-            // GameManager.instance.player2.ModifyHealth(healthPickupValue);
+            GameManager.instance.player2.ModifyHealth(healthPickupValue);
         }
     }
     public void Pickup_Shield(string tag)
@@ -90,7 +111,7 @@ public class PickupManager : MonoBehaviour
         }
         else
         {
-            // Instantiate(shieldPrefab).GetComponent<Shield>().target = GameManager.instance.player2.gameObject;
+            Instantiate(shieldPrefab).GetComponent<Shield>().target = GameManager.instance.player2.gameObject;
         }
     }
     public void Pickup_Speedup(string tag)
@@ -101,7 +122,7 @@ public class PickupManager : MonoBehaviour
         }
         else
         {
-            // GameManager.instance.player2.SpeedBulletsUp();
+            GameManager.instance.player2.SpeedBulletsUp();
         }
     }
     public void Pickup_Jetpack(string tag)
@@ -112,7 +133,7 @@ public class PickupManager : MonoBehaviour
         }
         else
         {
-            // GameManager.instance.player2.EnterJetpackMode();
+            GameManager.instance.player2.SetMovementMode(Player.MovementMode.JETPACK);
         }
     }
     public void Pickup_Shotgun(string tag)
@@ -165,19 +186,66 @@ public class PickupManager : MonoBehaviour
     #region Private methods
     IEnumerator CheckForPickupSpawn() // Generates a random number and if said number is smaller than chanceForPickupToSpawnPerSecond, spawns a random pickup.
     {
+        runningSpawnCheck = true;
+
         yield return new WaitForSeconds(1);
 
         int randomNumber = Random.Range(0, 100);
         if (randomNumber <= chanceForPickupToSpawnPerSecond)
         {
-            int randomPickup = Random.Range(0, 7);
+            // Pick a random pickup to spawn. Possibly add weights later.
+            Pickup.Type randomPickup = (Pickup.Type)Random.Range(0, numberOfPickupTypes);
+            float horizontalPosition = Random.Range(-GameManager.instance.gameViewHorizontalDistanceInMeters/2 + 1f, GameManager.instance.gameViewHorizontalDistanceInMeters/2 - 1f);
+            switch (randomPickup)
+            {
+                case Pickup.Type.BAZOOKA:
+                    {
+                        Instantiate(pickupPrefab_bazooka, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters/2 + 5f, 0), new Quaternion());
+                    }break;
+                case Pickup.Type.HEALTH:
+                    {
+                        Instantiate(pickupPrefab_health, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                    }
+                    break;
+                case Pickup.Type.JETPACK:
+                    {
+                        Instantiate(pickupPrefab_jetpack, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                    }
+                    break;
+                case Pickup.Type.LIFE:
+                    {
+                        Instantiate(pickupPrefab_life, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                    }
+                    break;
+                case Pickup.Type.MINIGUN:
+                    {
+                        Instantiate(pickupPrefab_minigun, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                    }
+                    break;
+                case Pickup.Type.SHIELD:
+                    {
+                        Instantiate(pickupPrefab_shield, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                    }
+                    break;
+                case Pickup.Type.SHOTGUN:
+                    {
+                        Instantiate(pickupPrefab_shotgun, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                    }
+                    break;
+                case Pickup.Type.SNIPER:
+                    {
+                        Instantiate(pickupPrefab_sniper, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                    }
+                    break;
+                case Pickup.Type.SPEED_UP:
+                    {
+                        Instantiate(pickupPrefab_speedup, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                    }
+                    break;
+            }
         }
-    }
-    IEnumerator CheckForLightningBoltSpawn() // Generates a random number and if said number is smaller than chanceForLightningBoltToSpawnPerSecond, spawns a lightning bolt at a random X location.
-    {
-        yield return new WaitForSeconds(1);
 
-
+        runningSpawnCheck = false;
     }
     #endregion
 
@@ -190,7 +258,10 @@ public class PickupManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        StartCoroutine(CheckForPickupSpawn());
+        if (!runningSpawnCheck)
+        {
+            StartCoroutine(CheckForPickupSpawn());
+        }
     }
     #endregion
 }

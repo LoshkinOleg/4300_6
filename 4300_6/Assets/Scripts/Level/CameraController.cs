@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float screenEdgeBuffer = 1;
     [SerializeField] float minimalZoom = 1;
     [SerializeField] float maximalZoom = 5;
-    [SerializeField] GameObject[] players;
+    [SerializeField] GameObject[] players = new GameObject[2];
 
     // References
     Camera mainCamera = null;

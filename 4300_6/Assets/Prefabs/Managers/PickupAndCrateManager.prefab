@@ -44,24 +44,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601dbaf55795f9a42aca166acefab115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speedupBulletSpeed: 20
+  _speedupBulletSpeedMultiplier: 3
   _speedupPickupTime: 5
-  stormDuration: 7
-  chanceForLightningBoltToSpawnPerSecond: 3
-  chanceForPickupToSpawnPerSecond: 10
+  chanceForPickupToSpawnPerSecond: 100
   healthPickupValue: 0.5
   _pickupSpeedLimit: 3
   _jetpackDuration: 10
   _jetpackVelocity: 7
-  lifePickupPrefab: {fileID: 0}
-  healthPickupPrefab: {fileID: 0}
-  shieldPickupPrefab: {fileID: 0}
-  speedupPickupPrefab: {fileID: 0}
-  stormPickupPrefab: {fileID: 0}
-  jetpackPickupPrefab: {fileID: 0}
-  stormPrefab: {fileID: 0}
-  lightningBoltPrefab: {fileID: 0}
-  shieldPrefab: {fileID: 0}
+  _firerate_pistol: 4
+  _firerate_shotgun: 1
+  _firerate_sniper: 1
+  _firerate_bazooka: 0.5
+  _firerate_minigun: 20
+  _bulletSpeed_pistol: 10
+  _bulletSpeed_shotgun: 10
+  _bulletSpeed_sniper: 40
+  _bulletSpeed_bazooka: 5
+  _bulletSpeed_minigun: 10
+  pickupPrefab_life: {fileID: 4323740266736981398, guid: 32c93fbc23e791849b7e41374167c1e0,
+    type: 3}
+  pickupPrefab_health: {fileID: 4323740266736981398, guid: efc55e80c45aec542973b950ee90b145,
+    type: 3}
+  pickupPrefab_shield: {fileID: 4323740266736981398, guid: 6b921af5812bd7843a06b7cf154209cc,
+    type: 3}
+  pickupPrefab_speedup: {fileID: 7561157662321798908, guid: 4317c9fbbab34c643822382841d5ae01,
+    type: 3}
+  pickupPrefab_jetpack: {fileID: 7561157662321798908, guid: 7973d5cc586a7fe4bb1ae2134ea9069d,
+    type: 3}
+  pickupPrefab_shotgun: {fileID: 7561157662321798908, guid: eaa6a01523042bf4791f5d8e21e51187,
+    type: 3}
+  pickupPrefab_sniper: {fileID: 7561157662321798908, guid: bbac4cc0eb70b00449933f2bd6afb6d7,
+    type: 3}
+  pickupPrefab_bazooka: {fileID: 7561157662321798908, guid: bfae03f4f2538eb49a1ea0448ec12671,
+    type: 3}
+  pickupPrefab_minigun: {fileID: 7561157662321798908, guid: 06f73669171118b44b887eb8d95c4418,
+    type: 3}
+  shieldPrefab: {fileID: 8651878451569179181, guid: ea18ee35e489c2344937411df52d6af1,
+    type: 3}
 --- !u!114 &2455572566554133034
 MonoBehaviour:
   m_ObjectHideFlags: 0

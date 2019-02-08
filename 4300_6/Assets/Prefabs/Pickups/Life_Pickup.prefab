@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5369184568216318572}
   - component: {fileID: 6279015400881128387}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Parachute_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -65,8 +65,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1689391803
-  m_SortingLayer: 2
+  m_SortingLayerID: -502906763
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ba991c9e06cc9ed4a823ceb0d7b1e060, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4323740265555196397}
   - component: {fileID: 4323740265555196394}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Pickup_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,11 +144,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1689391803
-  m_SortingLayer: 2
+  m_SortingLayerID: -502906763
+  m_SortingLayer: -1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: d15b7b66d29027d4aae92693d09ddb0d, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.99765027, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -171,9 +171,9 @@ GameObject:
   - component: {fileID: 4373499343689709935}
   - component: {fileID: 7334428131585459282}
   - component: {fileID: 327899900806771034}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Life_Pickup
-  m_TagString: Health_Pickup
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -206,8 +206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86052ea2b3324f9449da80ba3562462d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
-  pickupSpeedLimit: 1
+  type: 8
 --- !u!50 &4373499343689709935
 Rigidbody2D:
   serializedVersion: 4

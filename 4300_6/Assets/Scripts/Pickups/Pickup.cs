@@ -7,7 +7,6 @@ public class Pickup : MonoBehaviour
     // Classes and Enums
     public enum Type
     {
-        LIFE,
         HEALTH,
         SHIELD,
         SPEED_UP,
@@ -15,7 +14,8 @@ public class Pickup : MonoBehaviour
         SHOTGUN,
         SNIPER,
         BAZOOKA,
-        MINIGUN
+        MINIGUN,
+        LIFE
     }
 
     // Attributes
