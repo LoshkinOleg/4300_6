@@ -7,8 +7,9 @@ public class PickupManager : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
-    [SerializeField] float _speedupPickupTime = 5;
     [SerializeField] float chanceForPickupToSpawnPerSecond = 100;
+    [SerializeField] float _speedupPickupTime = 5;
+    [SerializeField] float _speedupMultiplier = 2f;
     [SerializeField] float healthPickupValue = 0.5f;
     [SerializeField] float _pickupSpeedLimit = 3;
     [SerializeField] float _jetpackDuration = 10;
@@ -33,6 +34,8 @@ public class PickupManager : MonoBehaviour
     [SerializeField] float _bulletSpread_sniper = 0f;
     [SerializeField] float _bulletSpread_bazooka = 0f;
     [SerializeField] float _bulletSpread_minigun = 7f;
+    [SerializeField] int _numberOfShotgunPelletsPerShot = 7;
+    [SerializeField] float _angleOfShotgunSpread = 60;
 
     // References
     [SerializeField] GameObject pickupPrefab_life = null;
@@ -73,6 +76,9 @@ public class PickupManager : MonoBehaviour
     public float bulletSpread_sniper => _bulletSpread_sniper;
     public float bulletSpread_bazooka => _bulletSpread_bazooka;
     public float bulletSpread_minigun => _bulletSpread_minigun;
+    public float speedupMultiplier => _speedupMultiplier;
+    public int numberOfShotgunPelletsPerShot => _numberOfShotgunPelletsPerShot;
+    public float angleOfShotgunSpread => _angleOfShotgunSpread;
     #endregion
 
     // Private variables

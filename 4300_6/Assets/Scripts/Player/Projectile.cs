@@ -4,9 +4,18 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    public enum Type
+    {
+        SIMPLE,
+        SNIPER,
+        PELLET,
+        ROCKET
+    }
+
     // Attributes
     #region Attributes
     public float speed;
+    public Type type;
 
     // Inspector variables
     [SerializeField] float hitDamage = 0.01f;

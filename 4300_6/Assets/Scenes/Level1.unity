@@ -189,8 +189,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screenEdgeBuffer: 1
-  minimalZoom: 1
+  minimalZoom: 2.5
   maximalZoom: 5
+  cameraSpeed: 3
   players:
   - {fileID: 657481379}
   - {fileID: 1221024329}

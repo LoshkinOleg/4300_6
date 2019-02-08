@@ -8,10 +8,17 @@ public class CameraController : MonoBehaviour
     [SerializeField] float screenEdgeBuffer = 1;
     [SerializeField] float minimalZoom = 1;
     [SerializeField] float maximalZoom = 5;
+    [SerializeField] float cameraSpeed = 3;
     [SerializeField] GameObject[] players = new GameObject[2];
 
     // References
     Camera mainCamera = null;
+
+    // Private variables
+    float lerp_journeyLength;
+    Vector3 lerp_startingPosition;
+    Vector3 lerp_targetPosition;
+    float lerp_StartTime;
 
     // Private methods
     #region Private methods
@@ -90,8 +97,13 @@ public class CameraController : MonoBehaviour
     }
     void FixedUpdate()
     {
-        transform.position = GameManager.instance.averagePlayerPosition + new Vector3(0,0,transform.position.z);
-        
+        // Set position
+        transform.position = GameManager.instance.averagePlayerPosition + new Vector3(0, 0, transform.position.z);
+
+        // Manage camera zoom
+        mainCamera.orthographicSize = FindRequiredSize();
+
+        // Prevent the camera from going out of bounds.
         if (CheckIfCameraGoesOutsideBoundsHorizontally())
         {
             BringCameraInsideBoundsHorizontally();
@@ -100,8 +112,6 @@ public class CameraController : MonoBehaviour
         {
             BringCameraInsideBoundsVertically();
         }
-
-        mainCamera.orthographicSize = FindRequiredSize();
     }
     #endregion
 }

@@ -99,8 +99,8 @@ public class Player : MonoBehaviour
                                 weaponsGOs[i].SetActive(false);
                             }
                         }
-                        currentFirerate = PickupManager.instance.firerate_bazooka;
-                        currentBulletsSpeed = PickupManager.instance.bulletSpeed_bazooka;
+                        baseFirerate = PickupManager.instance.firerate_bazooka;
+                        baseBulletSpeed = PickupManager.instance.bulletSpeed_bazooka;
                         currentBulletDamage = PickupManager.instance.bulletDamage_bazooka;
                         currentBulletSpread = PickupManager.instance.bulletSpread_bazooka;
                     }
@@ -118,8 +118,8 @@ public class Player : MonoBehaviour
                                 weaponsGOs[i].SetActive(false);
                             }
                         }
-                        currentFirerate = PickupManager.instance.firerate_minigun;
-                        currentBulletsSpeed = PickupManager.instance.bulletSpeed_minigun;
+                        baseFirerate = PickupManager.instance.firerate_minigun;
+                        baseBulletSpeed = PickupManager.instance.bulletSpeed_minigun;
                         currentBulletDamage = PickupManager.instance.bulletDamage_minigun;
                         currentBulletSpread = PickupManager.instance.bulletSpread_minigun;
                     }
@@ -137,8 +137,8 @@ public class Player : MonoBehaviour
                                 weaponsGOs[i].SetActive(false);
                             }
                         }
-                        currentFirerate = PickupManager.instance.firerate_pistol;
-                        currentBulletsSpeed = PickupManager.instance.bulletSpeed_pistol;
+                        baseFirerate = PickupManager.instance.firerate_pistol;
+                        baseBulletSpeed = PickupManager.instance.bulletSpeed_pistol;
                         currentBulletDamage = PickupManager.instance.bulletDamage_pistol;
                         currentBulletSpread = PickupManager.instance.bulletSpread_pistol;
                     }
@@ -156,8 +156,8 @@ public class Player : MonoBehaviour
                                 weaponsGOs[i].SetActive(false);
                             }
                         }
-                        currentFirerate = PickupManager.instance.firerate_shotgun;
-                        currentBulletsSpeed = PickupManager.instance.bulletSpeed_shotgun;
+                        baseFirerate = PickupManager.instance.firerate_shotgun;
+                        baseBulletSpeed = PickupManager.instance.bulletSpeed_shotgun;
                         currentBulletDamage = PickupManager.instance.bulletDamage_shotgun;
                         currentBulletSpread = PickupManager.instance.bulletSpread_shotgun;
                     }
@@ -175,13 +175,15 @@ public class Player : MonoBehaviour
                                 weaponsGOs[i].SetActive(false);
                             }
                         }
-                        currentFirerate = PickupManager.instance.firerate_sniper;
-                        currentBulletsSpeed = PickupManager.instance.bulletSpeed_sniper;
+                        baseFirerate = PickupManager.instance.firerate_sniper;
+                        baseBulletSpeed = PickupManager.instance.bulletSpeed_sniper;
                         currentBulletDamage = PickupManager.instance.bulletDamage_sniper;
                         currentBulletSpread = PickupManager.instance.bulletSpread_sniper;
                     }
                     break;
             }
+            currentFirerate = baseFirerate;
+            currentBulletsSpeed = baseBulletSpeed;
             _currentWeapon = value;
         }
     }
@@ -215,7 +217,8 @@ public class Player : MonoBehaviour
     GunDirection currentGunDirection = GunDirection.FORWARD;
     // Speedup pickup related
     float currentBulletsSpeed;
-    float speedupMultiplier = 3;
+    float baseBulletSpeed;
+    bool isSpeedup = false;
     float speedupTimer;
     // Firing related
     Weapon _currentWeapon = Weapon.PISTOL;
@@ -223,6 +226,7 @@ public class Player : MonoBehaviour
     float aimingVerticalInput = 0;
     bool firing = false;
     float currentFirerate = 1;
+    float baseFirerate;
     float firingTimer = 0;
     float currentBulletDamage;
     float currentBulletSpread;
@@ -245,8 +249,17 @@ public class Player : MonoBehaviour
     }
     public void SpeedBulletsUp()
     {
-        currentBulletsSpeed = currentBulletsSpeed * speedupMultiplier;
-        speedupTimer = PickupManager.instance.speedupPickupTime;
+        if (!isSpeedup)
+        {
+            isSpeedup = true;
+            speedupTimer = PickupManager.instance.speedupPickupTime;
+            currentBulletsSpeed *= PickupManager.instance.speedupMultiplier;
+            currentFirerate *= PickupManager.instance.speedupMultiplier;
+        }
+        else
+        {
+            speedupTimer = PickupManager.instance.speedupPickupTime;
+        }
     }
     public void SetMovementMode(MovementMode mode)
     {
@@ -606,7 +619,9 @@ public class Player : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            Projectile newProjectile = Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>();
+                            newProjectile.speed = currentBulletsSpeed;
+                            newProjectile.type = Projectile.Type.SIMPLE;
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -615,7 +630,13 @@ public class Player : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            for (int i = 0; i < PickupManager.instance.numberOfShotgunPelletsPerShot; i++)
+                            {
+                                Quaternion rotation = gunGO.transform.rotation * Quaternion.Euler(0,0,0);
+                                Projectile newProjectile = Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>();
+                                newProjectile.speed = currentBulletsSpeed;
+                                newProjectile.type = Projectile.Type.SIMPLE;
+                            }
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -624,7 +645,9 @@ public class Player : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            Projectile newProjectile = Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>();
+                            newProjectile.speed = currentBulletsSpeed;
+                            newProjectile.type = Projectile.Type.SIMPLE;
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -633,7 +656,9 @@ public class Player : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            Projectile newProjectile = Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>();
+                            newProjectile.speed = currentBulletsSpeed;
+                            newProjectile.type = Projectile.Type.SIMPLE;
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -642,7 +667,9 @@ public class Player : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>().speed = currentBulletsSpeed;
+                            Projectile newProjectile = Instantiate(bulletPrefab, transform.position, gunGO.transform.rotation).GetComponent<Projectile>();
+                            newProjectile.speed = currentBulletsSpeed;
+                            newProjectile.type = Projectile.Type.SIMPLE;
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -652,7 +679,12 @@ public class Player : MonoBehaviour
 
         if (speedupTimer < 0)
         {
-            speedupMultiplier = 1;
+            if (isSpeedup)
+            {
+                currentBulletsSpeed = baseBulletSpeed;
+                currentFirerate = baseFirerate;
+                isSpeedup = false;
+            }
         }
     }
     void ApplySpeedLimit()
@@ -701,7 +733,10 @@ public class Player : MonoBehaviour
         playerCollider = GetComponent<BoxCollider2D>();
         healthImage = healthImageGO.GetComponent<Image>();
         firingTimer = 1 / currentFirerate;
-        currentBulletsSpeed = PickupManager.instance.bulletSpeed_pistol;
+        baseFirerate = PickupManager.instance.firerate_pistol;
+        currentFirerate = baseFirerate;
+        baseBulletSpeed = PickupManager.instance.bulletSpeed_pistol;
+        currentBulletsSpeed = baseBulletSpeed;
         SetMovementMode(MovementMode.AIRBORNE);
         currentWeapon = Weapon.PISTOL;
 
