@@ -14,28 +14,6 @@ public class PickupManager : MonoBehaviour
     [SerializeField] float _pickupSpeedLimit = 3;
     [SerializeField] float _jetpackDuration = 10;
     [SerializeField] float _jetpackVelocity = 7;
-    [SerializeField] float _firerate_pistol = 4;
-    [SerializeField] float _firerate_shotgun = 1;
-    [SerializeField] float _firerate_sniper = 1;
-    [SerializeField] float _firerate_bazooka = 0.5f;
-    [SerializeField] float _firerate_minigun = 20;
-    [SerializeField] float _bulletSpeed_pistol = 10;
-    [SerializeField] float _bulletSpeed_shotgun = 10;
-    [SerializeField] float _bulletSpeed_sniper = 40;
-    [SerializeField] float _bulletSpeed_bazooka = 5;
-    [SerializeField] float _bulletSpeed_minigun = 10;
-    [SerializeField] float _bulletDamage_pistol = 0.01f;
-    [SerializeField] float _bulletDamage_shotgun = 0.1f;
-    [SerializeField] float _bulletDamage_sniper = 0.34f;
-    [SerializeField] float _bulletDamage_bazooka = 0.2f;
-    [SerializeField] float _bulletDamage_minigun = 0.01f;
-    [SerializeField] float _bulletSpread_pistol = 3f;
-    [SerializeField] float _bulletSpread_shotgun = 0f;
-    [SerializeField] float _bulletSpread_sniper = 0f;
-    [SerializeField] float _bulletSpread_bazooka = 0f;
-    [SerializeField] float _bulletSpread_minigun = 7f;
-    [SerializeField] int _numberOfShotgunPelletsPerShot = 7;
-    [SerializeField] float _angleOfShotgunSpread = 60;
 
     // References
     [SerializeField] GameObject pickupPrefab_life = null;
@@ -56,29 +34,7 @@ public class PickupManager : MonoBehaviour
     public float speedupPickupTime => _speedupPickupTime;
     public float jetpackDuration => _jetpackDuration;
     public float jetpackVelocity => _jetpackVelocity;
-    public float firerate_pistol => _firerate_pistol;
-    public float firerate_shotgun => _firerate_shotgun;
-    public float firerate_sniper => _firerate_sniper;
-    public float firerate_bazooka => _firerate_bazooka;
-    public float firerate_minigun => _firerate_minigun;
-    public float bulletSpeed_pistol => _bulletSpeed_pistol;
-    public float bulletSpeed_shotgun => _bulletSpeed_shotgun;
-    public float bulletSpeed_sniper => _bulletSpeed_sniper;
-    public float bulletSpeed_bazooka => _bulletSpeed_bazooka;
-    public float bulletSpeed_minigun => _bulletSpeed_minigun;
-    public float bulletDamage_pistol => _bulletDamage_pistol;
-    public float bulletDamage_shotgun => _bulletDamage_shotgun;
-    public float bulletDamage_sniper => _bulletDamage_sniper;
-    public float bulletDamage_bazooka => _bulletDamage_bazooka;
-    public float bulletDamage_minigun => _bulletDamage_minigun;
-    public float bulletSpread_pistol => _bulletSpread_pistol;
-    public float bulletSpread_shotgun => _bulletSpread_shotgun;
-    public float bulletSpread_sniper => _bulletSpread_sniper;
-    public float bulletSpread_bazooka => _bulletSpread_bazooka;
-    public float bulletSpread_minigun => _bulletSpread_minigun;
     public float speedupMultiplier => _speedupMultiplier;
-    public int numberOfShotgunPelletsPerShot => _numberOfShotgunPelletsPerShot;
-    public float angleOfShotgunSpread => _angleOfShotgunSpread;
     #endregion
 
     // Private variables
@@ -124,66 +80,66 @@ public class PickupManager : MonoBehaviour
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.SpeedBulletsUp();
+            GameManager.instance.player1.firingController.SpeedBulletsUp();
         }
         else
         {
-            GameManager.instance.player2.SpeedBulletsUp();
+            GameManager.instance.player2.firingController.SpeedBulletsUp();
         }
     }
     public void Pickup_Jetpack(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.SetMovementMode(Player.MovementMode.JETPACK);
+            GameManager.instance.player1.currentMovementMode = PlayerMovementController.MovementMode.JETPACK;
         }
         else
         {
-            GameManager.instance.player2.SetMovementMode(Player.MovementMode.JETPACK);
+            GameManager.instance.player2.currentMovementMode = PlayerMovementController.MovementMode.JETPACK;
         }
     }
     public void Pickup_Shotgun(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.currentWeapon = Player.Weapon.SHOTGUN;
+            GameManager.instance.player1.currentWeapon = PlayerFiringController.Weapon.SHOTGUN;
         }
         else
         {
-            GameManager.instance.player2.currentWeapon = Player.Weapon.SHOTGUN;
+            GameManager.instance.player2.currentWeapon = PlayerFiringController.Weapon.SHOTGUN;
         }
     }
     public void Pickup_Sniper(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.currentWeapon = Player.Weapon.SNIPER;
+            GameManager.instance.player1.currentWeapon = PlayerFiringController.Weapon.SNIPER;
         }
         else
         {
-            GameManager.instance.player2.currentWeapon = Player.Weapon.SNIPER;
+            GameManager.instance.player2.currentWeapon = PlayerFiringController.Weapon.SNIPER;
         }
     }
     public void Pickup_Bazooka(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.currentWeapon = Player.Weapon.BAZOOKA;
+            GameManager.instance.player1.currentWeapon = PlayerFiringController.Weapon.BAZOOKA;
         }
         else
         {
-            GameManager.instance.player2.currentWeapon = Player.Weapon.BAZOOKA;
+            GameManager.instance.player2.currentWeapon = PlayerFiringController.Weapon.BAZOOKA;
         }
     }
     public void Pickup_Minigun(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.currentWeapon = Player.Weapon.MINIGUN;
+            GameManager.instance.player1.currentWeapon = PlayerFiringController.Weapon.MINIGUN;
         }
         else
         {
-            GameManager.instance.player2.currentWeapon = Player.Weapon.BAZOOKA;
+            GameManager.instance.player2.currentWeapon = PlayerFiringController.Weapon.MINIGUN;
         }
     }
     #endregion

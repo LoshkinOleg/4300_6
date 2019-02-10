@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+
     // Attributes
     #region Attributes
     // References
@@ -12,15 +13,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject soundManager = null;
     BoxCollider2D _bottomBoundsCollider = null;
     static GameManager _instance = null;
-    Player _player1 = null;
-    Player _player2 = null;
+    PlayerManager _player1 = null;
+    PlayerManager _player2 = null;
     Rigidbody2D _player1RB = null;
     Rigidbody2D _player2RB = null;
 
     // Public properties
     public static GameManager instance => _instance;
-    public Player player1 => _player1;
-    public Player player2 => _player2;
+    public PlayerManager player1 => _player1;
+    public PlayerManager player2 => _player2;
     public Rigidbody2D player1RB => _player1RB;
     public Rigidbody2D player2RB => _player2RB;
     public float gameViewHorizontalDistanceInMeters => _gameViewHorizontalDistanceInMeters;
@@ -42,6 +43,10 @@ public class GameManager : MonoBehaviour
     {
         this.loser = loser;
         SceneManager.LoadScene("Score");
+    }
+    public float CalculateNorm(Vector2 vector)
+    {
+        return Mathf.Sqrt(Mathf.Pow(vector.x, 2) + Mathf.Pow(vector.y, 2));
     }
     #endregion
 
@@ -74,9 +79,9 @@ public class GameManager : MonoBehaviour
                 Debug.LogError("GameManager.cs: Reference to one of the managers is missing: PickupManager: " + PickupManager.instance + " ; CrateManager: " + CrateManager.instance);
             }
 
-            _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<Player>();
+            _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<PlayerManager>();
             _player1RB = _player1.gameObject.GetComponent<Rigidbody2D>();
-            _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<Player>();
+            _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerManager>();
             _player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
             _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
             inMainScene = true;

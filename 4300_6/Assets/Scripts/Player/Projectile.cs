@@ -4,21 +4,10 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public enum Type
-    {
-        SIMPLE,
-        SNIPER,
-        PELLET,
-        ROCKET
-    }
-
     // Attributes
     #region Attributes
     public float speed;
-    public Type type;
-
-    // Inspector variables
-    [SerializeField] float hitDamage = 0.01f;
+    public PlayerFiringController.Weapon type;
 
     // References
     [SerializeField] GameObject projectileSpriteGO = null;
@@ -28,6 +17,7 @@ public class Projectile : MonoBehaviour
 
     // Private variables
     bool isPlayingDestructionAnimation = false;
+    float x; // x variable in the Cos(x) function. Used to create a sinusoidal movement for the rocket projectile.
     #endregion
 
     // Private methods
@@ -64,9 +54,26 @@ public class Projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isPlayingDestructionAnimation)
+        if (type != PlayerFiringController.Weapon.BAZOOKA)
         {
-            bulletRigidbody2D.velocity = transform.right * speed;
+            if (!isPlayingDestructionAnimation)
+            {
+                bulletRigidbody2D.velocity = transform.right * speed;
+            }
+        }
+        else
+        {
+            // It is a rocket
+            if (!isPlayingDestructionAnimation)
+            {
+                // Apply sinusoidal rotation
+                x += Time.fixedDeltaTime;
+
+                // Mathf.Cos(x * Mathf.PI * 2) is a cos function with a frequency of 1 and an amplitude of 1.
+                transform.rotation *= Quaternion.Euler(0,0, Mathf.Cos(x * Mathf.PI * 2) * 7); // The 7 is dark magic that sets up the amplitude of the function.
+
+                bulletRigidbody2D.velocity = transform.right * speed;
+            }
         }
     }
 
@@ -74,11 +81,11 @@ public class Projectile : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player1")
         {
-            GameManager.instance.player1.ModifyHealth(-hitDamage);
+            GameManager.instance.player1.ProjectileHit(gameObject, type);
         }
         else if (collision.gameObject.tag == "Player2")
         {
-            GameManager.instance.player2.ModifyHealth(-hitDamage);
+            GameManager.instance.player1.ProjectileHit(gameObject, type);
         }
 
         if (!isPlayingDestructionAnimation)

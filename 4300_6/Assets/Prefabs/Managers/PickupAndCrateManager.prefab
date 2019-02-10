@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601dbaf55795f9a42aca166acefab115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chanceForPickupToSpawnPerSecond: 20
+  chanceForPickupToSpawnPerSecond: 100
   _speedupPickupTime: 5
   _speedupMultiplier: 2
   healthPickupValue: 0.5
@@ -66,11 +66,13 @@ MonoBehaviour:
   _bulletDamage_sniper: 0.34
   _bulletDamage_bazooka: 0.2
   _bulletDamage_minigun: 0.01
-  _bulletSpread_pistol: 3
+  _bulletSpread_pistol: 8
   _bulletSpread_shotgun: 0
   _bulletSpread_sniper: 0
   _bulletSpread_bazooka: 0
-  _bulletSpread_minigun: 7
+  _bulletSpread_minigun: 20
+  _numberOfShotgunPelletsPerShot: 13
+  _angleOfShotgunSpread: 55
   pickupPrefab_life: {fileID: 4323740266736981398, guid: 32c93fbc23e791849b7e41374167c1e0,
     type: 3}
   pickupPrefab_health: {fileID: 4323740266736981398, guid: efc55e80c45aec542973b950ee90b145,
