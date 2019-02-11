@@ -6,8 +6,12 @@ public class Projectile : MonoBehaviour
 {
     // Attributes
     #region Attributes
-    public float speed;
-    public PlayerFiringController.Weapon type;
+    // Setup variables
+    [HideInInspector] public float speed;
+    [HideInInspector] public PlayerFiringController.Weapon type;
+
+    // Inspector variables
+    [SerializeField] float explosionRadius = 1.5f;
 
     // References
     [SerializeField] GameObject projectileSpriteGO = null;
@@ -77,15 +81,30 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player1")
+        if (type != PlayerFiringController.Weapon.BAZOOKA)
         {
-            GameManager.instance.player1.ProjectileHit(gameObject, type);
+            if (collision.gameObject.tag == "Player1")
+            {
+                GameManager.instance.player1.ProjectileHit(gameObject, type);
+            }
+            else if (collision.gameObject.tag == "Player2")
+            {
+                GameManager.instance.player2.ProjectileHit(gameObject, type);
+            }
         }
-        else if (collision.gameObject.tag == "Player2")
+        else
         {
-            GameManager.instance.player1.ProjectileHit(gameObject, type);
+            // It is a rocket.
+            if (Vector3.Distance(GameManager.instance.player1.transform.position, transform.position) < explosionRadius)
+            {
+                GameManager.instance.player1.ExplosionHit(transform.position);
+            }
+            if (Vector3.Distance(GameManager.instance.player2.transform.position, transform.position) < explosionRadius)
+            {
+                GameManager.instance.player2.ExplosionHit(transform.position);
+            }
         }
 
         if (!isPlayingDestructionAnimation)

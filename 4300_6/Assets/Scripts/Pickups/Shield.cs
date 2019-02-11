@@ -5,7 +5,23 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     [SerializeField] int hitCounter = 3;
-    public GameObject target = null; // Needs to be set up upon shield instantiation.
+    [HideInInspector] public GameObject target
+    {
+        private get
+        {
+            return _target;
+        }
+        set
+        {
+            if (value == GameManager.instance.player1.gameObject)
+            {
+                leftPlayerIsTarget = true;
+            }
+            _target = value;
+        }
+    }
+    GameObject _target = null;
+    bool leftPlayerIsTarget;
 
     public void Hit()
     {
@@ -13,11 +29,21 @@ public class Shield : MonoBehaviour
     }
 
     // Inherited methods
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Projectile")
+        if (leftPlayerIsTarget)
         {
-            Hit();
+            if (collision.gameObject.tag == "Player2Projectile")
+            {
+                Hit();
+            }
+        }
+        else
+        {
+            if (collision.gameObject.tag == "Player1Projectile")
+            {
+                Hit();
+            }
         }
     }
 

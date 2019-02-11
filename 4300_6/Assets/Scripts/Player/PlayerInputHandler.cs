@@ -107,14 +107,14 @@ public class PlayerInputHandler : MonoBehaviour
             {
                 if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
                 {
-                    _tryingToOpenParachute = true;
+                    tryingToOpenParachute = true;
                 }
             }
             if (Input.GetButtonUp("Player2_Parachute"))
             {
                 if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
                 {
-                    _tryingToOpenParachute = false;
+                    tryingToOpenParachute = false;
                 }
             }
             

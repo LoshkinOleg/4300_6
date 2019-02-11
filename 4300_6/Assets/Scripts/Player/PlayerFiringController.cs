@@ -52,6 +52,7 @@ public class PlayerFiringController : MonoBehaviour
             currentFirerate = playerManager.weaponsData[(int)value].firerate;
             currentSpread = playerManager.weaponsData[(int)value].spread;
             currentNumberOfProjectilesPerShot = playerManager.weaponsData[(int)value].numberOfProjectiles;
+            currentFiringKnockback = playerManager.weaponsData[(int)value].firingKnockback;
         }
     }
 
@@ -68,10 +69,12 @@ public class PlayerFiringController : MonoBehaviour
             {
                 bulletsSpeedupTimer = PickupManager.instance.speedupPickupTime;
                 currentProjectileSpeed *= PickupManager.instance.speedupMultiplier;
+                currentFirerate *= PickupManager.instance.speedupMultiplier;
             }
             else
             {
                 currentProjectileSpeed /= PickupManager.instance.speedupMultiplier;
+                currentFirerate /= PickupManager.instance.speedupMultiplier;
             }
             _isSpeedup = value;
         }
@@ -82,7 +85,8 @@ public class PlayerFiringController : MonoBehaviour
     float currentProjectileSpeed;
     float currentFirerate;
     float currentSpread;
-    float currentNumberOfProjectilesPerShot;
+    int currentNumberOfProjectilesPerShot;
+    float currentFiringKnockback;
     bool _isSpeedup;
     float firingTimer;
     float bulletsSpeedupTimer;
@@ -96,7 +100,7 @@ public class PlayerFiringController : MonoBehaviour
     }
     public void Init()
     {
-        currentWeapon = Weapon.PISTOL;
+        currentWeapon = Weapon.BAZOOKA;
     }
     #endregion
 
@@ -119,6 +123,9 @@ public class PlayerFiringController : MonoBehaviour
                             Projectile newProjectile = Instantiate(bulletsPrefabs[0], transform.position, rotation).GetComponent<Projectile>();
                             newProjectile.speed = currentProjectileSpeed;
                             newProjectile.type = currentWeapon;
+
+                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -127,25 +134,19 @@ public class PlayerFiringController : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-
-                            /*
-                            for (int i = -PickupManager.instance.numberOfShotgunPelletsPerShot/2; i < PickupManager.instance.numberOfShotgunPelletsPerShot/2; i++)
+                            for (int i = -currentNumberOfProjectilesPerShot/2; i < currentNumberOfProjectilesPerShot / 2; i++)
                             {
-                                // Calculate the direction the pellet has to go.
-                                float degresToAdd = PickupManager.instance.angleOfShotgunSpread / (PickupManager.instance.numberOfShotgunPelletsPerShot + 1);
-                                if (i <= PickupManager.instance.numberOfShotgunPelletsPerShot / 2)
-                                {
-                                    degresToAdd = -degresToAdd;
-                                }
-                                Quaternion rotation = gunGO.transform.rotation * Quaternion.Euler(0,0,degresToAdd * i);
+                                float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
+                                Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
 
-                                // Instantiate and setup the bullet.
-                                Projectile newProjectile = Instantiate(bulletPrefab, transform.position, rotation).GetComponent<Projectile>();
-                                newProjectile.speed = currentBulletsSpeed;
-                                newProjectile.type = Projectile.Type.PELLET;
+                                Projectile newProjectile = Instantiate(bulletsPrefabs[1], transform.position, rotation).GetComponent<Projectile>();
+                                newProjectile.speed = currentProjectileSpeed;
+                                newProjectile.type = currentWeapon;
                             }
+
+                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
                             firingTimer = 1 / currentFirerate;
-                            */
                         }
                     }
                     break;
@@ -153,10 +154,16 @@ public class PlayerFiringController : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            Projectile newProjectile = Instantiate(bulletsPrefabs[2], transform.position, playerManager.armGO.transform.rotation).GetComponent<Projectile>();
-                            newProjectile.speed = playerManager.weaponsData[2].projectileSpeed;
-                            newProjectile.type = Weapon.SNIPER;
-                            firingTimer = 1 / playerManager.weaponsData[2].firerate;
+                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
+                            Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
+
+                            Projectile newProjectile = Instantiate(bulletsPrefabs[2], transform.position, rotation).GetComponent<Projectile>();
+                            newProjectile.speed = currentProjectileSpeed;
+                            newProjectile.type = currentWeapon;
+
+                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
+                            firingTimer = 1 / currentFirerate;
                         }
                     }
                     break;
@@ -164,10 +171,16 @@ public class PlayerFiringController : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            Projectile newProjectile = Instantiate(bulletsPrefabs[3], transform.position, playerManager.armGO.transform.rotation).GetComponent<Projectile>();
-                            newProjectile.speed = playerManager.weaponsData[3].projectileSpeed;
-                            newProjectile.type = Weapon.BAZOOKA;
-                            firingTimer = 1 / playerManager.weaponsData[3].firerate;
+                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
+                            Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
+
+                            Projectile newProjectile = Instantiate(bulletsPrefabs[3], transform.position, rotation).GetComponent<Projectile>();
+                            newProjectile.speed = currentProjectileSpeed;
+                            newProjectile.type = currentWeapon;
+
+                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
+                            firingTimer = 1 / currentFirerate;
                         }
                     }
                     break;
@@ -175,14 +188,16 @@ public class PlayerFiringController : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            // Calculate the direction the bullet will go with spread accounted.
-                            float randomSpread = Random.Range(-playerManager.weaponsData[4].spread / 2, -playerManager.weaponsData[4].spread / 2);
+                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
                             Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
 
                             Projectile newProjectile = Instantiate(bulletsPrefabs[4], transform.position, rotation).GetComponent<Projectile>();
-                            newProjectile.speed = playerManager.weaponsData[4].projectileSpeed;
-                            newProjectile.type = Weapon.MINIGUN;
-                            firingTimer = 1 / playerManager.weaponsData[4].firerate;
+                            newProjectile.speed = currentProjectileSpeed;
+                            newProjectile.type = currentWeapon;
+                            
+                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
+                            firingTimer = 1 / currentFirerate;
                         }
                     }
                     break;

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firerate: 1
   projectileSpeed: 20
-  damage: 0
-  spread: 120
-  firingKnockback: 20
-  hitKnockback: 4.17
-  numberOfProjectiles: 12
+  damage: 0.05
+  spread: 65
+  firingKnockback: 1000
+  hitKnockback: 500
+  numberOfProjectiles: 14

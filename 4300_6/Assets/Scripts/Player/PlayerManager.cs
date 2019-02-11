@@ -143,9 +143,21 @@ public class PlayerManager : MonoBehaviour
                 break;
         }
     } // Damages player and relays the message to the physics component for knockback.
-    public void CrateBottomHit(BoxCollider2D collider)
+    public void CrateBottomHit(BoxCollider2D crate)
     {
-        // Give orders to stun and physics components
+        if (parachuteIsOpen)
+        {
+            ToggleParachute();
+        }
+        stunController.CrateBottomHit(crate);
+        physicsHandler.CrateBottomHit(crate);
+    }
+    public void ExplosionHit(Vector3 position)
+    {
+        ModifyHealth(-weaponsData[3].damage);
+
+        Vector2 direction = -(position - transform.position);
+        physicsHandler.AddForce(direction * weaponsData[3].hitKnockback);
     }
     public void Kill()
     {

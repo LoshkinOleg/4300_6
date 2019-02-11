@@ -11,5 +11,5 @@ public class Weapon_Template : ScriptableObject
     public float spread = 1;
     public float firingKnockback = 1;
     public float hitKnockback = 1;
-    public float numberOfProjectiles = 1;
+    public int numberOfProjectiles = 1;
 }

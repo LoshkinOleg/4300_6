@@ -13,7 +13,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
     Rigidbody2D playerRigidbody = null;
-    BoxCollider2D playerCollider = null;
+    CapsuleCollider2D playerCollider = null;
 
     // Public properties
     public PlayerManager playerManager
@@ -62,7 +62,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
     #region Public methods
     public void ProjectileHit(GameObject projectile, PlayerFiringController.Weapon type)
     {
-        Vector2 directionOfKnockback = Vector3.Normalize((Vector2)projectile.transform.position - (Vector2)transform.position);
+        Vector2 directionOfKnockback = -Vector3.Normalize((Vector2)projectile.transform.position - (Vector2)transform.position);
         switch (type)
         {
             case PlayerFiringController.Weapon.PISTOL:
@@ -97,6 +97,20 @@ public class PlayerPhysicsHandler : MonoBehaviour
                 break;
         }
     }
+    public void CrateBottomHit(BoxCollider2D crate)
+    {
+        if (playerCollider.IsTouching(crate))
+        {
+            if (playerCollider.IsTouching(GameManager.instance.bottomBoundsCollider))
+            {
+                playerManager.Kill();
+            }
+            else
+            {
+                playerManager.physicsHandler.AddForce(Vector2.down * playerManager.stunController.stunForceMultiplier);
+            }
+        }
+    }
     public void ToggleGravity()
     {
         playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
@@ -123,7 +137,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
     public void Init()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
-        playerCollider = GetComponent<BoxCollider2D>();
+        playerCollider = GetComponent<CapsuleCollider2D>();
     }
     #endregion
 

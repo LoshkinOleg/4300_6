@@ -44,35 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601dbaf55795f9a42aca166acefab115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chanceForPickupToSpawnPerSecond: 100
+  chanceForPickupToSpawnPerSecond: 10
   _speedupPickupTime: 5
   _speedupMultiplier: 2
   healthPickupValue: 0.5
   _pickupSpeedLimit: 3
   _jetpackDuration: 10
   _jetpackVelocity: 7
-  _firerate_pistol: 4
-  _firerate_shotgun: 1
-  _firerate_sniper: 1
-  _firerate_bazooka: 0.5
-  _firerate_minigun: 20
-  _bulletSpeed_pistol: 10
-  _bulletSpeed_shotgun: 10
-  _bulletSpeed_sniper: 40
-  _bulletSpeed_bazooka: 5
-  _bulletSpeed_minigun: 10
-  _bulletDamage_pistol: 0.01
-  _bulletDamage_shotgun: 0.1
-  _bulletDamage_sniper: 0.34
-  _bulletDamage_bazooka: 0.2
-  _bulletDamage_minigun: 0.01
-  _bulletSpread_pistol: 8
-  _bulletSpread_shotgun: 0
-  _bulletSpread_sniper: 0
-  _bulletSpread_bazooka: 0
-  _bulletSpread_minigun: 20
-  _numberOfShotgunPelletsPerShot: 13
-  _angleOfShotgunSpread: 55
   pickupPrefab_life: {fileID: 4323740266736981398, guid: 32c93fbc23e791849b7e41374167c1e0,
     type: 3}
   pickupPrefab_health: {fileID: 4323740266736981398, guid: efc55e80c45aec542973b950ee90b145,
@@ -106,6 +84,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _crateSpeedLimit: 1
-  chanceToSpawnCratePerSecond: 10
+  chanceToSpawnCratePerSecond: 100
   cratePrefab: {fileID: 6194907134823173452, guid: 43e36453f6ec19245a34bb326ae71f4d,
     type: 3}

@@ -8,6 +8,8 @@ TagManager:
   - Player2
   - Destructor
   - BottomBounds
+  - Player2Projectile
+  - Player1Projectile
   layers:
   - Default
   - TransparentFX
@@ -24,7 +26,7 @@ TagManager:
   - Projectile2
   - Pickup
   - Crate
-  - 
+  - Shield
   - 
   - 
   - 

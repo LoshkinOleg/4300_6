@@ -8,11 +8,10 @@ public class PlayerStunController : MonoBehaviour
     #region Attributes
     // Inspector variables
     [SerializeField] float stunDuration = 0.5f;
-    [SerializeField] float stunForceMultiplier = 7;
+    [SerializeField] float _stunForceMultiplier = 500;
 
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
-    BoxCollider2D lastCrateBottomHit_collider = null;
 
     // Public properties
     public PlayerManager playerManager
@@ -34,6 +33,7 @@ public class PlayerStunController : MonoBehaviour
         }
     }
     public float stunTimer => _stunTimer;
+    public float stunForceMultiplier => _stunForceMultiplier;
 
     // Private variables
     float _stunTimer = 0;
@@ -44,6 +44,10 @@ public class PlayerStunController : MonoBehaviour
     public void Stun()
     {
         _stunTimer = stunDuration;
+    }
+    public void CrateBottomHit(BoxCollider2D crate)
+    {
+        Stun();
     }
     public void Init()
     {
@@ -58,17 +62,8 @@ public class PlayerStunController : MonoBehaviour
         if (stunTimer > 0) // If stunned.
         {
             playerManager.gravity = 0; // Set gravity to 0.
-            if (lastCrateBottomHit_collider != null)
-            {
-                if (playerManager.physicsHandler.IsTouching(GameManager.instance.bottomBoundsCollider) && playerManager.physicsHandler.IsTouching(lastCrateBottomHit_collider))
-                {
-                    playerManager.Kill(); // Kill player if he's caught between the bottom of a box and the bottom bounds.
-                }
-                else if (playerManager.physicsHandler.IsTouching(lastCrateBottomHit_collider))
-                {
-                    playerManager.physicsHandler.AddForce(Vector2.down * stunForceMultiplier);
-                }
-            }
+
+            // Disable inputs
         }
     }
     #endregion

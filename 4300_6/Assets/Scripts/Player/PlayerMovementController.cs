@@ -55,6 +55,8 @@ public class PlayerMovementController : MonoBehaviour
                 {
                     playerManager.ToggleParachute();
                 }
+                playerManager.gravity = 0;
+                jetpackTimer = PickupManager.instance.jetpackDuration;
             }
             _currentMovementMode = value;
         }
@@ -112,6 +114,7 @@ public class PlayerMovementController : MonoBehaviour
                     {
                         // Exit jetpack mode.
                         _currentMovementMode = MovementMode.AIRBORNE;
+                        playerManager.physicsHandler.ResetGravity();
                     }
                 }
                 break;
