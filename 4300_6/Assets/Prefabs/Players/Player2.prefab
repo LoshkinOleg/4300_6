@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3487737237929945506}
   - component: {fileID: 8550424049824656265}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Feet_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8639902279329764571}
   - component: {fileID: 8664007867377175912}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Parachute_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,7 +168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8048899218083751854}
   - component: {fileID: 7065398882382760808}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2791832271971745353}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +280,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2460751756455399285}
   - component: {fileID: 2297175697198789613}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -359,7 +359,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1628157619318430475}
   - component: {fileID: 8735414925810802197}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -437,7 +437,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4394938706873105827}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,7 +468,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1420163975365513281}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Sniper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -499,7 +499,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3382648638257323775}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Arms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -535,7 +535,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6070826268089767724}
   - component: {fileID: 8077171801018534389}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -614,7 +614,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4848834886452496592}
   - component: {fileID: 4848834886452496607}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Body_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -702,9 +702,9 @@ GameObject:
   - component: {fileID: 1059125894382690669}
   - component: {fileID: 7294951321575141521}
   - component: {fileID: 3520650665117570390}
-  m_Layer: 9
-  m_Name: Player1
-  m_TagString: Player1
+  m_Layer: 10
+  m_Name: Player2
+  m_TagString: Player2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -716,7 +716,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4848834887403473507}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -725,7 +725,7 @@ Transform:
   - {fileID: 8639902279329764571}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!61 &4848834887403473504
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -785,7 +785,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ea64325d5c0154e9f9912f86088869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isLeftPlayer: 1
+  _isLeftPlayer: 0
   _weaponsData:
   - {fileID: 11400000, guid: 00fecf7fd3db9284b9ae33e05cd101b3, type: 2}
   - {fileID: 11400000, guid: c8e07e9efb8d6f44db5e7ca0ebe6e93c, type: 2}
@@ -878,11 +878,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerManager: {fileID: 0}
   bulletsPrefabs:
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
+  - {fileID: 4222088480428699918, guid: 6c799435c23c9ed409cde03f0e783f41, type: 3}
+  - {fileID: 4222088480428699918, guid: 6c799435c23c9ed409cde03f0e783f41, type: 3}
+  - {fileID: 4222088480428699918, guid: 6c799435c23c9ed409cde03f0e783f41, type: 3}
+  - {fileID: 4222088480428699918, guid: 6c799435c23c9ed409cde03f0e783f41, type: 3}
+  - {fileID: 4222088480428699918, guid: 6c799435c23c9ed409cde03f0e783f41, type: 3}
 --- !u!114 &3520650665117570390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -914,7 +914,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5556336075922414217}
   - component: {fileID: 1698477133916682384}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Head_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -992,7 +992,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1260728641642396252}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1023,7 +1023,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 299851847109734367}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Minigun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1055,7 +1055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5149609634305365850}
   - component: {fileID: 3074605618154261513}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1133,7 +1133,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5437273982008688790}
-  m_Layer: 9
+  m_Layer: 10
   m_Name: Bazooka
   m_TagString: Untagged
   m_Icon: {fileID: 0}

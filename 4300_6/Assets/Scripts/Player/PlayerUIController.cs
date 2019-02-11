@@ -21,7 +21,7 @@ public class PlayerUIController : MonoBehaviour
         }
         set
         {
-            if (_playerManager = null)
+            if (_playerManager == null)
             {
                 _playerManager = value;
             }
@@ -39,11 +39,7 @@ public class PlayerUIController : MonoBehaviour
     {
         healthImage.fillAmount = playerManager.health;
     }
-    #endregion
-
-    // Inherited methods
-    #region Inherited methods
-    private void Start()
+    public void Init()
     {
         healthImage = healthImageGO.GetComponent<Image>();
     }

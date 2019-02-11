@@ -23,7 +23,7 @@ public class PlayerStunController : MonoBehaviour
         }
         set
         {
-            if (_playerManager = null)
+            if (_playerManager == null)
             {
                 _playerManager = value;
             }
@@ -44,6 +44,10 @@ public class PlayerStunController : MonoBehaviour
     public void Stun()
     {
         _stunTimer = stunDuration;
+    }
+    public void Init()
+    {
+
     }
     #endregion
 

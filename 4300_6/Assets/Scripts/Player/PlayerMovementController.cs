@@ -30,7 +30,7 @@ public class PlayerMovementController : MonoBehaviour
         }
         set
         {
-            if (_playerManager = null)
+            if (_playerManager == null)
             {
                 _playerManager = value;
             }
@@ -63,6 +63,14 @@ public class PlayerMovementController : MonoBehaviour
     // Private variables
     MovementMode _currentMovementMode = MovementMode.AIRBORNE;
     float jetpackTimer;
+    #endregion
+
+    // Public methods
+    #region Public methods
+    public void Init()
+    {
+        currentMovementMode = MovementMode.AIRBORNE;
+    }
     #endregion
 
     // Private methods
@@ -113,10 +121,6 @@ public class PlayerMovementController : MonoBehaviour
 
     // Inherited methods
     #region Inherited methods
-    private void Start()
-    {
-        currentMovementMode = MovementMode.AIRBORNE;
-    }
     private void FixedUpdate()
     {
         Move();

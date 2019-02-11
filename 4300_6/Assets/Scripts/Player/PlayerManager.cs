@@ -173,14 +173,54 @@ public class PlayerManager : MonoBehaviour
     #region Inherited methods
     private void Start()
     {
-        // Give other components a reference to the PlayerManager.
+        if ((_movementController = GetComponent<PlayerMovementController>()) == null)
+        {
+            Debug.LogError("PlayerManager.cs: player component not found.");
+        }
         movementController.playerManager = this;
+        movementController.Init();
+
+        if ((_firingController = GetComponent<PlayerFiringController>()) == null)
+        {
+            Debug.LogError("PlayerManager.cs: player component not found.");
+        }
         firingController.playerManager = this;
+        firingController.Init();
+
+        if ((_animationAndOrientationController = GetComponent<PlayerAnimationAndOrientationController>()) == null)
+        {
+            Debug.LogError("PlayerManager.cs: player component not found.");
+        }
         animationAndOrientationController.playerManager = this;
+        animationAndOrientationController.Init();
+
+        if ((_physicsHandler = GetComponent<PlayerPhysicsHandler>()) == null)
+        {
+            Debug.LogError("PlayerManager.cs: player component not found.");
+        }
         physicsHandler.playerManager = this;
+        physicsHandler.Init();
+
+        if ((_inputHandler = GetComponent<PlayerInputHandler>()) == null)
+        {
+            Debug.LogError("PlayerManager.cs: player component not found.");
+        }
         inputHandler.playerManager = this;
+        inputHandler.Init();
+
+        if ((_stunController = GetComponent<PlayerStunController>()) == null)
+        {
+            Debug.LogError("PlayerManager.cs: player component not found.");
+        }
         stunController.playerManager = this;
+        stunController.Init();
+
+        if ((_uiController = GetComponent<PlayerUIController>()) == null)
+        {
+            Debug.LogError("PlayerManager.cs: player component not found.");
+        }
         uiController.playerManager = this;
+        uiController.Init();
     }
     private void Update()
     {

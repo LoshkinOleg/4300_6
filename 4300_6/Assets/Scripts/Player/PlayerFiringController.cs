@@ -29,7 +29,7 @@ public class PlayerFiringController : MonoBehaviour
         }
         set
         {
-            if (_playerManager = null)
+            if (_playerManager == null)
             {
                 _playerManager = value;
             }
@@ -48,12 +48,42 @@ public class PlayerFiringController : MonoBehaviour
         set
         {
             _currentWeapon = value;
+            currentProjectileSpeed = playerManager.weaponsData[(int)value].projectileSpeed;
+            currentFirerate = playerManager.weaponsData[(int)value].firerate;
+            currentSpread = playerManager.weaponsData[(int)value].spread;
+            currentNumberOfProjectilesPerShot = playerManager.weaponsData[(int)value].numberOfProjectiles;
+        }
+    }
+
+    // Private properties
+    bool isSpeedup
+    {
+        get
+        {
+            return _isSpeedup;
+        }
+        set
+        {
+            if (value)
+            {
+                bulletsSpeedupTimer = PickupManager.instance.speedupPickupTime;
+                currentProjectileSpeed *= PickupManager.instance.speedupMultiplier;
+            }
+            else
+            {
+                currentProjectileSpeed /= PickupManager.instance.speedupMultiplier;
+            }
+            _isSpeedup = value;
         }
     }
 
     // Private variables
     Weapon _currentWeapon = Weapon.PISTOL;
-    bool isSpeedup;
+    float currentProjectileSpeed;
+    float currentFirerate;
+    float currentSpread;
+    float currentNumberOfProjectilesPerShot;
+    bool _isSpeedup;
     float firingTimer;
     float bulletsSpeedupTimer;
     #endregion
@@ -62,15 +92,11 @@ public class PlayerFiringController : MonoBehaviour
     #region Public methods
     public void SpeedBulletsUp()
     {
-        if (!isSpeedup)
-        {
-            isSpeedup = true;
-            bulletsSpeedupTimer = PickupManager.instance.speedupPickupTime;
-        }
-        else // Reset timer if picked up a speed up while a speedup was active aleready.
-        {
-            bulletsSpeedupTimer = PickupManager.instance.speedupPickupTime;
-        }
+        isSpeedup = true;
+    }
+    public void Init()
+    {
+        currentWeapon = Weapon.PISTOL;
     }
     #endregion
 
@@ -87,13 +113,13 @@ public class PlayerFiringController : MonoBehaviour
                         if (firingTimer < 0)
                         {
                             // Calculate the direction the bullet will go with spread accounted.
-                            float randomSpread = Random.Range(-playerManager.weaponsData[0].spread / 2, -playerManager.weaponsData[0].spread / 2);
+                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
                             Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
 
                             Projectile newProjectile = Instantiate(bulletsPrefabs[0], transform.position, rotation).GetComponent<Projectile>();
-                            newProjectile.speed = playerManager.weaponsData[0].projectileSpeed;
-                            newProjectile.type = Weapon.PISTOL;
-                            firingTimer = 1 / playerManager.weaponsData[0].firerate;
+                            newProjectile.speed = currentProjectileSpeed;
+                            newProjectile.type = currentWeapon;
+                            firingTimer = 1 / currentFirerate;
                         }
                     }
                     break;
@@ -175,10 +201,6 @@ public class PlayerFiringController : MonoBehaviour
 
     // Inherited methods
     #region Inherited methods
-    private void Start()
-    {
-        currentWeapon = Weapon.PISTOL;
-    }
     private void FixedUpdate()
     {
         Shoot();

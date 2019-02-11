@@ -24,7 +24,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
         }
         set
         {
-            if (_playerManager = null)
+            if (_playerManager == null)
             {
                 _playerManager = value;
             }
@@ -120,6 +120,11 @@ public class PlayerPhysicsHandler : MonoBehaviour
     {
         return playerCollider.IsTouching(collider);
     }
+    public void Init()
+    {
+        playerRigidbody = GetComponent<Rigidbody2D>();
+        playerCollider = GetComponent<BoxCollider2D>();
+    }
     #endregion
 
     // Private methods
@@ -151,11 +156,6 @@ public class PlayerPhysicsHandler : MonoBehaviour
 
     // Inherited methods
     #region Inherited methods
-    private void Start()
-    {
-        playerRigidbody = GetComponent<Rigidbody2D>();
-        playerCollider = GetComponent<BoxCollider2D>();
-    }
     private void FixedUpdate()
     {
         ApplySpeedLimit();

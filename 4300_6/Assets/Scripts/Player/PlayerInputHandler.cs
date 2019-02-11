@@ -18,7 +18,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
         set
         {
-            if (_playerManager = null)
+            if (_playerManager == null)
             {
                 _playerManager = value;
             }
@@ -32,7 +32,21 @@ public class PlayerInputHandler : MonoBehaviour
     public float verticalInput => _verticalInput;
     public float aimingHorizontalInput => _aimingHorizontalInput;
     public float aimingVerticalInput => _aimingVerticalInput;
-    public bool tryingToOpenParachute => _tryingToOpenParachute;
+    public bool tryingToOpenParachute
+    {
+        get
+        {
+            return _tryingToOpenParachute;
+        }
+        set
+        {
+            if (value)
+            {
+                playerManager.ToggleParachute();
+            }
+            _tryingToOpenParachute = value;
+        }
+    }
     public bool tryingToFire => _tryingToFire;
 
     // Private variables
@@ -61,17 +75,17 @@ public class PlayerInputHandler : MonoBehaviour
             {
                 if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
                 {
-                    _tryingToOpenParachute = true;
+                    tryingToOpenParachute = true;
                 }
             }
             if (Input.GetButtonUp("Player1_Parachute"))
             {
                 if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
                 {
-                    _tryingToOpenParachute = false;
+                    tryingToOpenParachute = false;
                 }
             }
-
+            
             // Handle firing inputs.
             if (Input.GetButtonDown("Player1_Fire"))
             {
@@ -113,6 +127,10 @@ public class PlayerInputHandler : MonoBehaviour
                 _tryingToFire = false;
             }
         }
+    }
+    public void Init()
+    {
+
     }
     #endregion
 

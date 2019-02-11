@@ -35,7 +35,7 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
         }
         set
         {
-            if (_playerManager = null)
+            if (_playerManager == null)
             {
                 _playerManager = value;
             }
@@ -57,6 +57,17 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     public void ToggleParachute()
     {
         parachuteGO.SetActive(!parachuteGO.activeSelf);
+    }
+    public void Init()
+    {
+        if (playerManager.isLeftPlayer)
+        {
+            currentPlayerDirection = PlayerDirection.RIGHT;
+        }
+        else
+        {
+            currentPlayerDirection = PlayerDirection.LEFT;
+        }
     }
     #endregion
 
@@ -266,17 +277,6 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
 
     // Inherited methods
     #region Inherited methods
-    private void Start()
-    {
-        if (playerManager.isLeftPlayer)
-        {
-            currentPlayerDirection = PlayerDirection.RIGHT;
-        }
-        else
-        {
-            currentPlayerDirection = PlayerDirection.LEFT;
-        }
-    }
     private void FixedUpdate()
     {
         OrientSpriteAndGun();
