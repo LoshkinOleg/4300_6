@@ -100,7 +100,7 @@ public class PlayerFiringController : MonoBehaviour
     }
     public void Init()
     {
-        currentWeapon = Weapon.BAZOOKA;
+        currentWeapon = Weapon.SNIPER;
     }
     #endregion
 
@@ -154,12 +154,24 @@ public class PlayerFiringController : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
-                            Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
+                            // debug
+                            Debug.DrawRay(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right * 100, Color.red);
 
-                            Projectile newProjectile = Instantiate(bulletsPrefabs[2], transform.position, rotation).GetComponent<Projectile>();
-                            newProjectile.speed = currentProjectileSpeed;
-                            newProjectile.type = currentWeapon;
+                            // Cast a hitscan.
+                            if (playerManager.isLeftPlayer)
+                            {
+                                if (Physics2D.Raycast(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right).collider.gameObject.tag == "Player2")
+                                {
+                                    GameManager.instance.player2.SniperHit();
+                                }
+                            }
+                            else
+                            {
+                                if (Physics2D.Raycast(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right).collider.gameObject.tag == "Player1")
+                                {
+                                    GameManager.instance.player1.SniperHit();
+                                }
+                            }
 
                             Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
                             playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);

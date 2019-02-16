@@ -9,6 +9,8 @@ public class PlayerStunController : MonoBehaviour
     // Inspector variables
     [SerializeField] float stunDuration = 0.5f;
     [SerializeField] float _stunForceMultiplier = 500;
+    [SerializeField] float _projectileHitStunWindow = 0.25f;
+    [SerializeField] float stunDragValue = 4f;
 
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
@@ -34,6 +36,7 @@ public class PlayerStunController : MonoBehaviour
     }
     public float stunTimer => _stunTimer;
     public float stunForceMultiplier => _stunForceMultiplier;
+    public float projectileHitStunWindow => _projectileHitStunWindow;
 
     // Private variables
     float _stunTimer = 0;
@@ -44,6 +47,7 @@ public class PlayerStunController : MonoBehaviour
     public void Stun()
     {
         _stunTimer = stunDuration;
+        playerManager.physicsHandler.ModifyLinearDrag(stunDragValue);
     }
     public void CrateBottomHit(BoxCollider2D crate)
     {
@@ -52,6 +56,10 @@ public class PlayerStunController : MonoBehaviour
     public void Init()
     {
 
+    }
+    public void CrateSideStun()
+    {
+        Stun();
     }
     #endregion
 
@@ -62,8 +70,6 @@ public class PlayerStunController : MonoBehaviour
         if (stunTimer > 0) // If stunned.
         {
             playerManager.gravity = 0; // Set gravity to 0.
-
-            // Disable inputs
         }
     }
     #endregion
@@ -82,6 +88,7 @@ public class PlayerStunController : MonoBehaviour
             if (Mathf.Abs(playerManager.gravity) != 2)
             {
                 playerManager.physicsHandler.ResetGravity();
+                playerManager.physicsHandler.ModifyLinearDrag(1); // Reset drag
             }
         }
 

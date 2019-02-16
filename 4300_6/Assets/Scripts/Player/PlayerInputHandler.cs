@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using InControl;
 
 public class PlayerInputHandler : MonoBehaviour
 {
@@ -48,6 +49,17 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
     public bool tryingToFire => _tryingToFire;
+    public InputDevice gamepad
+    {
+        get
+        {
+            return _gamepad;
+        }
+        set
+        {
+            _gamepad = value;
+        }
+    }
 
     // Private variables
     float _horizontalInput;
@@ -56,75 +68,55 @@ public class PlayerInputHandler : MonoBehaviour
     float _aimingVerticalInput;
     bool _tryingToOpenParachute;
     bool _tryingToFire;
+    InputDevice _gamepad = null;
     #endregion
 
     // Public methods
     #region Public methods
     public void UpdateInputs()
     {
-        if (playerManager.isLeftPlayer)
+        if (gamepad != null)
         {
-            // Handle analog sticks inputs.
-            _horizontalInput = Input.GetAxisRaw("Player1_Horizontal");
-            _verticalInput = Input.GetAxisRaw("Player1_Vertical");
-            _aimingHorizontalInput = Input.GetAxisRaw("Player1_Aiming_Horizontal");
-            _aimingVerticalInput = Input.GetAxisRaw("Player1_Aiming_Vertical");
+            if (playerManager.stunTimer > 0)
+            {
+                _horizontalInput = 0;
+                _verticalInput = 0;
+                _aimingHorizontalInput = 0;
+                _aimingVerticalInput = 0;
+            }
+            else
+            {
+                // Handle analog sticks inputs.
+                _horizontalInput = _gamepad.LeftStick.X;
+                _verticalInput = _gamepad.LeftStick.Y;
+                _aimingHorizontalInput = _gamepad.RightStick.X;
+                _aimingVerticalInput = _gamepad.RightStick.Y;
 
-            // Handle parachute inputs toggling in applicable movement modes.
-            if (Input.GetButtonDown("Player1_Parachute"))
-            {
-                if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                // Handle parachute inputs toggling in applicable movement modes.
+                if (_gamepad.LeftBumper.WasPressed)
                 {
-                    tryingToOpenParachute = true;
+                    if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                    {
+                        tryingToOpenParachute = true;
+                    }
                 }
-            }
-            if (Input.GetButtonUp("Player1_Parachute"))
-            {
-                if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                if (_gamepad.LeftBumper.WasReleased)
                 {
-                    tryingToOpenParachute = false;
+                    if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                    {
+                        tryingToOpenParachute = false;
+                    }
                 }
-            }
-            
-            // Handle firing inputs.
-            if (Input.GetButtonDown("Player1_Fire"))
-            {
-                _tryingToFire = true;
-            }
-            if (Input.GetButtonUp("Player1_Fire"))
-            {
-                _tryingToFire = false;
-            }
-        }
-        else
-        {
-            _horizontalInput = Input.GetAxisRaw("Player2_Horizontal");
-            _verticalInput = Input.GetAxisRaw("Player2_Vertical");
-            _aimingHorizontalInput = Input.GetAxisRaw("Player2_Aiming_Horizontal");
-            _aimingVerticalInput = Input.GetAxisRaw("Player2_Aiming_Vertical");
 
-            if (Input.GetButtonDown("Player2_Parachute"))
-            {
-                if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                // Handle firing inputs.
+                if (_gamepad.RightBumper.WasPressed)
                 {
-                    tryingToOpenParachute = true;
+                    _tryingToFire = true;
                 }
-            }
-            if (Input.GetButtonUp("Player2_Parachute"))
-            {
-                if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                if (_gamepad.RightBumper.WasReleased)
                 {
-                    tryingToOpenParachute = false;
+                    _tryingToFire = false;
                 }
-            }
-            
-            if (Input.GetButtonDown("Player2_Fire"))
-            {
-                _tryingToFire = true;
-            }
-            if (Input.GetButtonUp("Player2_Fire"))
-            {
-                _tryingToFire = false;
             }
         }
     }

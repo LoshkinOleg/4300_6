@@ -39,7 +39,7 @@ public class PickupManager : MonoBehaviour
 
     // Private variables
     bool runningSpawnCheck = false;
-    int numberOfPickupTypes = (int)Pickup.Type.LIFE + 1;
+    int numberOfPickupTypes = (int)Pickup.Type.MINIGUN + 1;
 
     // Public methods
     #region Public methods
@@ -162,46 +162,46 @@ public class PickupManager : MonoBehaviour
             {
                 case Pickup.Type.BAZOOKA:
                     {
-                        Instantiate(pickupPrefab_bazooka, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters/2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_bazooka, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters/2 + 1.5f, 0), new Quaternion());
                     }break;
                 case Pickup.Type.HEALTH:
                     {
-                        Instantiate(pickupPrefab_health, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_health, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 1.5f, 0), new Quaternion());
                     }
                     break;
                 case Pickup.Type.JETPACK:
                     {
-                        Instantiate(pickupPrefab_jetpack, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_jetpack, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 1.5f, 0), new Quaternion());
                     }
                     break;
                 case Pickup.Type.LIFE:
                     {
-                        Instantiate(pickupPrefab_life, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_life, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 1.5f, 0), new Quaternion());
                     }
                     break;
                 case Pickup.Type.MINIGUN:
                     {
-                        Instantiate(pickupPrefab_minigun, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_minigun, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 1.5f, 0), new Quaternion());
                     }
                     break;
                 case Pickup.Type.SHIELD:
                     {
-                        Instantiate(pickupPrefab_shield, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_shield, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 1.5f, 0), new Quaternion());
                     }
                     break;
                 case Pickup.Type.SHOTGUN:
                     {
-                        Instantiate(pickupPrefab_shotgun, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_shotgun, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 1.5f, 0), new Quaternion());
                     }
                     break;
                 case Pickup.Type.SNIPER:
                     {
-                        Instantiate(pickupPrefab_sniper, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_sniper, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 1.5f, 0), new Quaternion());
                     }
                     break;
                 case Pickup.Type.SPEED_UP:
                     {
-                        Instantiate(pickupPrefab_speedup, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 5f, 0), new Quaternion());
+                        Instantiate(pickupPrefab_speedup, new Vector3(horizontalPosition, GameManager.instance.gameViewVerticalDistanceInMeters / 2 + 1.5f, 0), new Quaternion());
                     }
                     break;
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using InControl;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,7 +35,7 @@ public class GameManager : MonoBehaviour
     float _gameViewHorizontalDistanceInMeters = 17.78f;
     float _gameViewVerticalDistanceInMeters = 10f;
     Vector3 _averagePlayerPosition = new Vector3();
-    bool inMainScene = false;
+    List<InputDevice> devicesBeingUsed = new List<InputDevice>();
     #endregion
 
     // Public methods
@@ -56,7 +57,6 @@ public class GameManager : MonoBehaviour
     {
         if (scene.name == "Score")
         {
-            inMainScene = false;
             TMPro.TMP_Text winnerText = GameObject.FindGameObjectWithTag("WinnerText").GetComponent<TMPro.TMP_Text>();
 
             if (loser == player1)
@@ -84,28 +84,44 @@ public class GameManager : MonoBehaviour
             _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerManager>();
             _player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
             _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
-            inMainScene = true;
         }
         else if (scene.name == "MainMenu")
         {
-            inMainScene = false;
             if (SoundManager.instance == null)
             {
                 Instantiate(soundManager);
             }
         }
     }
-    Vector3 FindAveragePlayerPosition()
+    void AssignADevice(InputDevice device)
     {
-        // Reset targetPosition
-        Vector3 averagePosition = new Vector3();
-
-        // Find average position
-        averagePosition += player1.transform.position;
-        averagePosition += player2.transform.position;
-        averagePosition /= 2;
-
-        return averagePosition;
+        if (player1.inputHandler.gamepad == null)
+        {
+            if (DeviceIsNotTaken(device))
+            {
+                player1.inputHandler.gamepad = device;
+                devicesBeingUsed.Add(device);
+            }
+        }
+        else if (player2.inputHandler.gamepad == null)
+        {
+            if (DeviceIsNotTaken(device))
+            {
+                player2.inputHandler.gamepad = device;
+                devicesBeingUsed.Add(device);
+            }
+        }
+    }
+    bool DeviceIsNotTaken(InputDevice device)
+    {
+        foreach (var item in devicesBeingUsed)
+        {
+            if (device == item)
+            {
+                return false;
+            }
+        }
+        return true;
     }
     #endregion
 
@@ -117,12 +133,10 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnScoreLoaded;
     }
-    private void FixedUpdate()
+
+    private void Start()
     {
-        if (inMainScene)
-        {
-            _averagePlayerPosition = FindAveragePlayerPosition();
-        }
+        InputManager.OnActiveDeviceChanged += AssignADevice; // Putting this in Start should hopefully avoid errors.
     }
     #endregion
 }

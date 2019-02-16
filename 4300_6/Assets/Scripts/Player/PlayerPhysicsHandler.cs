@@ -9,6 +9,8 @@ public class PlayerPhysicsHandler : MonoBehaviour
     // Inspector variables
     [SerializeField] float dragForce = 0.1f;
     [SerializeField] float _playerSpeedLimit = 5;
+    [SerializeField] float screenEdgeBuffer = 1f;
+    [SerializeField] float bufferForceMultiplier = 35f;
 
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
@@ -56,6 +58,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
             playerRigidbody.velocity = value;
         }
     }
+    public float playerSpeedLimit => _playerSpeedLimit;
     #endregion
 
     // Public methods
@@ -134,6 +137,10 @@ public class PlayerPhysicsHandler : MonoBehaviour
     {
         return playerCollider.IsTouching(collider);
     }
+    public void ModifyLinearDrag(float drag)
+    {
+        playerRigidbody.drag = drag;
+    }
     public void Init()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
@@ -145,7 +152,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
     #region Private methods
     void ApplyDrag()
     {
-        if (Input.GetAxisRaw("Player1_Horizontal") == 0)
+        if (playerManager.horizontalInput == 0)
         {
             if (Mathf.Abs(playerRigidbody.velocity.x) > 0.05f) // Applies drag if the horizontal speed is greater than 0.05f
             {
@@ -166,14 +173,38 @@ public class PlayerPhysicsHandler : MonoBehaviour
             playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) * _playerSpeedLimit;
         }
     }
+    void ApplyBufferForces()
+    {
+        // Right buffer
+        if (transform.position.x > GameManager.instance.gameViewHorizontalDistanceInMeters / 2 - screenEdgeBuffer)
+        {
+            playerRigidbody.AddForce(Vector2.left * bufferForceMultiplier);
+        }
+        // Left buffer
+        if (transform.position.x < -GameManager.instance.gameViewHorizontalDistanceInMeters / 2 + screenEdgeBuffer)
+        {
+            playerRigidbody.AddForce(Vector2.right * bufferForceMultiplier);
+        }
+        // Top buffer
+        if (transform.position.y > GameManager.instance.gameViewVerticalDistanceInMeters / 2 - screenEdgeBuffer)
+        {
+            playerRigidbody.AddForce(Vector2.down * bufferForceMultiplier);
+        }
+        // Bottom buffer
+        if (transform.position.y < -GameManager.instance.gameViewVerticalDistanceInMeters / 2 + screenEdgeBuffer)
+        {
+            playerRigidbody.AddForce(Vector2.up * bufferForceMultiplier);
+        }
+    }
     #endregion
 
     // Inherited methods
     #region Inherited methods
     private void FixedUpdate()
     {
-        ApplySpeedLimit();
-        ApplyDrag();
+        ApplyBufferForces();
+        // ApplySpeedLimit();
+        // ApplyDrag();
     }
     #endregion
 }

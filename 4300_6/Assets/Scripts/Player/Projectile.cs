@@ -83,7 +83,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (type != PlayerFiringController.Weapon.BAZOOKA)
+        if (type != PlayerFiringController.Weapon.BAZOOKA && type != PlayerFiringController.Weapon.SNIPER)
         {
             if (collision.gameObject.tag == "Player1")
             {

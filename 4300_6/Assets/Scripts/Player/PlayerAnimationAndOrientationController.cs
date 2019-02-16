@@ -73,39 +73,77 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
 
     // Private methods
     #region Private methods
-    void AnalyseInputsForDirection()
+    void HandleGroundOrientations()
     {
-        if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.GROUND)
+        HandlePlayerOrientation();
+        HandleGunOrientation();
+    }
+    void HandleAirborneAndJetpackOrientations()
+    {
+        HandlePlayerOrientation();
+        HandleGunOrientation();
+    }
+    void HandlePlayerOrientation()
+    {
+        // Handle player sprite orientation. // AIRBORNE
+        if (playerManager.horizontalInput != 0)
         {
-            // Handle player sprite orientation.
-            if (playerManager.horizontalInput != 0)
+            if (playerManager.horizontalInput > 0)
             {
-                if (playerManager.horizontalInput > 0)
-                {
-                    // H+
-                    currentPlayerDirection = PlayerDirection.RIGHT;
-                }
-                else
-                {
-                    // H-
-                    currentPlayerDirection = PlayerDirection.LEFT;
-                }
+                // H+
+                currentPlayerDirection = PlayerDirection.RIGHT;
             }
             else
             {
-                // H = 0
-                if (CheckEnemyDirection())
-                {
-                    currentPlayerDirection = PlayerDirection.RIGHT;
-                }
-                else
-                {
-                    currentPlayerDirection = PlayerDirection.LEFT;
-                }
+                // H-
+                currentPlayerDirection = PlayerDirection.LEFT;
             }
+        }
+        else
+        {
+            // H = 0
+            if (CheckEnemyDirection())
+            {
+                currentPlayerDirection = PlayerDirection.RIGHT;
+            }
+            else
+            {
+                currentPlayerDirection = PlayerDirection.LEFT;
+            }
+        }
 
-            //Handle gun orientation
-            // vertcial is biggest
+        // Handle player sprite orientation. // GROUND
+        if (playerManager.horizontalInput != 0)
+        {
+            if (playerManager.horizontalInput > 0)
+            {
+                // H+
+                currentPlayerDirection = PlayerDirection.RIGHT;
+            }
+            else
+            {
+                // H-
+                currentPlayerDirection = PlayerDirection.LEFT;
+            }
+        }
+        else
+        {
+            // H = 0
+            if (CheckEnemyDirection())
+            {
+                currentPlayerDirection = PlayerDirection.RIGHT;
+            }
+            else
+            {
+                currentPlayerDirection = PlayerDirection.LEFT;
+            }
+        }
+    }
+    void HandleGunOrientation()
+    {
+        //Handle gun orientation // Airborne
+        if (Mathf.Abs(playerManager.aimingVerticalInput) >= Mathf.Abs(playerManager.aimingHorizontalInput))
+        {
             if (playerManager.aimingVerticalInput > 0)
             {
                 // V+
@@ -123,33 +161,21 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
         }
         else
         {
-            // Handle player sprite orientation.
-            if (playerManager.horizontalInput != 0)
-            {
-                if (playerManager.horizontalInput > 0)
-                {
-                    // H+
-                    currentPlayerDirection = PlayerDirection.RIGHT;
-                }
-                else
-                {
-                    // H-
-                    currentPlayerDirection = PlayerDirection.LEFT;
-                }
-            }
-            else
-            {
-                // H = 0
-                if (CheckEnemyDirection())
-                {
-                    currentPlayerDirection = PlayerDirection.RIGHT;
-                }
-                else
-                {
-                    currentPlayerDirection = PlayerDirection.LEFT;
-                }
-            }
-            currentGunDirection = GunDirection.ANYWHERE;
+            currentGunDirection = GunDirection.FORWARD;
+        }
+
+        // Handle gun orientation // GROUND
+        currentGunDirection = GunDirection.ANYWHERE;
+    }
+    void AnalyseInputsForDirection()
+    {
+        if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.GROUND)
+        {
+            HandleAirborneAndJetpackOrientations();
+        }
+        else // If current movement mode is GROUND
+        {
+            HandleGroundOrientations();
         }
     }
     void OrientSpriteAndGun()

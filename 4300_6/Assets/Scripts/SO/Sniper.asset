@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Sniper
   m_EditorClassIdentifier: 
   firerate: 1
-  projectileSpeed: 40
+  projectileSpeed: 30
   damage: 0.34
   spread: 0
   firingKnockback: 10
-  hitKnockback: 30
+  hitKnockback: 1000
   numberOfProjectiles: 1

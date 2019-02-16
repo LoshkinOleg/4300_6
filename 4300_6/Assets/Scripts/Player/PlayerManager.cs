@@ -24,7 +24,7 @@ public class PlayerManager : MonoBehaviour
     PlayerInputHandler _inputHandler = null;
     PlayerStunController _stunController = null;
     PlayerUIController _uiController = null;
-    [SerializeField] Weapon_Template[] _weaponsData = new Weapon_Template[(int)PlayerFiringController.Weapon.MINIGUN + 1];
+    [SerializeField] Weapon_Template[] _weaponsData = new Weapon_Template[(int)PlayerFiringController.Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
 
     // Properties
     public PlayerMovementController movementController => _movementController;
@@ -39,6 +39,7 @@ public class PlayerManager : MonoBehaviour
     public float health => _health;
     public bool isLeftPlayer => _isLeftPlayer;
     public int lives { get; set; } = 3;
+    public float hitByProjectileTimer { get; set; }
 
     // Other components properties
     // Read only
@@ -50,6 +51,7 @@ public class PlayerManager : MonoBehaviour
     public bool tryingToOpenParachute => inputHandler.tryingToOpenParachute;
     public bool tryingToFire => inputHandler.tryingToFire;
     public GameObject armGO => animationAndOrientationController.armGO;
+    public float speedLimit => physicsHandler.playerSpeedLimit;
     // Writable
     public PlayerMovementController.MovementMode currentMovementMode
     {
@@ -107,7 +109,7 @@ public class PlayerManager : MonoBehaviour
         _health += damage;
         uiController.UpdateHealthBar();
     }
-    public void ProjectileHit(GameObject projectile, PlayerFiringController.Weapon type)
+    public void ProjectileHit(GameObject projectile, PlayerFiringController.Weapon type) // Damages player and relays the message to the physics component for knockback.
     {
         switch (type)
         {
@@ -142,7 +144,8 @@ public class PlayerManager : MonoBehaviour
                 }
                 break;
         }
-    } // Damages player and relays the message to the physics component for knockback.
+        hitByProjectileTimer = _stunController.projectileHitStunWindow;
+    }
     public void CrateBottomHit(BoxCollider2D crate)
     {
         if (parachuteIsOpen)
@@ -158,6 +161,23 @@ public class PlayerManager : MonoBehaviour
 
         Vector2 direction = -(position - transform.position);
         physicsHandler.AddForce(direction * weaponsData[3].hitKnockback);
+
+        hitByProjectileTimer = _stunController.projectileHitStunWindow;
+    }
+    public void SniperHit()
+    {
+        Vector2 direction;
+        if (isLeftPlayer)
+        {
+            direction = -(GameManager.instance.player2.transform.position - transform.position);
+        }
+        else
+        {
+            direction = -(GameManager.instance.player1.transform.position - transform.position);
+        }
+        physicsHandler.AddForce(direction * weaponsData[2].hitKnockback);
+
+        hitByProjectileTimer = _stunController.projectileHitStunWindow;
     }
     public void Kill()
     {
@@ -170,6 +190,7 @@ public class PlayerManager : MonoBehaviour
         {
             _health = 1;
             uiController.UpdateHealthBar();
+            uiController.UpdateLives();
             transform.position = new Vector3(0, 0, 0);
         }
     }
@@ -241,6 +262,8 @@ public class PlayerManager : MonoBehaviour
         {
             Kill();
         }
+
+        hitByProjectileTimer -= Time.deltaTime;
     }
     #endregion
 }

@@ -33,7 +33,7 @@ public class CrateManager : MonoBehaviour
             if (randomNumber <= chanceToSpawnCratePerSecond)
             {
                 float randomPosition = Random.Range(-GameManager.instance.gameViewHorizontalDistanceInMeters / 2 + 0.5f, GameManager.instance.gameViewHorizontalDistanceInMeters / 2 - 0.5f);
-                Instantiate(cratePrefab, new Vector3(randomPosition, GameManager.instance.gameViewVerticalDistanceInMeters, 0), new Quaternion());
+                Instantiate(cratePrefab, new Vector3(randomPosition, GameManager.instance.gameViewVerticalDistanceInMeters/2 + 2f, 0), new Quaternion());
             }
             timer = 1;
         }
