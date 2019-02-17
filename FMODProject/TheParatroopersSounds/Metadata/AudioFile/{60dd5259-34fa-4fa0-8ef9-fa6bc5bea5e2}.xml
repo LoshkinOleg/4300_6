@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{60dd5259-34fa-4fa0-8ef9-fa6bc5bea5e2}">
+        <property name="assetPath">
+            <value>parachute_closed.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>0.33378684807256237</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{0ef40eeb-13af-41f7-9b1f-1085a0cc5578}</destination>
+        </relationship>
+    </object>
+</objects>
