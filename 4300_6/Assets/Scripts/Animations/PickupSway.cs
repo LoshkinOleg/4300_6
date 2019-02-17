@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickupAnimation : MonoBehaviour
+public class PickupSway : MonoBehaviour
 {
     float magnitude = 25;
     float frequency = 3;

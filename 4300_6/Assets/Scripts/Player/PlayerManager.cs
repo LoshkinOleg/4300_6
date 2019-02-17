@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using InControl;
 
 /*
     - Links all player components together.
+    - Provides other components with it's variables.
     - Handles player health, lives and loosing conditions.
+    - Handles hits from projectiles.
     - Handles parachute toggling.
-    - Provides other components with WeaponData.
+    - Relays function calls to other components.
 */
 
 public class PlayerManager : MonoBehaviour
@@ -17,42 +20,30 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] bool _isLeftPlayer = true;
 
     // References
-    PlayerMovementController _movementController = null;
-    PlayerFiringController _firingController = null;
-    PlayerAnimationAndOrientationController _animationAndOrientationController = null;
-    PlayerPhysicsHandler _physicsHandler = null;
-    PlayerInputHandler _inputHandler = null;
-    PlayerStunController _stunController = null;
-    PlayerUIController _uiController = null;
-    [SerializeField] Weapon_Template[] _weaponsData = new Weapon_Template[(int)PlayerFiringController.Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
+    PlayerMovementController movementController = null;
+    PlayerFiringController firingController = null;
+    PlayerAnimationAndOrientationController animationAndOrientationController = null;
+    PlayerPhysicsHandler physicsHandler = null;
+    PlayerInputHandler inputHandler = null;
+    PlayerStunController stunController = null;
+    PlayerUIController uiController = null;
+    [SerializeField] Weapon[] _weaponsData = new Weapon[(int)PlayerFiringController.Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
 
-    // Properties
-    public PlayerMovementController movementController => _movementController;
-    public PlayerFiringController firingController => _firingController;
-    public PlayerAnimationAndOrientationController animationAndOrientationController => _animationAndOrientationController;
-    public PlayerPhysicsHandler physicsHandler => _physicsHandler;
-    public PlayerInputHandler inputHandler => _inputHandler;
-    public PlayerStunController stunController => _stunController;
-    public PlayerUIController uiController => _uiController;
-    public Weapon_Template[] weaponsData => _weaponsData;
-    public bool parachuteIsOpen { get; set; }
-    public float health => _health;
+    // Private variables
+    float _health = 1;
+    int _lives = 3;
+    bool _parachuteIsOpen;
+    #endregion
+
+    // Public properties
+    #region Public properties
+    // PlayerManager's properties
+    public Weapon[] weaponsData => _weaponsData;
     public bool isLeftPlayer => _isLeftPlayer;
-    public int lives { get; set; } = 3;
-    public float hitByProjectileTimer { get; set; }
-
-    // Other components properties
-    // Read only
-    public float stunTimer => stunController.stunTimer;
-    public float horizontalInput => inputHandler.horizontalInput;
-    public float verticalInput => inputHandler.verticalInput;
-    public float aimingHorizontalInput => inputHandler.aimingHorizontalInput;
-    public float aimingVerticalInput => inputHandler.aimingVerticalInput;
-    public bool tryingToOpenParachute => inputHandler.tryingToOpenParachute;
-    public bool tryingToFire => inputHandler.tryingToFire;
-    public GameObject armGO => animationAndOrientationController.armGO;
-    public float speedLimit => physicsHandler.playerSpeedLimit;
-    // Writable
+    public int lives => _lives;
+    public float health => _health;
+    public bool parachuteIsOpen => _parachuteIsOpen;
+    // Movement controller
     public PlayerMovementController.MovementMode currentMovementMode
     {
         get
@@ -64,6 +55,7 @@ public class PlayerManager : MonoBehaviour
             movementController.currentMovementMode = value;
         }
     }
+    // Firing controller
     public PlayerFiringController.Weapon currentWeapon
     {
         get
@@ -75,6 +67,10 @@ public class PlayerManager : MonoBehaviour
             firingController.currentWeapon = value;
         }
     }
+    // Animation and Orientation controller
+    public GameObject armGO => animationAndOrientationController.armGO;
+    // Physics handler
+    public float speedLimit => physicsHandler.playerSpeedLimit;
     public float gravity
     {
         get
@@ -97,17 +93,74 @@ public class PlayerManager : MonoBehaviour
             physicsHandler.velocity = value;
         }
     }
-
-    // Private variables
-    float _health = 1;
+    public float linearDrag
+    {
+        get
+        {
+            return physicsHandler.linearDrag;
+        }
+        set
+        {
+            physicsHandler.linearDrag = value;
+        }
+    }
+    // Input handler
+    public InputDevice gamepad
+    {
+        get
+        {
+            return inputHandler.gamepad;
+        }
+        set
+        {
+            inputHandler.gamepad = value;
+        }
+    }
+    public float horizontalInput => inputHandler.horizontalInput;
+    public float verticalInput => inputHandler.verticalInput;
+    public float aimingHorizontalInput => inputHandler.aimingHorizontalInput;
+    public float aimingVerticalInput => inputHandler.aimingVerticalInput;
+    public bool tryingToOpenParachute => inputHandler.tryingToOpenParachute;
+    public bool tryingToFire => inputHandler.tryingToFire;
+    // Stun controller
+    public float stunTimer => stunController.stunTimer;
+    public float stunForceMultiplier => stunController.stunForceMultiplier;
+    public float stunOpportunityTimer
+    {
+        get
+        {
+            return stunController.stunOpportunityTimer;
+        }
+        set
+        {
+            stunController.stunOpportunityTimer = value;
+        }
+    }
+    public float projectileHitStunWindow
+    {
+        get
+        {
+            return stunController.projectileHitStunWindow;
+        }
+        set
+        {
+            stunController.projectileHitStunWindow = value;
+        }
+    }
     #endregion
 
     // PUBLIC METHODS
     #region Public Methods
+    // PlayerManager's methods
     public void ModifyHealth(float damage) // Use to damage (pass a negative number) or to heal (pass a positive number) the player.
     {
         _health += damage;
         uiController.UpdateHealthBar();
+    }
+    public void ModifyLives(int life)
+    {
+        _lives += life;
+        UpdateLives();
     }
     public void ProjectileHit(GameObject projectile, PlayerFiringController.Weapon type) // Damages player and relays the message to the physics component for knockback.
     {
@@ -125,26 +178,20 @@ public class PlayerManager : MonoBehaviour
                     physicsHandler.ProjectileHit(projectile, type);
                 }
                 break;
-            case PlayerFiringController.Weapon.SNIPER:
-                {
-                    ModifyHealth(-weaponsData[2].damage);
-                    physicsHandler.ProjectileHit(projectile, type);
-                }
-                break;
-            case PlayerFiringController.Weapon.BAZOOKA:
-                {
-                    ModifyHealth(-weaponsData[3].damage);
-                    physicsHandler.ProjectileHit(projectile, type);
-                }
-                break;
             case PlayerFiringController.Weapon.MINIGUN:
                 {
                     ModifyHealth(-weaponsData[4].damage);
                     physicsHandler.ProjectileHit(projectile, type);
                 }
                 break;
+            default:
+                {
+                    Debug.LogWarning("PlayerManager.cs: ProjectileHit() got passed a non valid projectile type: " + type);
+                }
+                break;
         }
-        hitByProjectileTimer = _stunController.projectileHitStunWindow;
+        // Reset stun opportunity timer.
+        stunOpportunityTimer = projectileHitStunWindow;
     }
     public void CrateBottomHit(BoxCollider2D crate)
     {
@@ -152,36 +199,23 @@ public class PlayerManager : MonoBehaviour
         {
             ToggleParachute();
         }
-        stunController.CrateBottomHit(crate);
+        stunController.Stun();
         physicsHandler.CrateBottomHit(crate);
     }
     public void ExplosionHit(Vector3 position)
     {
         ModifyHealth(-weaponsData[3].damage);
-
-        Vector2 direction = -(position - transform.position);
-        physicsHandler.AddForce(direction * weaponsData[3].hitKnockback);
-
-        hitByProjectileTimer = _stunController.projectileHitStunWindow;
+        physicsHandler.ExplosionHit(position);
+        stunOpportunityTimer = projectileHitStunWindow;
     }
     public void SniperHit()
     {
-        Vector2 direction;
-        if (isLeftPlayer)
-        {
-            direction = -(GameManager.instance.player2.transform.position - transform.position);
-        }
-        else
-        {
-            direction = -(GameManager.instance.player1.transform.position - transform.position);
-        }
-        physicsHandler.AddForce(direction * weaponsData[2].hitKnockback);
-
-        hitByProjectileTimer = _stunController.projectileHitStunWindow;
+        ModifyHealth(-weaponsData[2].damage);
+        stunOpportunityTimer = projectileHitStunWindow;
     }
     public void Kill()
     {
-        lives--;
+        _lives--;
         if (lives < 1)
         {
             GameManager.instance.GameOver(gameObject);
@@ -198,7 +232,47 @@ public class PlayerManager : MonoBehaviour
     {
         physicsHandler.ToggleGravity();
         animationAndOrientationController.ToggleParachute();
-        parachuteIsOpen = !parachuteIsOpen;
+        _parachuteIsOpen = !_parachuteIsOpen;
+    }
+    // Firing controller
+    public void SpeedBulletsUp()
+    {
+        firingController.SpeedBulletsUp();
+    }
+    // Physics handler
+    public void ToggleGravity()
+    {
+        physicsHandler.ToggleGravity();
+    }
+    public void ResetGravity()
+    {
+        physicsHandler.ResetGravity();
+    }
+    public bool IsTouching(Collider2D collider)
+    {
+        return physicsHandler.IsTouching(collider);
+    }
+    public void ApplyFiringKnockback(Vector2 unitaryDirection, float magnitude)
+    {
+        physicsHandler.AddForce(unitaryDirection, magnitude);
+    }
+    public void AddForce(Vector2 unitaryDirection, float magnitude)
+    {
+        physicsHandler.AddForce(unitaryDirection, magnitude);
+    }
+    // Stun controller
+    public void Stun()
+    {
+        stunController.Stun();
+    }
+    // UI controller
+    public void UpdateHealthBar()
+    {
+        uiController.UpdateHealthBar();
+    }
+    public void UpdateLives()
+    {
+        uiController.UpdateLives();
     }
     #endregion
 
@@ -206,49 +280,49 @@ public class PlayerManager : MonoBehaviour
     #region Inherited methods
     private void Start()
     {
-        if ((_movementController = GetComponent<PlayerMovementController>()) == null)
+        if ((movementController = GetComponent<PlayerMovementController>()) == null)
         {
             Debug.LogError("PlayerManager.cs: player component not found.");
         }
         movementController.playerManager = this;
         movementController.Init();
 
-        if ((_firingController = GetComponent<PlayerFiringController>()) == null)
+        if ((firingController = GetComponent<PlayerFiringController>()) == null)
         {
             Debug.LogError("PlayerManager.cs: player component not found.");
         }
         firingController.playerManager = this;
         firingController.Init();
 
-        if ((_animationAndOrientationController = GetComponent<PlayerAnimationAndOrientationController>()) == null)
+        if ((animationAndOrientationController = GetComponent<PlayerAnimationAndOrientationController>()) == null)
         {
             Debug.LogError("PlayerManager.cs: player component not found.");
         }
         animationAndOrientationController.playerManager = this;
         animationAndOrientationController.Init();
 
-        if ((_physicsHandler = GetComponent<PlayerPhysicsHandler>()) == null)
+        if ((physicsHandler = GetComponent<PlayerPhysicsHandler>()) == null)
         {
             Debug.LogError("PlayerManager.cs: player component not found.");
         }
         physicsHandler.playerManager = this;
         physicsHandler.Init();
 
-        if ((_inputHandler = GetComponent<PlayerInputHandler>()) == null)
+        if ((inputHandler = GetComponent<PlayerInputHandler>()) == null)
         {
             Debug.LogError("PlayerManager.cs: player component not found.");
         }
         inputHandler.playerManager = this;
         inputHandler.Init();
 
-        if ((_stunController = GetComponent<PlayerStunController>()) == null)
+        if ((stunController = GetComponent<PlayerStunController>()) == null)
         {
             Debug.LogError("PlayerManager.cs: player component not found.");
         }
         stunController.playerManager = this;
         stunController.Init();
 
-        if ((_uiController = GetComponent<PlayerUIController>()) == null)
+        if ((uiController = GetComponent<PlayerUIController>()) == null)
         {
             Debug.LogError("PlayerManager.cs: player component not found.");
         }
@@ -262,8 +336,6 @@ public class PlayerManager : MonoBehaviour
         {
             Kill();
         }
-
-        hitByProjectileTimer -= Time.deltaTime;
     }
     #endregion
 }

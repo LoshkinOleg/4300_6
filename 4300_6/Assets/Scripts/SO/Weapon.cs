@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WeaponData", menuName = "SO/WeaponData")]
-public class Weapon_Template : ScriptableObject
+public class Weapon : ScriptableObject
 {
     public float firerate = 1;
     public float projectileSpeed = 1;

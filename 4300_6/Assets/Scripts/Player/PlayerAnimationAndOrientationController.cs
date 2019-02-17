@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerAnimationAndOrientationController : MonoBehaviour
 {
     // Classes and Enums
+    #region Classes and Enums
     public enum PlayerDirection
     {
         LEFT,
@@ -17,6 +18,7 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
         DOWN,
         ANYWHERE
     }
+    #endregion
 
     // Attributes
     #region Attributes
@@ -26,7 +28,13 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     [SerializeField] GameObject _armGO = null;
     [SerializeField] GameObject[] weaponsGOs = new GameObject[(int)PlayerFiringController.Weapon.MINIGUN + 1];
 
+    // Private variables
+    PlayerDirection currentPlayerDirection;
+    GunDirection currentGunDirection = GunDirection.FORWARD;
+    #endregion
+
     // Public properties
+    #region Public properties
     public PlayerManager playerManager
     {
         get
@@ -46,10 +54,6 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
         }
     }
     public GameObject armGO => _armGO;
-
-    // Private variables
-    PlayerDirection currentPlayerDirection;
-    GunDirection currentGunDirection = GunDirection.FORWARD;
     #endregion
 
     // Public methods
@@ -75,62 +79,30 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     #region Private methods
     void HandlePlayerOrientation()
     {
-        if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.GROUND)
+        if (playerManager.horizontalInput != 0)
         {
-            // Handle player sprite orientation.
-            if (playerManager.horizontalInput != 0)
+            if (playerManager.horizontalInput > 0)
             {
-                if (playerManager.horizontalInput > 0)
-                {
-                    // H+
-                    currentPlayerDirection = PlayerDirection.RIGHT;
-                }
-                else
-                {
-                    // H-
-                    currentPlayerDirection = PlayerDirection.LEFT;
-                }
+                // H+
+                currentPlayerDirection = PlayerDirection.RIGHT;
             }
             else
             {
-                // H = 0
-                if (CheckEnemyDirection())
-                {
-                    currentPlayerDirection = PlayerDirection.RIGHT;
-                }
-                else
-                {
-                    currentPlayerDirection = PlayerDirection.LEFT;
-                }
+                // H-
+                currentPlayerDirection = PlayerDirection.LEFT;
             }
         }
-        else // If current movement mode is GROUND
+        else
         {
-            // Handle player sprite orientation.
-            if (playerManager.horizontalInput != 0)
+            // H = 0
+            // Face enemy if the joystick is in it's neutral position.
+            if (CheckEnemyDirection())
             {
-                if (playerManager.horizontalInput > 0)
-                {
-                    // H+
-                    currentPlayerDirection = PlayerDirection.RIGHT;
-                }
-                else
-                {
-                    // H-
-                    currentPlayerDirection = PlayerDirection.LEFT;
-                }
+                currentPlayerDirection = PlayerDirection.RIGHT;
             }
             else
             {
-                // H = 0
-                if (CheckEnemyDirection())
-                {
-                    currentPlayerDirection = PlayerDirection.RIGHT;
-                }
-                else
-                {
-                    currentPlayerDirection = PlayerDirection.LEFT;
-                }
+                currentPlayerDirection = PlayerDirection.LEFT;
             }
         }
     }
@@ -138,7 +110,7 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     {
         if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.GROUND)
         {
-            //Handle gun orientation
+            // If player is aiming up or down.
             if (Mathf.Abs(playerManager.aimingVerticalInput) >= Mathf.Abs(playerManager.aimingHorizontalInput))
             {
                 if (playerManager.aimingVerticalInput > 0)
@@ -152,13 +124,14 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
                     currentGunDirection = GunDirection.UP;
                 }
                 else
-                {
+                {   // V = 0
                     currentGunDirection = GunDirection.FORWARD;
                 }
             }
-            else
+            else // If the player is aiming left or right.
             {
-                // If the player is going one way and firing in the other.
+                currentGunDirection = GunDirection.FORWARD;
+                // Change player orientation if the player is going one way and firing in the other.
                 if (playerManager.aimingHorizontalInput < 0 && currentPlayerDirection == PlayerDirection.RIGHT)
                 {
                     currentPlayerDirection = PlayerDirection.LEFT;
@@ -167,7 +140,6 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
                 {
                     currentPlayerDirection = PlayerDirection.RIGHT;
                 }
-                currentGunDirection = GunDirection.FORWARD;
             }
         }
         else // If current movement mode is GROUND
@@ -176,15 +148,13 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
             currentGunDirection = GunDirection.ANYWHERE;
         }
     }
-    void AnalyseInputsForDirection()
-    {
-        HandlePlayerOrientation();
-        HandleGunOrientation();
-    }
     void OrientSpriteAndGun()
     {
-        AnalyseInputsForDirection();
+        // Analyse inputs.
+        HandlePlayerOrientation();
+        HandleGunOrientation();
 
+        // Apply orientations accordingly.
         if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.GROUND)
         {
             switch (currentPlayerDirection)

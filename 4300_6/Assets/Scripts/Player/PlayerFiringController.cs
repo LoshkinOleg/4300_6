@@ -20,42 +20,6 @@ public class PlayerFiringController : MonoBehaviour
     [HideInInspector] public PlayerManager _playerManager = null;
     [SerializeField] GameObject[] bulletsPrefabs = new GameObject[(int)Weapon.MINIGUN + 1];
 
-    // Public properties
-    public PlayerManager playerManager
-    {
-        get
-        {
-            return _playerManager;
-        }
-        set
-        {
-            if (_playerManager == null)
-            {
-                _playerManager = value;
-            }
-            else
-            {
-                Debug.LogWarning("Attempting to modify PlayerManager reference after it has been set.");
-            }
-        }
-    }
-    public Weapon currentWeapon
-    {
-        get
-        {
-            return _currentWeapon;
-        }
-        set
-        {
-            _currentWeapon = value;
-            currentProjectileSpeed = playerManager.weaponsData[(int)value].projectileSpeed;
-            currentFirerate = playerManager.weaponsData[(int)value].firerate;
-            currentSpread = playerManager.weaponsData[(int)value].spread;
-            currentNumberOfProjectilesPerShot = playerManager.weaponsData[(int)value].numberOfProjectiles;
-            currentFiringKnockback = playerManager.weaponsData[(int)value].firingKnockback;
-        }
-    }
-
     // Private properties
     bool isSpeedup
     {
@@ -92,6 +56,44 @@ public class PlayerFiringController : MonoBehaviour
     float bulletsSpeedupTimer;
     #endregion
 
+    // Public properties
+    #region Public properties
+    public PlayerManager playerManager
+    {
+        get
+        {
+            return _playerManager;
+        }
+        set
+        {
+            if (_playerManager == null)
+            {
+                _playerManager = value;
+            }
+            else
+            {
+                Debug.LogWarning("Attempting to modify PlayerManager reference after it has been set.");
+            }
+        }
+    }
+    public Weapon currentWeapon
+    {
+        get
+        {
+            return _currentWeapon;
+        }
+        set
+        {
+            _currentWeapon = value;
+            currentProjectileSpeed = playerManager.weaponsData[(int)value].projectileSpeed;
+            currentFirerate = playerManager.weaponsData[(int)value].firerate;
+            currentSpread = playerManager.weaponsData[(int)value].spread;
+            currentNumberOfProjectilesPerShot = playerManager.weaponsData[(int)value].numberOfProjectiles;
+            currentFiringKnockback = playerManager.weaponsData[(int)value].firingKnockback;
+        }
+    }
+    #endregion
+
     // Public methods
     #region Public methods
     public void SpeedBulletsUp()
@@ -119,13 +121,14 @@ public class PlayerFiringController : MonoBehaviour
                             // Calculate the direction the bullet will go with spread accounted.
                             float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
                             Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
-
+                            // Instantiate bullet
                             Projectile newProjectile = Instantiate(bulletsPrefabs[0], transform.position, rotation).GetComponent<Projectile>();
                             newProjectile.speed = currentProjectileSpeed;
                             newProjectile.type = currentWeapon;
-
+                            // Apply firing knockback
                             Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
+                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+                            // Reset firing timer.
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -145,7 +148,8 @@ public class PlayerFiringController : MonoBehaviour
                             }
 
                             Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
+                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -154,10 +158,7 @@ public class PlayerFiringController : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            // debug
-                            Debug.DrawRay(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right * 100, Color.red);
-
-                            // Cast a hitscan.
+                            // Cast a hitscan. Apply sniper hit mechanics if a player is hit.
                             if (playerManager.isLeftPlayer)
                             {
                                 if (Physics2D.Raycast(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right).collider.gameObject.tag == "Player2")
@@ -174,7 +175,8 @@ public class PlayerFiringController : MonoBehaviour
                             }
 
                             Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
+                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -183,15 +185,14 @@ public class PlayerFiringController : MonoBehaviour
                     {
                         if (firingTimer < 0)
                         {
-                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
-                            Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
-
-                            Projectile newProjectile = Instantiate(bulletsPrefabs[3], transform.position, rotation).GetComponent<Projectile>();
+                            // Instantiate a projectile without any spread applied.
+                            Projectile newProjectile = Instantiate(bulletsPrefabs[3], transform.position, new Quaternion()).GetComponent<Projectile>();
                             newProjectile.speed = currentProjectileSpeed;
                             newProjectile.type = currentWeapon;
 
                             Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
+                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
                             firingTimer = 1 / currentFirerate;
                         }
                     }
@@ -208,7 +209,8 @@ public class PlayerFiringController : MonoBehaviour
                             newProjectile.type = currentWeapon;
                             
                             Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.physicsHandler.AddForce(direction * currentFiringKnockback);
+                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
                             firingTimer = 1 / currentFirerate;
                         }
                     }

@@ -16,8 +16,10 @@ public class PlayerPhysicsHandler : MonoBehaviour
     [HideInInspector] public PlayerManager _playerManager = null;
     Rigidbody2D playerRigidbody = null;
     CapsuleCollider2D playerCollider = null;
+    #endregion
 
     // Public properties
+    #region Public properties
     public PlayerManager playerManager
     {
         get
@@ -59,6 +61,17 @@ public class PlayerPhysicsHandler : MonoBehaviour
         }
     }
     public float playerSpeedLimit => _playerSpeedLimit;
+    public float linearDrag
+    {
+        get
+        {
+            return playerRigidbody.drag;
+        }
+        set
+        {
+            playerRigidbody.drag = value;
+        }
+    }
     #endregion
 
     // Public methods
@@ -80,24 +93,16 @@ public class PlayerPhysicsHandler : MonoBehaviour
                     playerRigidbody.AddForce(forceToApply);
                 }
                 break;
-            case PlayerFiringController.Weapon.SNIPER:
-                {
-                    Vector2 forceToApply = directionOfKnockback * playerManager.weaponsData[2].hitKnockback;
-                    playerRigidbody.AddForce(forceToApply);
-                }
-                break;
-            case PlayerFiringController.Weapon.BAZOOKA:
-                {
-                    Vector2 forceToApply = directionOfKnockback * playerManager.weaponsData[3].hitKnockback;
-                    playerRigidbody.AddForce(forceToApply);
-                }
-                break;
             case PlayerFiringController.Weapon.MINIGUN:
                 {
                     Vector2 forceToApply = directionOfKnockback * playerManager.weaponsData[4].hitKnockback;
                     playerRigidbody.AddForce(forceToApply);
                 }
                 break;
+            default:
+                {
+                    Debug.LogWarning("PlayerPhysicsHandler.cs: ProjectileHit() got passed a non valid projectile type: " + type);
+                }break;
         }
     }
     public void CrateBottomHit(BoxCollider2D crate)
@@ -110,9 +115,27 @@ public class PlayerPhysicsHandler : MonoBehaviour
             }
             else
             {
-                playerManager.physicsHandler.AddForce(Vector2.down * playerManager.stunController.stunForceMultiplier);
+                playerRigidbody.AddForce(Vector2.down * playerManager.stunForceMultiplier);
             }
         }
+    }
+    public void ExplosionHit(Vector2 position)
+    {
+        Vector2 direction = -(position - (Vector2)transform.position);
+        playerRigidbody.AddForce(direction * playerManager.weaponsData[3].hitKnockback);
+    }
+    public void SniperHit()
+    {
+        Vector2 direction;
+        if (playerManager.isLeftPlayer)
+        {
+            direction = -(GameManager.instance.player2.transform.position - transform.position);
+        }
+        else
+        {
+            direction = -(GameManager.instance.player1.transform.position - transform.position);
+        }
+        playerRigidbody.AddForce(direction * playerManager.weaponsData[2].hitKnockback);
     }
     public void ToggleGravity()
     {
@@ -129,17 +152,13 @@ public class PlayerPhysicsHandler : MonoBehaviour
             playerRigidbody.gravityScale = 2;
         }
     }
-    public void AddForce(Vector2 force)
+    public void AddForce(Vector2 unitaryDirection, float magnitude)
     {
-        playerRigidbody.AddForce(force);
+        playerRigidbody.AddForce(unitaryDirection * magnitude);
     }
     public bool IsTouching(Collider2D collider)
     {
         return playerCollider.IsTouching(collider);
-    }
-    public void ModifyLinearDrag(float drag)
-    {
-        playerRigidbody.drag = drag;
     }
     public void Init()
     {

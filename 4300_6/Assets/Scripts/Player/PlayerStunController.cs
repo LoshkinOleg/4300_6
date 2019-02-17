@@ -15,7 +15,13 @@ public class PlayerStunController : MonoBehaviour
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
 
+    // Private variables
+    float _stunTimer;
+    float _stunOpportunityTimer;
+    #endregion
+
     // Public properties
+    #region Public properties
     public PlayerManager playerManager
     {
         get
@@ -36,10 +42,28 @@ public class PlayerStunController : MonoBehaviour
     }
     public float stunTimer => _stunTimer;
     public float stunForceMultiplier => _stunForceMultiplier;
-    public float projectileHitStunWindow => _projectileHitStunWindow;
-
-    // Private variables
-    float _stunTimer = 0;
+    public float projectileHitStunWindow
+    {
+        get
+        {
+            return _projectileHitStunWindow;
+        }
+        set
+        {
+            _projectileHitStunWindow = value;
+        }
+    }
+    public float stunOpportunityTimer
+    {
+        get
+        {
+            return _stunOpportunityTimer;
+        }
+        set
+        {
+            _stunOpportunityTimer = value;
+        }
+    }
     #endregion
 
     // Public methods
@@ -47,19 +71,11 @@ public class PlayerStunController : MonoBehaviour
     public void Stun()
     {
         _stunTimer = stunDuration;
-        playerManager.physicsHandler.ModifyLinearDrag(stunDragValue);
-    }
-    public void CrateBottomHit(BoxCollider2D crate)
-    {
-        Stun();
+        playerManager.linearDrag = stunDragValue;
     }
     public void Init()
     {
 
-    }
-    public void CrateSideStun()
-    {
-        Stun();
     }
     #endregion
 
@@ -87,12 +103,13 @@ public class PlayerStunController : MonoBehaviour
             // Reset gravity after the player has just exited stun mode where gravity is set to 0.
             if (Mathf.Abs(playerManager.gravity) != 2)
             {
-                playerManager.physicsHandler.ResetGravity();
-                playerManager.physicsHandler.ModifyLinearDrag(1); // Reset drag
+                playerManager.ResetGravity();
+                playerManager.linearDrag = 1f; // Reset drag
             }
         }
 
         _stunTimer -= Time.deltaTime;
+        _stunOpportunityTimer -= Time.deltaTime;
     }
     #endregion
 }

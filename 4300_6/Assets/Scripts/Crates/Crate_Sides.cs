@@ -8,16 +8,16 @@ public class Crate_Sides : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player1")
         {
-            if (GameManager.instance.player1.hitByProjectileTimer > 0)
+            if (GameManager.instance.player1.stunOpportunityTimer > 0)
             {
-                GameManager.instance.player1.stunController.CrateSideStun();
+                GameManager.instance.player1.Stun();
             }
         }
         else if (collision.gameObject.tag == "Player2")
         {
-            if (GameManager.instance.player2.hitByProjectileTimer > 0)
+            if (GameManager.instance.player2.stunOpportunityTimer > 0)
             {
-                GameManager.instance.player2.stunController.CrateSideStun();
+                GameManager.instance.player2.Stun();
             }
         }
     }

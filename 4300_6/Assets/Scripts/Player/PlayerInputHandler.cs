@@ -10,7 +10,18 @@ public class PlayerInputHandler : MonoBehaviour
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
 
+    // Private variables
+    float _horizontalInput;
+    float _verticalInput;
+    float _aimingHorizontalInput;
+    float _aimingVerticalInput;
+    bool _tryingToOpenParachute;
+    bool _tryingToFire;
+    InputDevice _gamepad = null;
+    #endregion
+
     // Public properties
+    #region Public properties
     public PlayerManager playerManager
     {
         get
@@ -60,20 +71,19 @@ public class PlayerInputHandler : MonoBehaviour
             _gamepad = value;
         }
     }
-
-    // Private variables
-    float _horizontalInput;
-    float _verticalInput;
-    float _aimingHorizontalInput;
-    float _aimingVerticalInput;
-    bool _tryingToOpenParachute;
-    bool _tryingToFire;
-    InputDevice _gamepad = null;
     #endregion
 
     // Public methods
     #region Public methods
-    public void UpdateInputs()
+    public void Init()
+    {
+
+    }
+    #endregion
+
+    // Private methods
+    #region Private methods
+    void UpdateInputs()
     {
         if (gamepad != null)
         {
@@ -119,10 +129,6 @@ public class PlayerInputHandler : MonoBehaviour
                 }
             }
         }
-    }
-    public void Init()
-    {
-
     }
     #endregion
 

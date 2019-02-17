@@ -95,19 +95,19 @@ public class GameManager : MonoBehaviour
     }
     void AssignADevice(InputDevice device)
     {
-        if (player1.inputHandler.gamepad == null)
+        if (player1.gamepad == null)
         {
             if (DeviceIsNotTaken(device))
             {
-                player1.inputHandler.gamepad = device;
+                player1.gamepad = device;
                 devicesBeingUsed.Add(device);
             }
         }
-        else if (player2.inputHandler.gamepad == null)
+        else if (player2.gamepad == null)
         {
             if (DeviceIsNotTaken(device))
             {
-                player2.inputHandler.gamepad = device;
+                player2.gamepad = device;
                 devicesBeingUsed.Add(device);
             }
         }

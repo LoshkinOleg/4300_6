@@ -21,7 +21,13 @@ public class PlayerMovementController : MonoBehaviour
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
 
+    // Private variables
+    MovementMode _currentMovementMode = MovementMode.AIRBORNE;
+    float jetpackTimer;
+    #endregion
+
     // Public properties
+    #region Public properties
     public PlayerManager playerManager
     {
         get
@@ -61,10 +67,6 @@ public class PlayerMovementController : MonoBehaviour
             _currentMovementMode = value;
         }
     }
-
-    // Private variables
-    MovementMode _currentMovementMode = MovementMode.AIRBORNE;
-    float jetpackTimer;
     #endregion
 
     // Public methods
@@ -84,22 +86,22 @@ public class PlayerMovementController : MonoBehaviour
             case MovementMode.AIRBORNE:
                 {
                     // Handle horizontal input
-                    if (playerManager.inputHandler.horizontalInput != 0)
+                    if (playerManager.horizontalInput != 0)
                     {
-                        playerManager.physicsHandler.AddForce(Vector2.right * playerManager.inputHandler.horizontalInput * airborneHorizontalMovementForceMultiplier);
+                        playerManager.AddForce(Vector2.right, playerManager.horizontalInput * airborneHorizontalMovementForceMultiplier);
                     }
                 }
                 break;
             case MovementMode.GROUND:
                 {
                     // Controlls horizontal movement precisely by affecting velocity.
-                    if (playerManager.inputHandler.horizontalInput != 0)
+                    if (playerManager.horizontalInput != 0)
                     {
-                        playerManager.velocity = new Vector2(playerManager.inputHandler.horizontalInput * groundHorizontalVelocity, playerManager.physicsHandler.velocity.y);
+                        playerManager.velocity = new Vector2(playerManager.horizontalInput * groundHorizontalVelocity, playerManager.velocity.y);
                     }
                     else
                     {
-                        playerManager.velocity = new Vector2(0, playerManager.physicsHandler.velocity.y);
+                        playerManager.velocity = new Vector2(0, playerManager.velocity.y);
                     }
                 }
                 break;
@@ -108,13 +110,13 @@ public class PlayerMovementController : MonoBehaviour
                     if (jetpackTimer > 0)
                     {
                         // Controls all movement precisely by affecting velocity.
-                        playerManager.velocity = new Vector2(playerManager.inputHandler.horizontalInput, playerManager.inputHandler.verticalInput) * PickupManager.instance.jetpackVelocity;
+                        playerManager.velocity = new Vector2(playerManager.horizontalInput, playerManager.verticalInput) * PickupManager.instance.jetpackVelocity;
                     }
                     else
                     {
                         // Exit jetpack mode.
                         _currentMovementMode = MovementMode.AIRBORNE;
-                        playerManager.physicsHandler.ResetGravity();
+                        playerManager.ResetGravity();
                     }
                 }
                 break;

@@ -47,11 +47,11 @@ public class PickupManager : MonoBehaviour
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.lives++;
+            GameManager.instance.player1.ModifyLives(1);
         }
         else
         {
-            GameManager.instance.player2.lives++;
+            GameManager.instance.player2.ModifyLives(1);
         }
     }
     public void Pickup_Health(string tag)
@@ -80,11 +80,11 @@ public class PickupManager : MonoBehaviour
     {
         if (tag == "Player1")
         {
-            GameManager.instance.player1.firingController.SpeedBulletsUp();
+            GameManager.instance.player1.SpeedBulletsUp();
         }
         else
         {
-            GameManager.instance.player2.firingController.SpeedBulletsUp();
+            GameManager.instance.player2.SpeedBulletsUp();
         }
     }
     public void Pickup_Jetpack(string tag)
