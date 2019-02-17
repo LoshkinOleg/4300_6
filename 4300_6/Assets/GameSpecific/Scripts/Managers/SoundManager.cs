@@ -7,15 +7,32 @@ public class SoundManager : MonoBehaviour
 {
     // Attributes
     #region Attributes
-    static SoundManager _instance = null;
+    [EventRef] [SerializeField] string[] paths = new string[0];
 
     // Public properties
     static public SoundManager Instance => _instance;
 
     // Private variables
-    IDictionary<string, StudioEventEmitter> sounds = new Dictionary<string, StudioEventEmitter>();
+    static SoundManager _instance = null;
+    IDictionary<string, FMOD.Studio.EventInstance> sounds = new Dictionary<string, FMOD.Studio.EventInstance>();
     #endregion
-    
+
+    // Public methods
+    #region Public methods
+    public void PlayShortSound(string name)
+    {
+        sounds[name].start();
+    }
+    public void PlayLoopingSound(string name)
+    {
+        sounds[name].start();
+    }
+    public void StopLoopingSound(string name)
+    {
+        sounds[name].stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+    }
+    #endregion
+
     // Inherited methods
     #region Inherited methods
     private void Awake()
@@ -25,10 +42,9 @@ public class SoundManager : MonoBehaviour
     }
     private void Start()
     {
-        StudioEventEmitter[] emitters = GetComponents<StudioEventEmitter>();
-        foreach (var item in emitters)
+        for (int i = 0; i < paths.Length; i++)
         {
-            sounds.Add(item.Event.ToString().Remove(0,7), item);
+            sounds[paths[i].Remove(0,7)] = RuntimeManager.CreateInstance(paths[i]);
         }
     }
     #endregion

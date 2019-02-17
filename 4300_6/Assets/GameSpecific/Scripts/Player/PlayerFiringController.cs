@@ -130,6 +130,11 @@ public class PlayerFiringController : MonoBehaviour
                             playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
                             // Reset firing timer.
                             firingTimer = 1 / currentFirerate;
+                            // Play sound
+                            if (SoundManager.Instance != null)
+                            {
+                                SoundManager.Instance.PlayShortSound("pistol_fire");
+                            }
                         }
                     }
                     break;
@@ -151,6 +156,11 @@ public class PlayerFiringController : MonoBehaviour
                             playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
                             firingTimer = 1 / currentFirerate;
+
+                            if (SoundManager.Instance != null)
+                            {
+                                SoundManager.Instance.PlayShortSound("shotgun_fire");
+                            }
                         }
                     }
                     break;
@@ -178,6 +188,11 @@ public class PlayerFiringController : MonoBehaviour
                             playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
                             firingTimer = 1 / currentFirerate;
+
+                            if (SoundManager.Instance != null)
+                            {
+                                SoundManager.Instance.PlayShortSound("sniper_fire");
+                            }
                         }
                     }
                     break;
@@ -194,6 +209,11 @@ public class PlayerFiringController : MonoBehaviour
                             playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
                             firingTimer = 1 / currentFirerate;
+
+                            if (SoundManager.Instance != null)
+                            {
+                                SoundManager.Instance.PlayShortSound("bazooka_fire");
+                            }
                         }
                     }
                     break;
@@ -212,9 +232,29 @@ public class PlayerFiringController : MonoBehaviour
                             playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
                             firingTimer = 1 / currentFirerate;
+
+                            if (SoundManager.Instance != null)
+                            {
+                                if (!playerManager.isPlayingMinigunSound)
+                                {
+                                    SoundManager.Instance.PlayLoopingSound("minigun_fire");
+                                    playerManager.isPlayingMinigunSound = true;
+                                }
+                            }
                         }
                     }
                     break;
+            }
+        }
+        else
+        {
+            if (SoundManager.Instance != null)
+            {
+                if (playerManager.isPlayingMinigunSound)
+                {
+                    SoundManager.Instance.StopLoopingSound("minigun_fire");
+                    playerManager.isPlayingMinigunSound = false;
+                }
             }
         }
 

@@ -33,6 +33,7 @@ public class PlayerManager : MonoBehaviour
     float _health = 1;
     int _lives = 3;
     bool _parachuteIsOpen;
+    bool _isPlayingMinigunSound;
     #endregion
 
     // Public properties
@@ -43,6 +44,17 @@ public class PlayerManager : MonoBehaviour
     public int lives => _lives;
     public float health => _health;
     public bool parachuteIsOpen => _parachuteIsOpen;
+    public bool isPlayingMinigunSound
+    {
+        get
+        {
+            return _isPlayingMinigunSound;
+        }
+        set
+        {
+            _isPlayingMinigunSound = value;
+        }
+    }
     // Movement controller
     public PlayerMovementController.MovementMode currentMovementMode
     {

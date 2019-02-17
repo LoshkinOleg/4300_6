@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{b90eb4bb-24f1-4bec-a4f6-32a8b22fef9b}">
+        <property name="assetPath">
+            <value>minigun_slowdown.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>1.8837868480725624</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{0ef40eeb-13af-41f7-9b1f-1085a0cc5578}</destination>
+        </relationship>
+    </object>
+</objects>

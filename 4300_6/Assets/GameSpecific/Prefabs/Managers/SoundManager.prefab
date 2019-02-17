@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3565864735475486936}
   - component: {fileID: 5702887065061625136}
-  - component: {fileID: 1919449993622577289}
+  - component: {fileID: 8915974241945718233}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -44,7 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16fe301d9c87d0b4e81f880787583308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1919449993622577289
+  paths:
+  - event:/bazooka_fire
+  - event:/bazooka_hit
+  - event:/minigun_fire
+  - event:/minigun_slowdown
+  - event:/minigun_spinup
+  - event:/out_of_ammo
+  - event:/parachute_closed
+  - event:/parachute_open
+  - event:/pistol_fire
+  - event:/player_hit
+  - event:/shotgun_fire
+  - event:/sniper_fire
+--- !u!114 &8915974241945718233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -53,17 +66,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6260657872254428704}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Event: event:/player_hit
-  PlayEvent: 0
-  StopEvent: 0
-  CollisionTag: 
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 0
-  OverrideMaxDistance: 0
+  ListenerNumber: 0

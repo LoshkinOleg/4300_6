@@ -17,12 +17,69 @@ MonoBehaviour:
   - {fileID: 114127576458469622}
   EditorEvents:
   - {fileID: 114435295089796208}
+  - {fileID: 114071709205897634}
+  - {fileID: 114654815221701228}
+  - {fileID: 114252002999179388}
+  - {fileID: 114927646237154906}
+  - {fileID: 114182876200216766}
+  - {fileID: 114186812364488748}
+  - {fileID: 114054737090491564}
+  - {fileID: 114324551910940930}
+  - {fileID: 114867335316199982}
+  - {fileID: 114147901671715194}
+  - {fileID: 114169243445280504}
   MasterBanks:
   - {fileID: 114127576458469622}
   StringsBanks:
   - {fileID: 114960451514435258}
-  stringsBankWriteTime: 636860039515502799
+  stringsBankWriteTime: 636860218857716075
   cacheVersion: 3
+--- !u!114 &114054737090491564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/bazooka_fire
+  guid: 9502633c40b7cf43b69aeae973490341
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 888
+--- !u!114 &114071709205897634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/parachute_open
+  guid: 1f279f8606612046b7d6f0f31a75afb2
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 333
 --- !u!114 &114127576458469622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37,12 +94,150 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: C:\Users\Dante\Desktop\FinalProject\4300_6\FMODProject\TheParatroopersSounds\Build\Desktop\Master
     Bank.bank
-  lastModified: 636860039515462812
+  lastModified: 636860218857676088
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 17056
+    Value: 206208
   Exists: 1
+--- !u!114 &114147901671715194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/minigun_slowdown
+  guid: e5848171a76dea408366e9fdd4765aa0
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 1883
+--- !u!114 &114169243445280504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/out_of_ammo
+  guid: fbb3c7167de6e143ae3c2e7afb6f8fa6
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 104
+--- !u!114 &114182876200216766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/minigun_spinup
+  guid: 4219dbbca99c0648a1944c9dcf7598bc
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 1005
+--- !u!114 &114186812364488748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/sniper_fire
+  guid: 880e585fafcdab4dbd6cba2b074ec73b
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 1380
+--- !u!114 &114252002999179388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/parachute_closed
+  guid: bcb22481ee297948a98a04c7d8895ed2
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 333
+--- !u!114 &114324551910940930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/pistol_fire
+  guid: 9c6c133c49b3bb4c887c83b286c277c5
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 302
 --- !u!114 &114435295089796208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,6 +261,75 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 272
+--- !u!114 &114654815221701228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/shotgun_fire
+  guid: 3ea5d0fda059114dae137b3c0f7601f3
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 800
+--- !u!114 &114867335316199982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/bazooka_hit
+  guid: b4274cd55d6f1349b74df38c89d48f38
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 3560
+--- !u!114 &114927646237154906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/minigun_fire
+  guid: 3c781fe9b18ea24b8057670789171683
+  Banks:
+  - {fileID: 114127576458469622}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 890
 --- !u!114 &114960451514435258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,9 +344,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: C:\Users\Dante\Desktop\FinalProject\4300_6\FMODProject\TheParatroopersSounds\Build\Desktop\Master
     Bank.strings.bank
-  lastModified: 636860039515502799
+  lastModified: 636860218857716075
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 720
+    Value: 1248
   Exists: 1

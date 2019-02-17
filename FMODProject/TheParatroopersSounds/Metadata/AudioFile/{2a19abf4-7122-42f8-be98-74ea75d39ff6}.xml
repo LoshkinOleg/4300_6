@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{2a19abf4-7122-42f8-be98-74ea75d39ff6}">
+        <property name="assetPath">
+            <value>missile_launch_2.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>0.8882539682539683</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{0ef40eeb-13af-41f7-9b1f-1085a0cc5578}</destination>
+        </relationship>
+    </object>
+</objects>
