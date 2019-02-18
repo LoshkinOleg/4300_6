@@ -251,6 +251,11 @@ PrefabInstance:
       propertyPath: screenEdgeBuffer
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 757692163130730270, guid: 9b8362348ff340b479dfc35385aa736c,
+        type: 3}
+      propertyPath: startingWeapon
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b8362348ff340b479dfc35385aa736c, type: 3}
 --- !u!4 &307517120 stripped

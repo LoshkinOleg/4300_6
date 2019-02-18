@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
     #region Attributes
     // Inspector variables
     [SerializeField] bool _isLeftPlayer = true;
+    [SerializeField] PlayerFiringController.Weapon startingWeapon = PlayerFiringController.Weapon.MINIGUN;
 
     // References
     PlayerMovementController movementController = null;
@@ -33,7 +34,6 @@ public class PlayerManager : MonoBehaviour
     float _health = 1;
     int _lives = 3;
     bool _parachuteIsOpen;
-    bool _isPlayingMinigunSound;
     #endregion
 
     // Public properties
@@ -44,17 +44,6 @@ public class PlayerManager : MonoBehaviour
     public int lives => _lives;
     public float health => _health;
     public bool parachuteIsOpen => _parachuteIsOpen;
-    public bool isPlayingMinigunSound
-    {
-        get
-        {
-            return _isPlayingMinigunSound;
-        }
-        set
-        {
-            _isPlayingMinigunSound = value;
-        }
-    }
     // Movement controller
     public PlayerMovementController.MovementMode currentMovementMode
     {
@@ -340,6 +329,8 @@ public class PlayerManager : MonoBehaviour
         }
         uiController.playerManager = this;
         uiController.Init();
+
+        currentWeapon = startingWeapon;
     }
     private void Update()
     {

@@ -105,6 +105,9 @@ public class Projectile : MonoBehaviour
             {
                 GameManager.Instance.Player2.ExplosionHit(transform.position);
             }
+
+            // Play audio
+            SoundManager.Instance.PlaySound("bazooka_hit");
         }
 
         if (!isPlayingDestructionAnimation)

@@ -11,25 +11,29 @@ public class SoundManager : MonoBehaviour
 
     // Public properties
     static public SoundManager Instance => _instance;
+    public float minigunSpinupTime => _minigunSpinupTime;
+    public float minigunSlowdownTime => _minigunSlowdownTime;
 
     // Private variables
     static SoundManager _instance = null;
     IDictionary<string, FMOD.Studio.EventInstance> sounds = new Dictionary<string, FMOD.Studio.EventInstance>();
+    float _minigunSpinupTime;
+    float _minigunSlowdownTime;
     #endregion
 
     // Public methods
     #region Public methods
-    public void PlayShortSound(string name)
+    public void PlaySound(string name)
     {
         sounds[name].start();
     }
-    public void PlayLoopingSound(string name)
+    public void StopSoundNoFadeout(string name)
     {
-        sounds[name].start();
+        sounds[name].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
-    public void StopLoopingSound(string name)
+    public void StopSoundWithFadeout(string name)
     {
-        sounds[name].stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        sounds[name].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
     #endregion
 
@@ -40,12 +44,31 @@ public class SoundManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
     }
+    private void OnDestroy()
+    {
+        foreach (var item in sounds)
+        {
+            item.Value.release();
+        }
+    }
     private void Start()
     {
         for (int i = 0; i < paths.Length; i++)
         {
             sounds[paths[i].Remove(0,7)] = RuntimeManager.CreateInstance(paths[i]);
         }
+        
+        // Setup minigun time properties.
+        FMOD.Studio.EventDescription description;
+        int duration;
+
+        sounds["minigun_spinup"].getDescription(out description);
+        description.getLength(out duration);
+        _minigunSpinupTime = duration / 1000;
+
+        sounds["minigun_slowdown"].getDescription(out description);
+        description.getLength(out duration);
+        _minigunSlowdownTime = duration / 1000;
     }
     #endregion
 }

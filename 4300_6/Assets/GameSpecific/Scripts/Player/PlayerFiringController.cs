@@ -13,6 +13,13 @@ public class PlayerFiringController : MonoBehaviour
         BAZOOKA,
         MINIGUN
     }
+    private enum MinigunSoundStage
+    {
+        STOPPED,
+        SPINNING_UP,
+        FIRING,
+        SLOWING_DOWN
+    }
 
     // Attributes
     #region Attributes
@@ -54,6 +61,62 @@ public class PlayerFiringController : MonoBehaviour
     bool _isSpeedup;
     float firingTimer;
     float bulletsSpeedupTimer;
+    // Sound related
+    MinigunSoundStage minigunSoundStage // Triggers the right minigun sound when assigned to.
+    {
+        get
+        {
+            return _minigunSoundStage;
+        }
+        set
+        {
+            switch (value)
+            {
+                case MinigunSoundStage.SPINNING_UP:
+                    {
+                        SoundManager.Instance.PlaySound("minigun_spinup");
+                    }
+                    break;
+                case MinigunSoundStage.FIRING:
+                    {
+                        switch (_minigunSoundStage)
+                        {
+                            case MinigunSoundStage.SPINNING_UP:
+                                {
+                                    SoundManager.Instance.PlaySound("minigun_fire");
+                                }break;
+                            case MinigunSoundStage.SLOWING_DOWN:
+                                {
+                                    SoundManager.Instance.StopSoundNoFadeout("minigun_slowdown");
+                                    SoundManager.Instance.PlaySound("minigun_fire");
+                                }
+                                break;
+                        }
+                    }
+                    break;
+                case MinigunSoundStage.SLOWING_DOWN:
+                    {
+                        SoundManager.Instance.StopSoundWithFadeout("minigun_fire");
+                        SoundManager.Instance.PlaySound("minigun_slowdown");
+                    }break;
+                case MinigunSoundStage.STOPPED:
+                    {
+                        SoundManager.Instance.StopSoundWithFadeout("minigun_spinup");
+                    }
+                    break;
+            }
+
+            _minigunSoundStage = value;
+        }
+    }
+    bool isSpinningUp;
+    bool isFiringMinigun;
+    bool isSlowingDown;
+    float spinupTimer;
+    float spinupTime;
+    float slowdownTimer;
+    float slowdownTime;
+    MinigunSoundStage _minigunSoundStage = MinigunSoundStage.STOPPED;
     #endregion
 
     // Public properties
@@ -133,7 +196,7 @@ public class PlayerFiringController : MonoBehaviour
                             // Play sound
                             if (SoundManager.Instance != null)
                             {
-                                SoundManager.Instance.PlayShortSound("pistol_fire");
+                                SoundManager.Instance.PlaySound("pistol_fire");
                             }
                         }
                     }
@@ -159,7 +222,7 @@ public class PlayerFiringController : MonoBehaviour
 
                             if (SoundManager.Instance != null)
                             {
-                                SoundManager.Instance.PlayShortSound("shotgun_fire");
+                                SoundManager.Instance.PlaySound("shotgun_fire");
                             }
                         }
                     }
@@ -191,7 +254,7 @@ public class PlayerFiringController : MonoBehaviour
 
                             if (SoundManager.Instance != null)
                             {
-                                SoundManager.Instance.PlayShortSound("sniper_fire");
+                                SoundManager.Instance.PlaySound("sniper_fire");
                             }
                         }
                     }
@@ -212,48 +275,126 @@ public class PlayerFiringController : MonoBehaviour
 
                             if (SoundManager.Instance != null)
                             {
-                                SoundManager.Instance.PlayShortSound("bazooka_fire");
+                                SoundManager.Instance.PlaySound("bazooka_fire");
                             }
                         }
                     }
                     break;
                 case Weapon.MINIGUN:
                     {
-                        if (firingTimer < 0)
+                        switch (minigunSoundStage)
                         {
-                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
-                            Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
-
-                            Projectile newProjectile = Instantiate(bulletsPrefabs[4], transform.position, rotation).GetComponent<Projectile>();
-                            newProjectile.speed = currentProjectileSpeed;
-                            newProjectile.type = currentWeapon;
-                            
-                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
-
-                            firingTimer = 1 / currentFirerate;
-
-                            if (SoundManager.Instance != null)
-                            {
-                                if (!playerManager.isPlayingMinigunSound)
+                            case MinigunSoundStage.STOPPED:
                                 {
-                                    SoundManager.Instance.PlayLoopingSound("minigun_fire");
-                                    playerManager.isPlayingMinigunSound = true;
+                                    minigunSoundStage = MinigunSoundStage.SPINNING_UP;
+                                    spinupTimer = spinupTime;
+                                    slowdownTimer = slowdownTime;
+                                }break;
+                            case MinigunSoundStage.SPINNING_UP:
+                                {
+                                    if (spinupTimer < 0)
+                                    {
+                                        minigunSoundStage = MinigunSoundStage.FIRING;
+                                    }
+                                }break;
+                            case MinigunSoundStage.FIRING:
+                                {
+                                    if (firingTimer < 0)
+                                    {
+                                        float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
+                                        Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
+
+                                        Projectile newProjectile = Instantiate(bulletsPrefabs[4], transform.position, rotation).GetComponent<Projectile>();
+                                        newProjectile.speed = currentProjectileSpeed;
+                                        newProjectile.type = currentWeapon;
+
+                                        Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                                        playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
+                                        firingTimer = 1 / currentFirerate;
+                                    }
+                                }break;
+                            case MinigunSoundStage.SLOWING_DOWN:
+                                {
+                                    minigunSoundStage = MinigunSoundStage.FIRING;
+                                }break;
+                        }
+
+                        /*
+                        // Manage spinup mechanic
+                        if (spinupTimer > 0)
+                        {
+                            if (minigunSoundStage != MinigunSoundStage.SPINNING_UP)
+                            {
+                                minigunSoundStage = MinigunSoundStage.SPINNING_UP;
+
+                                if (!isSpinningUp)
+                                {
+                                    SoundManager.Instance.PlayNewSound("minigun_spinup");
+                                    isSpinningUp = true;
                                 }
                             }
                         }
-                    }
-                    break;
+                        else
+                        {
+                            if (minigunSoundStage == MinigunSoundStage.SPINNING_UP)
+                            {
+                                minigunSoundStage = MinigunSoundStage.FIRING;
+                            }
+                            else if (minigunSoundStage == MinigunSoundStage.FIRING)
+                            {
+                                if (!isFiringMinigun)
+                                {
+                                    SoundManager.Instance.PlayNewSound("minigun_fire");
+                                    isFiringMinigun = true;
+                                    isSpinningUp = false;
+                                }
+                                else
+                                {
+                                    if (firingTimer < 0)
+                                    {
+                                        float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
+                                        Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
+
+                                        Projectile newProjectile = Instantiate(bulletsPrefabs[4], transform.position, rotation).GetComponent<Projectile>();
+                                        newProjectile.speed = currentProjectileSpeed;
+                                        newProjectile.type = currentWeapon;
+
+                                        Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                                        playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
+                                        firingTimer = 1 / currentFirerate;
+                                    }
+                                }
+                            }
+                        }*/
+                    }break;
             }
         }
-        else
+        else // If we're not trying to fire.
         {
-            if (SoundManager.Instance != null)
+            if (currentWeapon == Weapon.MINIGUN)
             {
-                if (playerManager.isPlayingMinigunSound)
+                switch (minigunSoundStage)
                 {
-                    SoundManager.Instance.StopLoopingSound("minigun_fire");
-                    playerManager.isPlayingMinigunSound = false;
+                    case MinigunSoundStage.SPINNING_UP:
+                        {
+                            minigunSoundStage = MinigunSoundStage.STOPPED;
+                        }break;
+                    case MinigunSoundStage.FIRING:
+                        {
+                            minigunSoundStage = MinigunSoundStage.SLOWING_DOWN;
+                            slowdownTimer = slowdownTime;
+                        }
+                        break;
+                    case MinigunSoundStage.SLOWING_DOWN:
+                        {
+                            if (slowdownTimer < 0)
+                            {
+                                minigunSoundStage = MinigunSoundStage.STOPPED;
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -270,6 +411,11 @@ public class PlayerFiringController : MonoBehaviour
 
     // Inherited methods
     #region Inherited methods
+    private void Start()
+    {
+        spinupTime = SoundManager.Instance.minigunSpinupTime;
+        slowdownTime = SoundManager.Instance.minigunSlowdownTime;
+    }
     private void FixedUpdate()
     {
         Shoot();
@@ -278,6 +424,14 @@ public class PlayerFiringController : MonoBehaviour
     {
         firingTimer -= Time.deltaTime;
         bulletsSpeedupTimer -= Time.deltaTime;
+        if (minigunSoundStage == MinigunSoundStage.SPINNING_UP)
+        {
+            spinupTimer -= Time.deltaTime;
+        }
+        if (minigunSoundStage == MinigunSoundStage.SLOWING_DOWN)
+        {
+            slowdownTimer -= Time.deltaTime;
+        }
     }
     #endregion
 }
