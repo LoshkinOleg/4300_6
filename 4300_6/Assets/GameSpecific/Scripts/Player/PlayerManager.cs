@@ -68,6 +68,7 @@ public class PlayerManager : MonoBehaviour
             firingController.currentWeapon = value;
         }
     }
+    public int currentAmmo => firingController.currentAmmo;
     // Animation and Orientation controller
     public GameObject armGO => animationAndOrientationController.armGO;
     // Physics handler

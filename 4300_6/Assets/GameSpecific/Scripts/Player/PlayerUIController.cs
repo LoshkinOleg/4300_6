@@ -44,7 +44,14 @@ public class PlayerUIController : MonoBehaviour
     }
     public void UpdateLives()
     {
-        livesText.text = playerManager.lives.ToString();
+        if (livesText != null)
+        {
+            livesText.text = playerManager.lives.ToString();
+        }
+        else
+        {
+            Debug.LogError("PlayerUIController.cs: livesText is null on " + gameObject.name);
+        }
     }
     public void Init()
     {

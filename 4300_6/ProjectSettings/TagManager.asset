@@ -10,6 +10,7 @@ TagManager:
   - BottomBounds
   - Player2Projectile
   - Player1Projectile
+  - FeedbackUI
   layers:
   - Default
   - TransparentFX

@@ -50,19 +50,6 @@ public class PlayerFiringController : MonoBehaviour
             _isSpeedup = value;
         }
     }
-
-    // Private variables
-    Weapon _currentWeapon = Weapon.PISTOL;
-    float currentProjectileSpeed;
-    float currentFirerate;
-    float currentSpread;
-    int currentNumberOfProjectilesPerShot;
-    float currentFiringKnockback;
-    int currentAmmo;
-    bool _isSpeedup;
-    float firingTimer;
-    float bulletsSpeedupTimer;
-    // Sound related
     MinigunSoundStage minigunSoundStage // Triggers the right minigun sound when assigned to.
     {
         get
@@ -85,7 +72,8 @@ public class PlayerFiringController : MonoBehaviour
                             case MinigunSoundStage.SPINNING_UP:
                                 {
                                     SoundManager.Instance.PlaySound("minigun_fire");
-                                }break;
+                                }
+                                break;
                             case MinigunSoundStage.SLOWING_DOWN:
                                 {
                                     SoundManager.Instance.StopSoundNoFadeout("minigun_slowdown");
@@ -99,7 +87,8 @@ public class PlayerFiringController : MonoBehaviour
                     {
                         SoundManager.Instance.StopSoundWithFadeout("minigun_fire");
                         SoundManager.Instance.PlaySound("minigun_slowdown");
-                    }break;
+                    }
+                    break;
                 case MinigunSoundStage.STOPPED:
                     {
                         SoundManager.Instance.StopSoundWithFadeout("minigun_spinup");
@@ -110,6 +99,19 @@ public class PlayerFiringController : MonoBehaviour
             _minigunSoundStage = value;
         }
     }
+    
+    // Private variables
+    Weapon _currentWeapon = Weapon.PISTOL;
+    float currentProjectileSpeed;
+    float currentFirerate;
+    float currentSpread;
+    int currentNumberOfProjectilesPerShot;
+    float currentFiringKnockback;
+    int _currentAmmo;
+    bool _isSpeedup;
+    float firingTimer;
+    float bulletsSpeedupTimer;
+    // Sound related
     bool isSpinningUp;
     bool isFiringMinigun;
     bool isSlowingDown;
@@ -158,6 +160,42 @@ public class PlayerFiringController : MonoBehaviour
             currentNumberOfProjectilesPerShot = playerManager.weaponsData[(int)value].numberOfProjectiles;
             currentFiringKnockback = playerManager.weaponsData[(int)value].firingKnockback;
             currentAmmo = playerManager.weaponsData[(int)value].ammo;
+        }
+    }
+    public int currentAmmo
+    {
+        get
+        {
+            return _currentAmmo;
+        }
+        private set
+        {
+            Color color;
+            string text;
+            int maximalNumberOfAmmo = playerManager.weaponsData[(int)currentWeapon].numberOfProjectiles;
+
+            if (_currentAmmo > (maximalNumberOfAmmo / 3) * 2)
+            {
+                color = Color.green;
+                text = _currentAmmo.ToString();
+            }
+            else if (_currentAmmo > maximalNumberOfAmmo / 3)
+            {
+                color = Color.yellow;
+                text = _currentAmmo.ToString();
+            }
+            else if (_currentAmmo <= maximalNumberOfAmmo / 3 && _currentAmmo > 0)
+            {
+                color = Color.red;
+                text = _currentAmmo.ToString();
+            }
+            else
+            {
+                color = Color.black;
+                text = "*Clack!*";
+            }
+            GameManager.Instance.feedbackUIController.InstantiateText(gameObject, text, color);
+            _currentAmmo = value;
         }
     }
     #endregion
@@ -292,9 +330,10 @@ public class PlayerFiringController : MonoBehaviour
                                 {
                                     SoundManager.Instance.PlaySound("bazooka_fire");
                                 }
+
+                                currentAmmo--;
                             }
 
-                            currentAmmo--;
                         }
                         break;
                     case Weapon.MINIGUN:

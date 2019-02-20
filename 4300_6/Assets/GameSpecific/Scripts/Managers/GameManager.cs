@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using InControl;
 
+// /!\ Is setup in OnSceneLoad, not in Start()! /!\
+
 public class GameManager : MonoBehaviour
 {
 
@@ -18,6 +20,7 @@ public class GameManager : MonoBehaviour
     PlayerManager _player2 = null;
     Rigidbody2D _player1RB = null;
     Rigidbody2D _player2RB = null;
+    FeedbacksUIController _feedbackUIController;
 
     // Public properties
     public static GameManager Instance => _instance;
@@ -29,6 +32,7 @@ public class GameManager : MonoBehaviour
     public float GameViewVerticalDistanceInMeters => _gameViewVerticalDistanceInMeters;
     public Vector3 AveragePlayerPosition => _averagePlayerPosition;
     public BoxCollider2D BottomBoundsCollider => _bottomBoundsCollider;
+    public FeedbacksUIController feedbackUIController => _feedbackUIController;
 
     // Private variables
     GameObject loser = null;
@@ -84,6 +88,7 @@ public class GameManager : MonoBehaviour
             _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerManager>();
             _player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
             _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
+            _feedbackUIController = GameObject.FindGameObjectWithTag("FeedbackUI").GetComponent<FeedbacksUIController>();
         }
         else if (scene.name == "MainMenu")
         {

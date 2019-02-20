@@ -26,6 +26,7 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     [HideInInspector] public PlayerManager _playerManager = null;
     [SerializeField] GameObject parachuteGO = null;
     [SerializeField] GameObject _armGO = null;
+    [SerializeField] GameObject[] muzzleFlashGO = new GameObject[(int)PlayerFiringController.Weapon.MINIGUN + 1];
     [SerializeField] GameObject[] weaponsGOs = new GameObject[(int)PlayerFiringController.Weapon.MINIGUN + 1];
 
     // Private variables
@@ -272,6 +273,23 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
             }
         }
     }
+    void DisplayMuzzleFlash()
+    {
+        if (playerManager.tryingToFire && playerManager.currentAmmo > 0)
+        {
+            if (!muzzleFlashGO[(int)playerManager.currentWeapon].activeSelf)
+            {
+                muzzleFlashGO[(int)playerManager.currentWeapon].SetActive(true);
+            }
+        }
+        else
+        {
+            if (muzzleFlashGO[(int)playerManager.currentWeapon].activeSelf)
+            {
+                muzzleFlashGO[(int)playerManager.currentWeapon].SetActive(false);
+            }
+        }
+    }
     #endregion
 
     // Inherited methods
@@ -279,6 +297,7 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     private void FixedUpdate()
     {
         OrientSpriteAndGun();
+        DisplayMuzzleFlash();
     }
     #endregion
 }
