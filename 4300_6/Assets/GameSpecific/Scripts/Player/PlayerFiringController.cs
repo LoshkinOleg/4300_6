@@ -58,6 +58,7 @@ public class PlayerFiringController : MonoBehaviour
     float currentSpread;
     int currentNumberOfProjectilesPerShot;
     float currentFiringKnockback;
+    int currentAmmo;
     bool _isSpeedup;
     float firingTimer;
     float bulletsSpeedupTimer;
@@ -117,6 +118,9 @@ public class PlayerFiringController : MonoBehaviour
     float slowdownTimer;
     float slowdownTime;
     MinigunSoundStage _minigunSoundStage = MinigunSoundStage.STOPPED;
+    bool isPlayingOutOfAmmo;
+    float outOfAmmoTime;
+    float outOfAmmoTimer;
     #endregion
 
     // Public properties
@@ -153,6 +157,7 @@ public class PlayerFiringController : MonoBehaviour
             currentSpread = playerManager.weaponsData[(int)value].spread;
             currentNumberOfProjectilesPerShot = playerManager.weaponsData[(int)value].numberOfProjectiles;
             currentFiringKnockback = playerManager.weaponsData[(int)value].firingKnockback;
+            currentAmmo = playerManager.weaponsData[(int)value].ammo;
         }
     }
     #endregion
@@ -165,7 +170,9 @@ public class PlayerFiringController : MonoBehaviour
     }
     public void Init()
     {
-        currentWeapon = Weapon.SNIPER;
+        spinupTime = SoundManager.Instance.minigunSpinupTime;
+        slowdownTime = SoundManager.Instance.minigunSlowdownTime;
+        outOfAmmoTime = SoundManager.Instance.outOfAmmoTime;
     }
     #endregion
 
@@ -175,200 +182,194 @@ public class PlayerFiringController : MonoBehaviour
     {
         if (playerManager.tryingToFire)
         {
-            switch (currentWeapon)
+            if (currentAmmo > 0)
             {
-                case Weapon.PISTOL:
-                    {
-                        if (firingTimer < 0)
+                switch (currentWeapon)
+                {
+                    case Weapon.PISTOL:
                         {
-                            // Calculate the direction the bullet will go with spread accounted.
-                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
-                            Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
-                            // Instantiate bullet
-                            Projectile newProjectile = Instantiate(bulletsPrefabs[0], transform.position, rotation).GetComponent<Projectile>();
-                            newProjectile.speed = currentProjectileSpeed;
-                            newProjectile.type = currentWeapon;
-                            // Apply firing knockback
-                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
-                            // Reset firing timer.
-                            firingTimer = 1 / currentFirerate;
-                            // Play sound
-                            if (SoundManager.Instance != null)
+                            if (firingTimer < 0)
                             {
-                                SoundManager.Instance.PlaySound("pistol_fire");
-                            }
-                        }
-                    }
-                    break;
-                case Weapon.SHOTGUN:
-                    {
-                        if (firingTimer < 0)
-                        {
-                            for (int i = -currentNumberOfProjectilesPerShot/2; i < currentNumberOfProjectilesPerShot / 2; i++)
-                            {
+                                // Calculate the direction the bullet will go with spread accounted.
                                 float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
                                 Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
-
-                                Projectile newProjectile = Instantiate(bulletsPrefabs[1], transform.position, rotation).GetComponent<Projectile>();
+                                // Instantiate bullet
+                                Projectile newProjectile = Instantiate(bulletsPrefabs[0], transform.position, rotation).GetComponent<Projectile>();
                                 newProjectile.speed = currentProjectileSpeed;
                                 newProjectile.type = currentWeapon;
-                            }
-
-                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
-
-                            firingTimer = 1 / currentFirerate;
-
-                            if (SoundManager.Instance != null)
-                            {
-                                SoundManager.Instance.PlaySound("shotgun_fire");
-                            }
-                        }
-                    }
-                    break;
-                case Weapon.SNIPER:
-                    {
-                        if (firingTimer < 0)
-                        {
-                            // Cast a hitscan. Apply sniper hit mechanics if a player is hit.
-                            if (playerManager.isLeftPlayer)
-                            {
-                                if (Physics2D.Raycast(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right).collider.gameObject.tag == "Player2")
+                                // Apply firing knockback
+                                Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                                playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+                                // Reset firing timer.
+                                firingTimer = 1 / currentFirerate;
+                                // Play sound
+                                if (SoundManager.Instance != null)
                                 {
-                                    GameManager.Instance.Player2.SniperHit();
+                                    SoundManager.Instance.PlaySound("pistol_fire");
                                 }
+                                // Decrement ammo count
+                                currentAmmo--;
                             }
-                            else
+                        }
+                        break;
+                    case Weapon.SHOTGUN:
+                        {
+                            if (firingTimer < 0)
                             {
-                                if (Physics2D.Raycast(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right).collider.gameObject.tag == "Player1")
+                                for (int i = -currentNumberOfProjectilesPerShot / 2; i < currentNumberOfProjectilesPerShot / 2; i++)
                                 {
-                                    GameManager.Instance.Player1.SniperHit();
+                                    float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
+                                    Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
+
+                                    Projectile newProjectile = Instantiate(bulletsPrefabs[1], transform.position, rotation).GetComponent<Projectile>();
+                                    newProjectile.speed = currentProjectileSpeed;
+                                    newProjectile.type = currentWeapon;
                                 }
-                            }
 
-                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+                                Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                                playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
-                            firingTimer = 1 / currentFirerate;
+                                firingTimer = 1 / currentFirerate;
 
-                            if (SoundManager.Instance != null)
-                            {
-                                SoundManager.Instance.PlaySound("sniper_fire");
+                                if (SoundManager.Instance != null)
+                                {
+                                    SoundManager.Instance.PlaySound("shotgun_fire");
+                                }
+
+                                currentAmmo--;
                             }
                         }
-                    }
-                    break;
-                case Weapon.BAZOOKA:
-                    {
-                        if (firingTimer < 0)
+                        break;
+                    case Weapon.SNIPER:
                         {
-                            // Instantiate a projectile without any spread applied.
-                            Projectile newProjectile = Instantiate(bulletsPrefabs[3], transform.position, new Quaternion()).GetComponent<Projectile>();
-                            newProjectile.speed = currentProjectileSpeed;
-                            newProjectile.type = currentWeapon;
-
-                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
-
-                            firingTimer = 1 / currentFirerate;
-
-                            if (SoundManager.Instance != null)
+                            if (firingTimer < 0)
                             {
-                                SoundManager.Instance.PlaySound("bazooka_fire");
-                            }
-                        }
-                    }
-                    break;
-                case Weapon.MINIGUN:
-                    {
-                        switch (minigunSoundStage)
-                        {
-                            case MinigunSoundStage.STOPPED:
+                                // Cast a hitscan. Apply sniper hit mechanics if a player is hit.
+                                if (playerManager.isLeftPlayer)
                                 {
-                                    minigunSoundStage = MinigunSoundStage.SPINNING_UP;
-                                    spinupTimer = spinupTime;
-                                    slowdownTimer = slowdownTime;
-                                }break;
-                            case MinigunSoundStage.SPINNING_UP:
-                                {
-                                    if (spinupTimer < 0)
+                                    if (Physics2D.Raycast(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right).collider.gameObject.tag == "Player2")
                                     {
-                                        minigunSoundStage = MinigunSoundStage.FIRING;
+                                        GameManager.Instance.Player2.SniperHit();
                                     }
-                                }break;
-                            case MinigunSoundStage.FIRING:
-                                {
-                                    if (firingTimer < 0)
-                                    {
-                                        float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
-                                        Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
-
-                                        Projectile newProjectile = Instantiate(bulletsPrefabs[4], transform.position, rotation).GetComponent<Projectile>();
-                                        newProjectile.speed = currentProjectileSpeed;
-                                        newProjectile.type = currentWeapon;
-
-                                        Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                                        playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
-
-                                        firingTimer = 1 / currentFirerate;
-                                    }
-                                }break;
-                            case MinigunSoundStage.SLOWING_DOWN:
-                                {
-                                    minigunSoundStage = MinigunSoundStage.FIRING;
-                                }break;
-                        }
-
-                        /*
-                        // Manage spinup mechanic
-                        if (spinupTimer > 0)
-                        {
-                            if (minigunSoundStage != MinigunSoundStage.SPINNING_UP)
-                            {
-                                minigunSoundStage = MinigunSoundStage.SPINNING_UP;
-
-                                if (!isSpinningUp)
-                                {
-                                    SoundManager.Instance.PlayNewSound("minigun_spinup");
-                                    isSpinningUp = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (minigunSoundStage == MinigunSoundStage.SPINNING_UP)
-                            {
-                                minigunSoundStage = MinigunSoundStage.FIRING;
-                            }
-                            else if (minigunSoundStage == MinigunSoundStage.FIRING)
-                            {
-                                if (!isFiringMinigun)
-                                {
-                                    SoundManager.Instance.PlayNewSound("minigun_fire");
-                                    isFiringMinigun = true;
-                                    isSpinningUp = false;
                                 }
                                 else
                                 {
-                                    if (firingTimer < 0)
+                                    if (Physics2D.Raycast(playerManager.armGO.transform.position + playerManager.armGO.transform.right, playerManager.armGO.transform.right).collider.gameObject.tag == "Player1")
                                     {
-                                        float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
-                                        Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
-
-                                        Projectile newProjectile = Instantiate(bulletsPrefabs[4], transform.position, rotation).GetComponent<Projectile>();
-                                        newProjectile.speed = currentProjectileSpeed;
-                                        newProjectile.type = currentWeapon;
-
-                                        Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
-                                        playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
-
-                                        firingTimer = 1 / currentFirerate;
+                                        GameManager.Instance.Player1.SniperHit();
                                     }
                                 }
+
+                                Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                                playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
+                                firingTimer = 1 / currentFirerate;
+
+                                if (SoundManager.Instance != null)
+                                {
+                                    SoundManager.Instance.PlaySound("sniper_fire");
+                                }
+
+                                currentAmmo--;
                             }
-                        }*/
-                    }break;
+                        }
+                        break;
+                    case Weapon.BAZOOKA:
+                        {
+                            if (firingTimer < 0)
+                            {
+                                // Instantiate a projectile without any spread applied.
+                                Projectile newProjectile = Instantiate(bulletsPrefabs[3], transform.position, new Quaternion()).GetComponent<Projectile>();
+                                newProjectile.speed = currentProjectileSpeed;
+                                newProjectile.type = currentWeapon;
+
+                                Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                                playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
+                                firingTimer = 1 / currentFirerate;
+
+                                if (SoundManager.Instance != null)
+                                {
+                                    SoundManager.Instance.PlaySound("bazooka_fire");
+                                }
+                            }
+
+                            currentAmmo--;
+                        }
+                        break;
+                    case Weapon.MINIGUN:
+                        {
+                            switch (minigunSoundStage)
+                            {
+                                case MinigunSoundStage.STOPPED:
+                                    {
+                                        minigunSoundStage = MinigunSoundStage.SPINNING_UP;
+                                        spinupTimer = spinupTime;
+                                        slowdownTimer = slowdownTime;
+                                    }
+                                    break;
+                                case MinigunSoundStage.SPINNING_UP:
+                                    {
+                                        if (spinupTimer < 0)
+                                        {
+                                            minigunSoundStage = MinigunSoundStage.FIRING;
+                                        }
+                                    }
+                                    break;
+                                case MinigunSoundStage.FIRING:
+                                    {
+                                        if (firingTimer < 0)
+                                        {
+                                            float randomSpread = Random.Range(-currentSpread / 2, currentSpread / 2);
+                                            Quaternion rotation = playerManager.armGO.transform.rotation * Quaternion.Euler(0, 0, randomSpread);
+
+                                            Projectile newProjectile = Instantiate(bulletsPrefabs[4], transform.position, rotation).GetComponent<Projectile>();
+                                            newProjectile.speed = currentProjectileSpeed;
+                                            newProjectile.type = currentWeapon;
+
+                                            Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
+                                            playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
+
+                                            firingTimer = 1 / currentFirerate;
+
+                                            currentAmmo--;
+                                        }
+                                    }
+                                    break;
+                                case MinigunSoundStage.SLOWING_DOWN:
+                                    {
+                                        minigunSoundStage = MinigunSoundStage.FIRING;
+                                    }
+                                    break;
+                            }
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                if (firingTimer < 0)
+                {
+                    if (currentWeapon == Weapon.MINIGUN)
+                    {
+                        if (minigunSoundStage == MinigunSoundStage.FIRING)
+                        {
+                            minigunSoundStage = MinigunSoundStage.SLOWING_DOWN;
+                        }
+                    }
+
+                    if (SoundManager.Instance != null)
+                    {
+                        if (!isPlayingOutOfAmmo)
+                        {
+                            SoundManager.Instance.PlaySound("out_of_ammo");
+                            isPlayingOutOfAmmo = true;
+                            outOfAmmoTimer = outOfAmmoTime;
+                            firingTimer = 1 / currentFirerate;
+                            currentAmmo--;
+                        }
+                    }
+                }
             }
         }
         else // If we're not trying to fire.
@@ -397,6 +398,11 @@ public class PlayerFiringController : MonoBehaviour
                         break;
                 }
             }
+
+            if (currentAmmo < 0)
+            {
+                currentWeapon = Weapon.PISTOL;
+            }
         }
 
         if (bulletsSpeedupTimer < 0)
@@ -411,11 +417,6 @@ public class PlayerFiringController : MonoBehaviour
 
     // Inherited methods
     #region Inherited methods
-    private void Start()
-    {
-        spinupTime = SoundManager.Instance.minigunSpinupTime;
-        slowdownTime = SoundManager.Instance.minigunSlowdownTime;
-    }
     private void FixedUpdate()
     {
         Shoot();
@@ -431,6 +432,11 @@ public class PlayerFiringController : MonoBehaviour
         if (minigunSoundStage == MinigunSoundStage.SLOWING_DOWN)
         {
             slowdownTimer -= Time.deltaTime;
+        }
+        outOfAmmoTimer -= Time.deltaTime;
+        if (outOfAmmoTimer < 0)
+        {
+            isPlayingOutOfAmmo = false;
         }
     }
     #endregion

@@ -19,3 +19,4 @@ MonoBehaviour:
   firingKnockback: 2
   hitKnockback: 4
   numberOfProjectiles: 1
+  ammo: 100

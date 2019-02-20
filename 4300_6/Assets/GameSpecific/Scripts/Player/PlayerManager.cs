@@ -28,7 +28,7 @@ public class PlayerManager : MonoBehaviour
     PlayerInputHandler inputHandler = null;
     PlayerStunController stunController = null;
     PlayerUIController uiController = null;
-    [SerializeField] Weapon[] _weaponsData = new Weapon[(int)PlayerFiringController.Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
+    [SerializeField] WeaponData[] _weaponsData = new WeaponData[(int)PlayerFiringController.Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
 
     // Private variables
     float _health = 1;
@@ -39,7 +39,7 @@ public class PlayerManager : MonoBehaviour
     // Public properties
     #region Public properties
     // PlayerManager's properties
-    public Weapon[] weaponsData => _weaponsData;
+    public WeaponData[] weaponsData => _weaponsData;
     public bool isLeftPlayer => _isLeftPlayer;
     public int lives => _lives;
     public float health => _health;

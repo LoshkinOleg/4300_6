@@ -13,12 +13,14 @@ public class SoundManager : MonoBehaviour
     static public SoundManager Instance => _instance;
     public float minigunSpinupTime => _minigunSpinupTime;
     public float minigunSlowdownTime => _minigunSlowdownTime;
+    public float outOfAmmoTime => _outOfAmmoTime;
 
     // Private variables
     static SoundManager _instance = null;
     IDictionary<string, FMOD.Studio.EventInstance> sounds = new Dictionary<string, FMOD.Studio.EventInstance>();
     float _minigunSpinupTime;
     float _minigunSlowdownTime;
+    float _outOfAmmoTime;
     #endregion
 
     // Public methods
@@ -69,6 +71,10 @@ public class SoundManager : MonoBehaviour
         sounds["minigun_slowdown"].getDescription(out description);
         description.getLength(out duration);
         _minigunSlowdownTime = duration / 1000;
+
+        sounds["out_of_ammo"].getDescription(out description);
+        description.getLength(out duration);
+        _outOfAmmoTime = duration / 1000 + 0.5f;
     }
     #endregion
 }
