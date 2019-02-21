@@ -16,12 +16,14 @@ public class Projectile : MonoBehaviour
     // References
     [SerializeField] GameObject projectileSpriteGO = null;
     [SerializeField] GameObject destructionSpriteGO = null;
+    [SerializeField] Sprite[] projectileSprites = new Sprite[(int)PlayerFiringController.Weapon.MINIGUN + 1];
     Rigidbody2D bulletRigidbody2D = null;
     CircleCollider2D bulletCollider = null;
 
     // Private variables
     bool isPlayingDestructionAnimation = false;
     float x; // x variable in the Cos(x) function. Used to create a sinusoidal movement for the rocket projectile.
+    SpriteRenderer currentProjectileSprite = null;
     #endregion
 
     // Private methods
@@ -54,18 +56,20 @@ public class Projectile : MonoBehaviour
     {
         bulletRigidbody2D = GetComponent<Rigidbody2D>();
         bulletCollider = GetComponent<CircleCollider2D>();
+        currentProjectileSprite = projectileSpriteGO.GetComponent<SpriteRenderer>();
+        currentProjectileSprite.sprite = projectileSprites[(int)type];
     }
 
     private void FixedUpdate()
     {
-        if (type != PlayerFiringController.Weapon.BAZOOKA)
+        if (type != PlayerFiringController.Weapon.BAZOOKA || type != PlayerFiringController.Weapon.SNIPER)
         {
             if (!isPlayingDestructionAnimation)
             {
                 bulletRigidbody2D.velocity = transform.right * speed;
             }
         }
-        else
+        else if (type == PlayerFiringController.Weapon.BAZOOKA)
         {
             // It is a rocket
             if (!isPlayingDestructionAnimation)

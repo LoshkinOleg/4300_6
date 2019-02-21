@@ -70,7 +70,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 279fe841dff5d514393a47a475d52f00, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.2, y: 0.2}
@@ -168,6 +168,12 @@ MonoBehaviour:
   explosionRadius: 1.5
   projectileSpriteGO: {fileID: 2463335392912139255}
   destructionSpriteGO: {fileID: 8791773816685965899}
+  projectileSprites:
+  - {fileID: 21300000, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
+  - {fileID: 21300004, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
+  - {fileID: 21300000, guid: a56de675f5239a5478b4ca2de5f1e6b2, type: 3}
+  - {fileID: 21300006, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
+  - {fileID: 21300002, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
 --- !u!1 &8791773816685965899
 GameObject:
   m_ObjectHideFlags: 0

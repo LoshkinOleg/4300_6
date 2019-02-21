@@ -25,13 +25,21 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
     [SerializeField] GameObject parachuteGO = null;
-    [SerializeField] GameObject _armGO = null;
-    [SerializeField] GameObject[] muzzleFlashGO = new GameObject[(int)PlayerFiringController.Weapon.MINIGUN + 1];
-    [SerializeField] GameObject[] weaponsGOs = new GameObject[(int)PlayerFiringController.Weapon.MINIGUN + 1];
+    [SerializeField] GameObject _armsGO = null;
+    [SerializeField] GameObject weaponGO = null;
+    [SerializeField] GameObject muzzleFlashGO = null;
+    [SerializeField] Vector2[] muzzleFlashPositions = new Vector2[(int)PlayerFiringController.Weapon.MINIGUN +1];
+    [SerializeField] Sprite[] weaponsSprites = new Sprite[(int)PlayerFiringController.Weapon.MINIGUN + 1];
+    [SerializeField] GameObject headGO = null;
+    [SerializeField] Sprite[] heads = new Sprite[2];
+    [SerializeField] GameObject stunPrefab = null;
 
     // Private variables
     PlayerDirection currentPlayerDirection;
     GunDirection currentGunDirection = GunDirection.FORWARD;
+    SpriteRenderer currentWeaponSprite = null;
+    SpriteRenderer muzzleFlashSprite = null;
+    SpriteRenderer headSprite = null;
     #endregion
 
     // Public properties
@@ -54,7 +62,7 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
             }
         }
     }
-    public GameObject armGO => _armGO;
+    public GameObject armsGO => _armsGO;
     #endregion
 
     // Public methods
@@ -62,6 +70,17 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     public void ToggleParachute()
     {
         parachuteGO.SetActive(!parachuteGO.activeSelf);
+    }
+    public void UpdateCurrentWeaponSprite(PlayerFiringController.Weapon weapon)
+    {
+        muzzleFlashGO.transform.position = transform.position + (Vector3)muzzleFlashPositions[(int)weapon];
+        currentWeaponSprite.sprite = weaponsSprites[(int)weapon];
+    }
+    public void DisplayStun(float duration)
+    {
+        StunEffectController newStunEffect = Instantiate(stunPrefab).GetComponent<StunEffectController>();
+        newStunEffect.target = gameObject;
+        newStunEffect.lifetime = duration;
     }
     public void Init()
     {
@@ -73,6 +92,10 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
         {
             currentPlayerDirection = PlayerDirection.LEFT;
         }
+
+        currentWeaponSprite = weaponGO.GetComponent<SpriteRenderer>();
+        muzzleFlashSprite = weaponGO.GetComponent<SpriteRenderer>();
+        headSprite = headGO.GetComponent<SpriteRenderer>();
     }
     #endregion
 
@@ -168,22 +191,22 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
                         {
                             case GunDirection.FORWARD:
                                 {
-                                    _armGO.transform.localEulerAngles = new Vector3(0, 0, 0);
+                                    _armsGO.transform.localEulerAngles = new Vector3(0, 0, 0);
                                 }
                                 break;
                             case GunDirection.UP:
                                 {
-                                    _armGO.transform.localEulerAngles = new Vector3(0, 0, -90);
+                                    _armsGO.transform.localEulerAngles = new Vector3(0, 0, -90);
                                 }
                                 break;
                             case GunDirection.DOWN:
                                 {
-                                    _armGO.transform.localEulerAngles = new Vector3(0, 0, 90);
+                                    _armsGO.transform.localEulerAngles = new Vector3(0, 0, 90);
                                 }
                                 break;
                             case GunDirection.ANYWHERE:
                                 {
-                                    _armGO.transform.localEulerAngles = new Vector3(0, 180, Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
+                                    _armsGO.transform.localEulerAngles = new Vector3(0, 180, Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
                                 }
                                 break;
                         }
@@ -197,22 +220,22 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
                         {
                             case GunDirection.FORWARD:
                                 {
-                                    _armGO.transform.localEulerAngles = new Vector3(0, 0, 0);
+                                    _armsGO.transform.localEulerAngles = new Vector3(0, 0, 0);
                                 }
                                 break;
                             case GunDirection.UP:
                                 {
-                                    _armGO.transform.localEulerAngles = new Vector3(0, 0, -90);
+                                    _armsGO.transform.localEulerAngles = new Vector3(0, 0, -90);
                                 }
                                 break;
                             case GunDirection.DOWN:
                                 {
-                                    _armGO.transform.localEulerAngles = new Vector3(0, 0, 90);
+                                    _armsGO.transform.localEulerAngles = new Vector3(0, 0, 90);
                                 }
                                 break;
                             case GunDirection.ANYWHERE:
                                 {
-                                    _armGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
+                                    _armsGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
                                 }
                                 break;
                         }
@@ -225,12 +248,12 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
             if (playerManager.aimingHorizontalInput > 0)
             {
                 transform.localEulerAngles = new Vector3(0, 0, 0);
-                _armGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
+                _armsGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
             }
             else if (playerManager.aimingHorizontalInput < 0)
             {
                 transform.localEulerAngles = new Vector3(0, 180, 0);
-                _armGO.transform.localEulerAngles = new Vector3(180, 180, -Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
+                _armsGO.transform.localEulerAngles = new Vector3(180, 180, -Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
             }
             else
             {
@@ -238,7 +261,7 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
                 {
                     // enemy on the right
                     transform.localEulerAngles = new Vector3(0, 0, 0);
-                    _armGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
+                    _armsGO.transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(playerManager.aimingVerticalInput, playerManager.aimingHorizontalInput) * Mathf.Rad2Deg);
                 }
                 else
                 {
@@ -277,16 +300,18 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     {
         if (playerManager.tryingToFire && playerManager.currentAmmo > 0)
         {
-            if (!muzzleFlashGO[(int)playerManager.currentWeapon].activeSelf)
+            if (!muzzleFlashGO.activeSelf)
             {
-                muzzleFlashGO[(int)playerManager.currentWeapon].SetActive(true);
+                muzzleFlashGO.SetActive(true);
+                headSprite.sprite = heads[1];
             }
         }
         else
         {
-            if (muzzleFlashGO[(int)playerManager.currentWeapon].activeSelf)
+            if (muzzleFlashGO.activeSelf)
             {
-                muzzleFlashGO[(int)playerManager.currentWeapon].SetActive(false);
+                muzzleFlashGO.SetActive(false);
+                headSprite.sprite = heads[0];
             }
         }
     }

@@ -94,13 +94,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2301677630429765139}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalScale: {x: 0.205, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 1299563905424848822}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &2717251133411575073
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -138,12 +138,12 @@ SpriteRenderer:
   m_SortingLayerID: -895171533
   m_SortingLayer: -2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 10498e75b51d6f04ca576f8e334a82e4, type: 3}
-  m_Color: {r: 1, g: 0.9075186, b: 0.6556604, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 11e8f1c395072f744a2340e8d32b64d1, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -166,7 +166,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &49834978943237281
 Transform:
   m_ObjectHideFlags: 0
@@ -237,7 +237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4813580323683288863
 Transform:
   m_ObjectHideFlags: 0
@@ -379,7 +379,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.05}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!50 &6176911597066440237
 Rigidbody2D:
@@ -494,8 +494,8 @@ SpriteRenderer:
   m_SortingLayerID: 62541281
   m_SortingLayer: -5
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: dbfab06c448460e4aa2f1390f77853a5, type: 3}
-  m_Color: {r: 0, g: 0.72298765, b: 1, a: 1}
+  m_Sprite: {fileID: 21300002, guid: f4ae333ee60e8554d8c0fb6e1557d4af, type: 3}
+  m_Color: {r: 0.25050166, g: 0.19780171, b: 0.3301887, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

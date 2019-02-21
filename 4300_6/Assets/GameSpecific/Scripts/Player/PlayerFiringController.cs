@@ -26,6 +26,7 @@ public class PlayerFiringController : MonoBehaviour
     // References
     [HideInInspector] public PlayerManager _playerManager = null;
     [SerializeField] GameObject[] bulletsPrefabs = new GameObject[(int)Weapon.MINIGUN + 1];
+    [SerializeField] GameObject catridgePrefab = null;
 
     // Private properties
     bool isSpeedup
@@ -153,13 +154,18 @@ public class PlayerFiringController : MonoBehaviour
         }
         set
         {
-            _currentWeapon = value;
+            // Set up variables
             currentProjectileSpeed = playerManager.weaponsData[(int)value].projectileSpeed;
             currentFirerate = playerManager.weaponsData[(int)value].firerate;
             currentSpread = playerManager.weaponsData[(int)value].spread;
             currentNumberOfProjectilesPerShot = playerManager.weaponsData[(int)value].numberOfProjectiles;
             currentFiringKnockback = playerManager.weaponsData[(int)value].firingKnockback;
             currentAmmo = playerManager.weaponsData[(int)value].ammo;
+
+            playerManager.UpdateCurrentWeaponSprite(value);
+            minigunSoundStage = MinigunSoundStage.STOPPED;
+
+            _currentWeapon = value;
         }
     }
     public int currentAmmo
@@ -211,6 +217,7 @@ public class PlayerFiringController : MonoBehaviour
         spinupTime = SoundManager.Instance.minigunSpinupTime;
         slowdownTime = SoundManager.Instance.minigunSlowdownTime;
         outOfAmmoTime = SoundManager.Instance.outOfAmmoTime;
+
     }
     #endregion
 
@@ -247,6 +254,9 @@ public class PlayerFiringController : MonoBehaviour
                                 }
                                 // Decrement ammo count
                                 currentAmmo--;
+
+                                // Instantiate catridge
+                                Instantiate(catridgePrefab, transform.position, new Quaternion());
                             }
                         }
                         break;
@@ -275,6 +285,8 @@ public class PlayerFiringController : MonoBehaviour
                                 }
 
                                 currentAmmo--;
+
+                                Instantiate(catridgePrefab, transform.position, new Quaternion());
                             }
                         }
                         break;
@@ -309,6 +321,8 @@ public class PlayerFiringController : MonoBehaviour
                                 }
 
                                 currentAmmo--;
+
+                                Instantiate(catridgePrefab, transform.position, new Quaternion());
                             }
                         }
                         break;
@@ -372,6 +386,8 @@ public class PlayerFiringController : MonoBehaviour
                                             firingTimer = 1 / currentFirerate;
 
                                             currentAmmo--;
+
+                                            Instantiate(catridgePrefab, transform.position, new Quaternion());
                                         }
                                     }
                                     break;

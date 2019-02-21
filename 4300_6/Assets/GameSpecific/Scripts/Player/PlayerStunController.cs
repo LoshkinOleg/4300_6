@@ -72,6 +72,7 @@ public class PlayerStunController : MonoBehaviour
     {
         _stunTimer = stunDuration;
         playerManager.linearDrag = stunDragValue;
+        playerManager.DisplayStun(stunDuration);
     }
     public void Init()
     {

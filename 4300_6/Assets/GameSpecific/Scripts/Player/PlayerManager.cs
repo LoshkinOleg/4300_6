@@ -70,7 +70,7 @@ public class PlayerManager : MonoBehaviour
     }
     public int currentAmmo => firingController.currentAmmo;
     // Animation and Orientation controller
-    public GameObject armGO => animationAndOrientationController.armGO;
+    public GameObject armGO => animationAndOrientationController.armsGO;
     // Physics handler
     public float speedLimit => physicsHandler.playerSpeedLimit;
     public float gravity
@@ -240,6 +240,15 @@ public class PlayerManager : MonoBehaviour
     public void SpeedBulletsUp()
     {
         firingController.SpeedBulletsUp();
+    }
+    // Animation and Orientation controller
+    public void UpdateCurrentWeaponSprite(PlayerFiringController.Weapon weapon)
+    {
+        animationAndOrientationController.UpdateCurrentWeaponSprite(weapon);
+    }
+    public void DisplayStun(float duration)
+    {
+        animationAndOrientationController.DisplayStun(duration);
     }
     // Physics handler
     public void ToggleGravity()

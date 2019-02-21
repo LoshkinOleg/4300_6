@@ -35,7 +35,15 @@ public class SoundManager : MonoBehaviour
     }
     public void StopSoundWithFadeout(string name)
     {
-        sounds[name].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        FMOD.Studio.EventInstance value;
+        if (sounds.TryGetValue(name, out value))
+        {
+            sounds[name].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
+        else
+        {
+            Debug.LogError("SoundManager.cs: passed key in not valid: " + name);
+        }
     }
     #endregion
 

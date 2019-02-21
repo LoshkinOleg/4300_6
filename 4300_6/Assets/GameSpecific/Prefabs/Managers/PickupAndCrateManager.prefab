@@ -59,7 +59,7 @@ MonoBehaviour:
     type: 3}
   pickupPrefab_speedup: {fileID: 7561157662321798908, guid: 4317c9fbbab34c643822382841d5ae01,
     type: 3}
-  pickupPrefab_jetpack: {fileID: 7561157662321798908, guid: 7973d5cc586a7fe4bb1ae2134ea9069d,
+  pickupPrefab_jetpack: {fileID: 4323740266736981398, guid: 9df4de40d6f6cfc4f9bf8d0083ab0b9a,
     type: 3}
   pickupPrefab_shotgun: {fileID: 7561157662321798908, guid: eaa6a01523042bf4791f5d8e21e51187,
     type: 3}
