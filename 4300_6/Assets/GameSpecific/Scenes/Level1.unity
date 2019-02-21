@@ -220,21 +220,6 @@ PrefabInstance:
       propertyPath: livesTextGO
       value: 
       objectReference: {fileID: 8253500511586646487}
-    - target: {fileID: 757692163130730270, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: startingWeapon
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209747188384941542, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: stunDuration
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7209747188384941542, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: _stunForceMultiplier
-      value: 350
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b8362348ff340b479dfc35385aa736c, type: 3}
 --- !u!4 &365851633 stripped
@@ -666,16 +651,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 757692163130730270, guid: 4c5e47b0b7b36f1459a5aa9e34eac7ae,
-        type: 3}
-      propertyPath: _isLeftPlayer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 757692163130730270, guid: 4c5e47b0b7b36f1459a5aa9e34eac7ae,
-        type: 3}
-      propertyPath: startingWeapon
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3922258878792094714, guid: 4c5e47b0b7b36f1459a5aa9e34eac7ae,
         type: 3}
       propertyPath: healthImageGO
@@ -923,6 +898,21 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 3115956267841941794, guid: 5e5b48a72db44e14abdeb6172a5c8b50,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3115956267841941794, guid: 5e5b48a72db44e14abdeb6172a5c8b50,
+        type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 3115956267841941794, guid: 5e5b48a72db44e14abdeb6172a5c8b50,
+        type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e5b48a72db44e14abdeb6172a5c8b50, type: 3}
 --- !u!1 &5505999575256480460 stripped
@@ -1104,6 +1094,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_isInputParsingRequired
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1511864349448439150, guid: 05b67b972aa48a74584bfe73c065bce2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05b67b972aa48a74584bfe73c065bce2, type: 3}

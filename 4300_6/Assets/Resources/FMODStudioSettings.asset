@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: C:\Users\Dante\Desktop\FinalProject\4300_6\FMODProject\TheParatroopersSounds\TheParatroopersSounds.fspro
-  SourceProjectPathUnformatted: C:\Users\Dante\Desktop\FinalProject\4300_6\FMODProject\TheParatroopersSounds\TheParatroopersSounds.fspro
-  SourceBankPathUnformatted: C:\Users\Dante\Desktop\FinalProject\4300_6\FMODProject\TheParatroopersSounds\Build
+  sourceProjectPath: C:\Users\Dante\Desktop\FinalProject\4300_7\FMODProject\TheParatroopersSounds\TheParatroopersSounds.fspro
+  SourceProjectPathUnformatted: C:\Users\Dante\Desktop\FinalProject\4300_7\FMODProject\TheParatroopersSounds\TheParatroopersSounds.fspro
+  SourceBankPathUnformatted: C:\Users\Dante\Desktop\FinalProject\4300_7\FMODProject\TheParatroopersSounds\Build
   AutomaticEventLoading: 1
   AutomaticSampleLoading: 0
   ImportType: 0

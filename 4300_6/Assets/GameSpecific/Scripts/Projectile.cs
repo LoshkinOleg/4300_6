@@ -62,14 +62,7 @@ public class Projectile : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (type != PlayerFiringController.Weapon.BAZOOKA || type != PlayerFiringController.Weapon.SNIPER)
-        {
-            if (!isPlayingDestructionAnimation)
-            {
-                bulletRigidbody2D.velocity = transform.right * speed;
-            }
-        }
-        else if (type == PlayerFiringController.Weapon.BAZOOKA)
+        if (type == PlayerFiringController.Weapon.BAZOOKA)
         {
             // It is a rocket
             if (!isPlayingDestructionAnimation)
@@ -80,6 +73,13 @@ public class Projectile : MonoBehaviour
                 // Mathf.Cos(x * Mathf.PI * 2) is a cos function with a frequency of 1 and an amplitude of 1.
                 transform.rotation *= Quaternion.Euler(0,0, Mathf.Cos(x * Mathf.PI * 2) * 7); // The 7 is dark magic that sets up the amplitude of the function.
 
+                bulletRigidbody2D.velocity = transform.right * speed;
+            }
+        }
+        else if (type != PlayerFiringController.Weapon.SNIPER)
+        {
+            if (!isPlayingDestructionAnimation)
+            {
                 bulletRigidbody2D.velocity = transform.right * speed;
             }
         }

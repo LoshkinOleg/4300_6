@@ -178,22 +178,27 @@ public class PlayerFiringController : MonoBehaviour
         {
             Color color;
             string text;
-            int maximalNumberOfAmmo = playerManager.weaponsData[(int)currentWeapon].numberOfProjectiles;
+            int maximalNumberOfAmmo = playerManager.weaponsData[(int)currentWeapon].ammo;
 
-            if (_currentAmmo > (maximalNumberOfAmmo / 3) * 2)
+            if (value > (maximalNumberOfAmmo / 3) * 2)
             {
                 color = Color.green;
-                text = _currentAmmo.ToString();
+                text = value.ToString();
             }
-            else if (_currentAmmo > maximalNumberOfAmmo / 3)
+            else if (value > maximalNumberOfAmmo / 3)
             {
                 color = Color.yellow;
-                text = _currentAmmo.ToString();
+                text = value.ToString();
             }
-            else if (_currentAmmo <= maximalNumberOfAmmo / 3 && _currentAmmo > 0)
+            else if (value <= maximalNumberOfAmmo / 3 && value > 0)
             {
                 color = Color.red;
-                text = _currentAmmo.ToString();
+                text = value.ToString();
+            }
+            else if (value == 0)
+            {
+                color = Color.black;
+                text = value.ToString();
             }
             else
             {

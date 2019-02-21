@@ -73,7 +73,7 @@ public class PlayerAnimationAndOrientationController : MonoBehaviour
     }
     public void UpdateCurrentWeaponSprite(PlayerFiringController.Weapon weapon)
     {
-        muzzleFlashGO.transform.position = transform.position + (Vector3)muzzleFlashPositions[(int)weapon];
+        muzzleFlashGO.transform.localPosition = muzzleFlashPositions[(int)weapon];
         currentWeaponSprite.sprite = weaponsSprites[(int)weapon];
     }
     public void DisplayStun(float duration)

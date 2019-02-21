@@ -17,5 +17,13 @@ public class FeedbacksUIController : MonoBehaviour
         TMP_Text newText_TMP = newText.GetComponent<TMP_Text>();
         newText_TMP.text = ammoLeft;
         newText_TMP.color = color;
+        if (ammoLeft == "*Clack!*")
+        {
+            newText_TMP.fontSize = 19;
+        }
+        else
+        {
+            newText_TMP.fontSize = 40;
+        }
     }
 }
