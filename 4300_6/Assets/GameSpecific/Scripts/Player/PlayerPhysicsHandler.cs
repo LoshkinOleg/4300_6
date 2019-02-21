@@ -107,7 +107,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
     }
     public void CrateBottomHit(BoxCollider2D crate)
     {
-        if (playerCollider.IsTouching(crate))
+        if (playerCollider.IsTouching(crate)) // BUG: not touching, is it because of the force up?
         {
             if (playerCollider.IsTouching(GameManager.Instance.BottomBoundsCollider))
             {

@@ -1173,7 +1173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isLeftPlayer: 1
-  startingWeapon: 0
+  startingWeapon: 1
   _weaponsData:
   - {fileID: 11400000, guid: 00fecf7fd3db9284b9ae33e05cd101b3, type: 2}
   - {fileID: 11400000, guid: c8e07e9efb8d6f44db5e7ca0ebe6e93c, type: 2}
@@ -1208,7 +1208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stunDuration: 5
-  _stunForceMultiplier: 500
+  _stunForceMultiplier: 100
   _projectileHitStunWindow: 0.25
   stunDragValue: 4
   _playerManager: {fileID: 0}
@@ -1288,7 +1288,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 852617f3897809b46a3417b2543517ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzleFlashDuration: 0.3
   _playerManager: {fileID: 0}
   parachuteGO: {fileID: 325984145752485330}
   _armGO: {fileID: 4557199037961504857}

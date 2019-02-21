@@ -166,7 +166,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &49834978943237281
 Transform:
   m_ObjectHideFlags: 0
@@ -237,7 +237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4813580323683288863
 Transform:
   m_ObjectHideFlags: 0
@@ -316,7 +316,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f546cd078dcf5c14f91cc75b90742a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stunThreshold: 0.25
 --- !u!1 &6194907134823173452
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,6 +328,7 @@ GameObject:
   - component: {fileID: 105069033899944885}
   - component: {fileID: 6176911597066440237}
   - component: {fileID: 8110322258272080007}
+  - component: {fileID: 8744970235191690727}
   m_Layer: 14
   m_Name: Crate
   m_TagString: Untagged
@@ -379,7 +379,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 1.05}
   m_EdgeRadius: 0
 --- !u!50 &6176911597066440237
 Rigidbody2D:
@@ -412,6 +412,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6e4d64cdef456e4f9bdea7e7931224f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8744970235191690727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194907134823173452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103c839ecca379d498223df4388f3738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7444589517457842945

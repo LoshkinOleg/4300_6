@@ -44,11 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601dbaf55795f9a42aca166acefab115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chanceForPickupToSpawnPerSecond: 25
+  chanceForPickupToSpawnPerSecond: 35
   _speedupPickupTime: 5
   _speedupMultiplier: 2
   healthPickupValue: 0.5
-  _pickupSpeedLimit: 3
+  _pickupSpeedLimit: 1.5
   _jetpackDuration: 10
   _jetpackVelocity: 7
   pickupPrefab_life: {fileID: 4323740266736981398, guid: 32c93fbc23e791849b7e41374167c1e0,
@@ -84,6 +84,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _crateSpeedLimit: 1
-  chanceToSpawnCratePerSecond: 15
+  chanceToSpawnCratePerSecond: 20
   cratePrefab: {fileID: 6194907134823173452, guid: 43e36453f6ec19245a34bb326ae71f4d,
     type: 3}

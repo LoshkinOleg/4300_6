@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Crate_Bottom : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player1")
         {
-            GameManager.Instance.Player1.CrateBottomHit(GetComponent<BoxCollider2D>());
+            GameManager.Instance.Player1.CrateBottomHit(GetComponentInParent<CrateRootIdentifier>().gameObject.GetComponent<BoxCollider2D>());
         }
         else if (collision.gameObject.tag == "Player2")
         {
-            GameManager.Instance.Player2.CrateBottomHit(GetComponent<BoxCollider2D>());
+            GameManager.Instance.Player2.CrateBottomHit(GetComponentInParent<CrateRootIdentifier>().gameObject.GetComponent<BoxCollider2D>());
         }
     }
 }
