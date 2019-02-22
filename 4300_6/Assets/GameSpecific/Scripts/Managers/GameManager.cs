@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     Rigidbody2D _player1RB = null;
     Rigidbody2D _player2RB = null;
     FeedbacksUIController _feedbackUIController;
+    ScreenShake _screenShake = null;
 
     // Public properties
     public static GameManager Instance => _instance;
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
     public Vector3 AveragePlayerPosition => _averagePlayerPosition;
     public BoxCollider2D BottomBoundsCollider => _bottomBoundsCollider;
     public FeedbacksUIController feedbackUIController => _feedbackUIController;
+    public ScreenShake screenShake => _screenShake;
 
     // Private variables
     GameObject loser = null;
@@ -89,6 +91,7 @@ public class GameManager : MonoBehaviour
             _player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
             _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
             _feedbackUIController = GameObject.FindGameObjectWithTag("FeedbackUI").GetComponent<FeedbacksUIController>();
+            _screenShake = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<ScreenShake>();
         }
         else if (scene.name == "MainMenu")
         {

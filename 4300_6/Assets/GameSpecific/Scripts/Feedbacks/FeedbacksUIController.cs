@@ -19,11 +19,11 @@ public class FeedbacksUIController : MonoBehaviour
         newText_TMP.color = color;
         if (ammoLeft == "*Clack!*")
         {
-            newText_TMP.fontSize = 19;
+            newText_TMP.fontSize = 2;
         }
         else
         {
-            newText_TMP.fontSize = 40;
+            newText_TMP.fontSize = 4;
         }
     }
 }

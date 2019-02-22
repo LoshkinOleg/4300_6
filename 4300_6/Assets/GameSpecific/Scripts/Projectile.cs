@@ -12,6 +12,7 @@ public class Projectile : MonoBehaviour
 
     // Inspector variables
     [SerializeField] float explosionRadius = 1.5f;
+    [SerializeField] float visualFeedbackLifetime = 0.5f;
 
     // References
     [SerializeField] GameObject projectileSpriteGO = null;
@@ -39,7 +40,7 @@ public class Projectile : MonoBehaviour
             destructionSpriteGO.SetActive(true);
             projectileSpriteGO.SetActive(false);
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(visualFeedbackLifetime);
 
             Destroy(gameObject);
         }
@@ -47,6 +48,11 @@ public class Projectile : MonoBehaviour
         {
             yield return new WaitForSeconds(0);
         }
+    }
+    IEnumerator SniperSelfDestroy()
+    {
+        yield return new WaitForSeconds(visualFeedbackLifetime);
+        Destroy(gameObject);
     }
     #endregion
 
@@ -58,6 +64,19 @@ public class Projectile : MonoBehaviour
         bulletCollider = GetComponent<CircleCollider2D>();
         currentProjectileSprite = projectileSpriteGO.GetComponent<SpriteRenderer>();
         currentProjectileSprite.sprite = projectileSprites[(int)type];
+
+        if (type == PlayerFiringController.Weapon.SNIPER)
+        {
+            if (gameObject.tag == "Player1Projectile")
+            {
+                transform.position = GameManager.Instance.Player1.transform.position;
+            }
+            else
+            {
+                transform.position = GameManager.Instance.Player2.transform.position;
+            }
+            StartCoroutine(SniperSelfDestroy());
+        }
     }
 
     private void FixedUpdate()
@@ -109,6 +128,9 @@ public class Projectile : MonoBehaviour
             {
                 GameManager.Instance.Player2.ExplosionHit(transform.position);
             }
+
+            // Shake screen
+            GameManager.Instance.screenShake.ShakeScreen(2);
 
             // Play audio
             SoundManager.Instance.PlaySound("bazooka_hit");

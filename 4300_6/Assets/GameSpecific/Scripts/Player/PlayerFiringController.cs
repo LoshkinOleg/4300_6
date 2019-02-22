@@ -318,6 +318,10 @@ public class PlayerFiringController : MonoBehaviour
                                 Vector2 direction = Vector3.Normalize(-playerManager.armGO.transform.right);
                                 playerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
+                                Projectile newProjectile = Instantiate(bulletsPrefabs[1], transform.position, new Quaternion()).GetComponent<Projectile>();
+                                newProjectile.speed = currentProjectileSpeed;
+                                newProjectile.type = currentWeapon;
+
                                 firingTimer = 1 / currentFirerate;
 
                                 if (SoundManager.Instance != null)
