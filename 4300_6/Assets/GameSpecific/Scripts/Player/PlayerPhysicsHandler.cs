@@ -13,24 +13,24 @@ public class PlayerPhysicsHandler : MonoBehaviour
     [SerializeField] float bufferForceMultiplier = 35f;
 
     // References
-    [HideInInspector] public PlayerManager _playerManager = null;
+    [HideInInspector] public PlayerManager playerManager = null;
     Rigidbody2D playerRigidbody = null;
     CapsuleCollider2D playerCollider = null;
     #endregion
 
     // Public properties
     #region Public properties
-    public PlayerManager playerManager
+    public PlayerManager PlayerManager
     {
         get
         {
-            return _playerManager;
+            return playerManager;
         }
         set
         {
-            if (_playerManager == null)
+            if (playerManager == null)
             {
-                _playerManager = value;
+                playerManager = value;
             }
             else
             {
@@ -38,65 +38,110 @@ public class PlayerPhysicsHandler : MonoBehaviour
             }
         }
     }
-    public float gravity
+    public float Gravity
     {
         get
         {
-            return playerRigidbody.gravityScale;
+            if (playerRigidbody != null)
+            {
+                return playerRigidbody.gravityScale;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
         }
         set
         {
-            playerRigidbody.gravityScale = value;
+            if (playerRigidbody != null)
+            {
+                playerRigidbody.gravityScale = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
         }
     }
-    public Vector2 velocity
+    public Vector2 Velocity
     {
         get
         {
-            return playerRigidbody.velocity;
+            if (playerRigidbody != null)
+            {
+                return playerRigidbody.velocity;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return new Vector2();
+            }
         }
         set
         {
-            playerRigidbody.velocity = value;
+            if (playerRigidbody != null)
+            {
+                playerRigidbody.velocity = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
         }
     }
-    public float playerSpeedLimit => _playerSpeedLimit;
-    public float linearDrag
+    public float PlayerSpeedLimit => _playerSpeedLimit;
+    public float LinearDrag
     {
         get
         {
-            return playerRigidbody.drag;
+            if (playerRigidbody != null)
+            {
+                return playerRigidbody.drag;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
         }
         set
         {
-            playerRigidbody.drag = value;
+            if (playerRigidbody != null)
+            {
+                playerRigidbody.drag = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
         }
     }
     #endregion
 
     // Public methods
     #region Public methods
-    public void ProjectileHit(GameObject projectile, PlayerFiringController.Weapon type)
+    public void ProjectileHit(GameObject projectile, Weapon type)
     {
         Vector2 directionOfKnockback = -Vector3.Normalize((Vector2)projectile.transform.position - (Vector2)transform.position);
         switch (type)
         {
-            case PlayerFiringController.Weapon.PISTOL:
+            case Weapon.PISTOL:
                 {
-                    Vector2 forceToApply = directionOfKnockback * playerManager.weaponsData[0].hitKnockback;
-                    playerRigidbody.AddForce(forceToApply);
+                    Vector2 forceToApply = directionOfKnockback * PlayerManager.WeaponsData[0].hitKnockback;
+                    if (playerRigidbody != null)            playerRigidbody.AddForce(forceToApply);             else Debug.LogWarning("Variable not set!");
                 }
                 break;
-            case PlayerFiringController.Weapon.SHOTGUN:
+            case Weapon.SHOTGUN:
                 {
-                    Vector2 forceToApply = directionOfKnockback * playerManager.weaponsData[1].hitKnockback;
-                    playerRigidbody.AddForce(forceToApply);
+                    Vector2 forceToApply = directionOfKnockback * PlayerManager.WeaponsData[1].hitKnockback;
+                    if (playerRigidbody != null)            playerRigidbody.AddForce(forceToApply);             else Debug.LogWarning("Variable not set!");
                 }
                 break;
-            case PlayerFiringController.Weapon.MINIGUN:
+            case Weapon.MINIGUN:
                 {
-                    Vector2 forceToApply = directionOfKnockback * playerManager.weaponsData[4].hitKnockback;
-                    playerRigidbody.AddForce(forceToApply);
+                    Vector2 forceToApply = directionOfKnockback * PlayerManager.WeaponsData[4].hitKnockback;
+                    if (playerRigidbody != null)            playerRigidbody.AddForce(forceToApply);             else Debug.LogWarning("Variable not set!");
                 }
                 break;
             default:
@@ -104,30 +149,31 @@ public class PlayerPhysicsHandler : MonoBehaviour
                     Debug.LogWarning("PlayerPhysicsHandler.cs: ProjectileHit() got passed a non valid projectile type: " + type);
                 }break;
         }
+
     }
     public void CrateBottomHit(BoxCollider2D crate)
     {
-        if (playerCollider.IsTouching(crate)) // BUG: not touching, is it because of the force up?
+        if (playerCollider.IsTouching(crate))
         {
             if (playerCollider.IsTouching(GameManager.Instance.BottomBoundsCollider))
             {
-                playerManager.Kill();
+                PlayerManager.Kill();
             }
             else
             {
-                playerRigidbody.AddForce(Vector2.down * playerManager.stunForceMultiplier);
+                if (playerRigidbody != null)            playerRigidbody.AddForce(Vector2.down * PlayerManager.StunForceMultiplier);             else Debug.LogWarning("Variable not set!");
             }
         }
     }
     public void ExplosionHit(Vector2 position)
     {
         Vector2 direction = -(position - (Vector2)transform.position);
-        playerRigidbody.AddForce(direction * playerManager.weaponsData[3].hitKnockback);
+        if (playerRigidbody != null)            playerRigidbody.AddForce(direction * PlayerManager.WeaponsData[3].hitKnockback);            else Debug.LogWarning("Variable not set!");
     }
     public void SniperHit()
     {
         Vector2 direction;
-        if (playerManager.isLeftPlayer)
+        if (PlayerManager.IsLeftPlayer)
         {
             direction = -(GameManager.Instance.Player2.transform.position - transform.position);
         }
@@ -135,26 +181,26 @@ public class PlayerPhysicsHandler : MonoBehaviour
         {
             direction = -(GameManager.Instance.Player1.transform.position - transform.position);
         }
-        playerRigidbody.AddForce(direction * playerManager.weaponsData[2].hitKnockback);
+        if (playerRigidbody != null)            playerRigidbody.AddForce(direction * PlayerManager.WeaponsData[2].hitKnockback);            else Debug.LogWarning("Variable not set!");
     }
     public void ToggleGravity()
     {
-        playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
+        if (playerRigidbody != null)            playerRigidbody.gravityScale = -playerRigidbody.gravityScale;           else Debug.LogWarning("Variable not set!");
     }
     public void ResetGravity()
     {
-        if (playerManager.parachuteIsOpen)
+        if (PlayerManager.ParachuteIsOpen)
         {
-            playerRigidbody.gravityScale = -2;
+            if (playerRigidbody != null)        playerRigidbody.gravityScale = -2;          else Debug.LogWarning("Variable not set!");
         }
         else
         {
-            playerRigidbody.gravityScale = 2;
+            if (playerRigidbody != null)        playerRigidbody.gravityScale = 2;           else Debug.LogWarning("Variable not set!");
         }
     }
     public void AddForce(Vector2 unitaryDirection, float magnitude)
     {
-        playerRigidbody.AddForce(unitaryDirection * magnitude);
+        if (playerRigidbody != null)            playerRigidbody.AddForce(unitaryDirection * magnitude);             else Debug.LogWarning("Variable not set!");
     }
     public bool IsTouching(Collider2D collider)
     {
@@ -171,25 +217,39 @@ public class PlayerPhysicsHandler : MonoBehaviour
     #region Private methods
     void ApplyDrag()
     {
-        if (playerManager.horizontalInput == 0)
+        if (PlayerManager.HorizontalInput == 0)
         {
-            if (Mathf.Abs(playerRigidbody.velocity.x) > 0.05f) // Applies drag if the horizontal speed is greater than 0.05f
+            if (playerRigidbody != null)
             {
-                playerRigidbody.velocity += new Vector2(-Mathf.Sign(playerRigidbody.velocity.x) * dragForce, 0);
+                if (Mathf.Abs(playerRigidbody.velocity.x) > 0.05f) // Applies drag if the horizontal speed is greater than 0.05f
+                {
+                    playerRigidbody.velocity += new Vector2(-Mathf.Sign(playerRigidbody.velocity.x) * dragForce, 0);
+                }
+                else // Stops all horizontal movement if the speed if smaller than 0.05f
+                {
+                    playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+                }
             }
-            else // Stops all horizontal movement if the speed if smaller than 0.05f
+            else
             {
-                playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+                Debug.LogWarning("Variable not set!");
             }
         }
     }
     void ApplySpeedLimit()
     {
-        float velocityFloat = playerRigidbody.velocity.magnitude;
-
-        if (velocityFloat > _playerSpeedLimit)
+        if (playerRigidbody != null)
         {
-            playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) * _playerSpeedLimit;
+            float velocityFloat = playerRigidbody.velocity.magnitude;
+
+            if (velocityFloat > _playerSpeedLimit)
+            {
+                playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) * _playerSpeedLimit;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Variable not set!");
         }
     }
     void ApplyBufferForces()
@@ -197,22 +257,22 @@ public class PlayerPhysicsHandler : MonoBehaviour
         // Right buffer
         if (transform.position.x > GameManager.Instance.GameViewHorizontalDistanceInMeters / 2 - screenEdgeBuffer)
         {
-            playerRigidbody.AddForce(Vector2.left * bufferForceMultiplier);
+            if (playerRigidbody != null)            playerRigidbody.AddForce(Vector2.left * bufferForceMultiplier);         else Debug.LogWarning("Variable not set!");
         }
         // Left buffer
         if (transform.position.x < -GameManager.Instance.GameViewHorizontalDistanceInMeters / 2 + screenEdgeBuffer)
         {
-            playerRigidbody.AddForce(Vector2.right * bufferForceMultiplier);
+            if (playerRigidbody != null)            playerRigidbody.AddForce(Vector2.right * bufferForceMultiplier);        else Debug.LogWarning("Variable not set!");
         }
         // Top buffer
         if (transform.position.y > GameManager.Instance.GameViewVerticalDistanceInMeters / 2 - screenEdgeBuffer)
         {
-            playerRigidbody.AddForce(Vector2.down * bufferForceMultiplier);
+            if (playerRigidbody != null)            playerRigidbody.AddForce(Vector2.down * bufferForceMultiplier);         else Debug.LogWarning("Variable not set!");
         }
         // Bottom buffer
         if (transform.position.y < -GameManager.Instance.GameViewVerticalDistanceInMeters / 2 + screenEdgeBuffer)
         {
-            playerRigidbody.AddForce(Vector2.up * bufferForceMultiplier);
+            if (playerRigidbody != null)            playerRigidbody.AddForce(Vector2.up * bufferForceMultiplier);           else Debug.LogWarning("Variable not set!");
         }
     }
     #endregion

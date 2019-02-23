@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 5044937060001580866}
   - component: {fileID: 3692715183436944658}
   - component: {fileID: 2455572566554133034}
+  - component: {fileID: 2883190093160949163}
   m_Layer: 0
-  m_Name: PickupAndCrateManager
+  m_Name: Level1Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87,3 +88,15 @@ MonoBehaviour:
   chanceToSpawnCratePerSecond: 20
   cratePrefab: {fileID: 6194907134823173452, guid: 43e36453f6ec19245a34bb326ae71f4d,
     type: 3}
+--- !u!114 &2883190093160949163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3853715874473687400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da2d5b1e01843744b86a5f46141540c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -91,55 +91,55 @@ public class PickupManager : MonoBehaviour
     {
         if (tag == "Player1")
         {
-            GameManager.Instance.Player1.currentMovementMode = PlayerMovementController.MovementMode.JETPACK;
+            GameManager.Instance.Player1.CurrentMovementMode = PlayerMovementController.MovementMode.JETPACK;
         }
         else
         {
-            GameManager.Instance.Player2.currentMovementMode = PlayerMovementController.MovementMode.JETPACK;
+            GameManager.Instance.Player2.CurrentMovementMode = PlayerMovementController.MovementMode.JETPACK;
         }
     }
     public void Pickup_Shotgun(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.Instance.Player1.currentWeapon = PlayerFiringController.Weapon.SHOTGUN;
+            GameManager.Instance.Player1.CurrentWeapon = PlayerFiringController.Weapon.SHOTGUN;
         }
         else
         {
-            GameManager.Instance.Player2.currentWeapon = PlayerFiringController.Weapon.SHOTGUN;
+            GameManager.Instance.Player2.CurrentWeapon = PlayerFiringController.Weapon.SHOTGUN;
         }
     }
     public void Pickup_Sniper(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.Instance.Player1.currentWeapon = PlayerFiringController.Weapon.SNIPER;
+            GameManager.Instance.Player1.CurrentWeapon = PlayerFiringController.Weapon.SNIPER;
         }
         else
         {
-            GameManager.Instance.Player2.currentWeapon = PlayerFiringController.Weapon.SNIPER;
+            GameManager.Instance.Player2.CurrentWeapon = PlayerFiringController.Weapon.SNIPER;
         }
     }
     public void Pickup_Bazooka(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.Instance.Player1.currentWeapon = PlayerFiringController.Weapon.BAZOOKA;
+            GameManager.Instance.Player1.CurrentWeapon = PlayerFiringController.Weapon.BAZOOKA;
         }
         else
         {
-            GameManager.Instance.Player2.currentWeapon = PlayerFiringController.Weapon.BAZOOKA;
+            GameManager.Instance.Player2.CurrentWeapon = PlayerFiringController.Weapon.BAZOOKA;
         }
     }
     public void Pickup_Minigun(string tag)
     {
         if (tag == "Player1")
         {
-            GameManager.Instance.Player1.currentWeapon = PlayerFiringController.Weapon.MINIGUN;
+            GameManager.Instance.Player1.CurrentWeapon = PlayerFiringController.Weapon.MINIGUN;
         }
         else
         {
-            GameManager.Instance.Player2.currentWeapon = PlayerFiringController.Weapon.MINIGUN;
+            GameManager.Instance.Player2.CurrentWeapon = PlayerFiringController.Weapon.MINIGUN;
         }
     }
     #endregion

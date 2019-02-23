@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     // Attributes
     #region Attributes
     // References
-    [SerializeField] GameObject pickupAndCrateManagers = null;
+    [SerializeField] GameObject level1Managers = null;
     [SerializeField] GameObject soundManager = null;
     BoxCollider2D _bottomBoundsCollider = null;
     static GameManager _instance = null;
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
         {
             if (PickupManager.instance == null && CrateManager.instance == null)
             {
-                Instantiate(pickupAndCrateManagers);
+                Instantiate(level1Managers);
             }
             else if ((PickupManager.instance != null && CrateManager.instance == null) || (PickupManager.instance == null && CrateManager.instance != null))
             {
@@ -103,19 +103,19 @@ public class GameManager : MonoBehaviour
     }
     void AssignADevice(InputDevice device)
     {
-        if (Player1.gamepad == null)
+        if (Player1.Gamepad == null)
         {
             if (DeviceIsNotTaken(device))
             {
-                Player1.gamepad = device;
+                Player1.Gamepad = device;
                 devicesBeingUsed.Add(device);
             }
         }
-        else if (Player2.gamepad == null)
+        else if (Player2.Gamepad == null)
         {
             if (DeviceIsNotTaken(device))
             {
-                Player2.gamepad = device;
+                Player2.Gamepad = device;
                 devicesBeingUsed.Add(device);
             }
         }

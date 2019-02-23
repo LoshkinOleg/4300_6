@@ -8,14 +8,14 @@ public class Crate_Sides : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player1")
         {
-            if (GameManager.Instance.Player1.stunOpportunityTimer > 0)
+            if (GameManager.Instance.Player1.StunOpportunityTimer > 0)
             {
                 GameManager.Instance.Player1.Stun();
             }
         }
         else if (collision.gameObject.tag == "Player2")
         {
-            if (GameManager.Instance.Player2.stunOpportunityTimer > 0)
+            if (GameManager.Instance.Player2.StunOpportunityTimer > 0)
             {
                 GameManager.Instance.Player2.Stun();
             }

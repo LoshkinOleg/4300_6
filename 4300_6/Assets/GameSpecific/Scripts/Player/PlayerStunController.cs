@@ -22,7 +22,7 @@ public class PlayerStunController : MonoBehaviour
 
     // Public properties
     #region Public properties
-    public PlayerManager playerManager
+    public PlayerManager PlayerManager
     {
         get
         {
@@ -40,9 +40,9 @@ public class PlayerStunController : MonoBehaviour
             }
         }
     }
-    public float stunTimer => _stunTimer;
-    public float stunForceMultiplier => _stunForceMultiplier;
-    public float projectileHitStunWindow
+    public float StunTimer => _stunTimer;
+    public float StunForceMultiplier => _stunForceMultiplier;
+    public float ProjectileHitStunWindow
     {
         get
         {
@@ -53,7 +53,7 @@ public class PlayerStunController : MonoBehaviour
             _projectileHitStunWindow = value;
         }
     }
-    public float stunOpportunityTimer
+    public float StunOpportunityTimer
     {
         get
         {
@@ -71,8 +71,8 @@ public class PlayerStunController : MonoBehaviour
     public void Stun()
     {
         _stunTimer = stunDuration;
-        playerManager.linearDrag = stunDragValue;
-        playerManager.DisplayStun(stunDuration);
+        PlayerManager.LinearDrag = stunDragValue;
+        FeedbackManager.Instance.DisplayStunEffect(gameObject, stunDuration);
     }
     public void Init()
     {
@@ -84,9 +84,9 @@ public class PlayerStunController : MonoBehaviour
     #region Private methods
     void ProcessStunMechanic()
     {
-        if (stunTimer > 0) // If stunned.
+        if (StunTimer > 0) // If stunned.
         {
-            playerManager.gravity = 0; // Set gravity to 0.
+            PlayerManager.Gravity = 0; // Set gravity to 0.
         }
     }
     #endregion
@@ -99,13 +99,13 @@ public class PlayerStunController : MonoBehaviour
     }
     private void Update()
     {
-        if (stunTimer <= 0) // If player is not stunned.
+        if (StunTimer <= 0) // If player is not stunned.
         {
             // Reset gravity after the player has just exited stun mode where gravity is set to 0.
-            if (Mathf.Abs(playerManager.gravity) != 2)
+            if (Mathf.Abs(PlayerManager.Gravity) != 2)
             {
-                playerManager.ResetGravity();
-                playerManager.linearDrag = 1f; // Reset drag
+                PlayerManager.ResetGravity();
+                PlayerManager.LinearDrag = 1f; // Reset drag
             }
         }
 

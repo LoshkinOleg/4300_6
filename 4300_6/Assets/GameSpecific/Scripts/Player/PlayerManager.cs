@@ -3,32 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using InControl;
 
-/*
-    - Links all player components together.
-    - Provides other components with it's variables.
-    - Handles player health, lives and loosing conditions.
-    - Handles hits from projectiles.
-    - Handles parachute toggling.
-    - Relays function calls to other components.
-*/
+public enum Weapon
+{
+    PISTOL,
+    SHOTGUN,
+    SNIPER,
+    BAZOOKA,
+    MINIGUN
+}
 
 public class PlayerManager : MonoBehaviour
 {
     // Attributes
     #region Attributes
     // Inspector variables
-    [SerializeField] bool _isLeftPlayer = true;
-    [SerializeField] PlayerFiringController.Weapon startingWeapon = PlayerFiringController.Weapon.MINIGUN;
+    [SerializeField] bool _isLeftPlayer;
+    [SerializeField] Weapon startingWeapon = Weapon.PISTOL;
 
     // References
     PlayerMovementController movementController = null;
     PlayerFiringController firingController = null;
-    PlayerAnimationAndOrientationController animationAndOrientationController = null;
+    PlayerOrientation orientationController = null;
     PlayerPhysicsHandler physicsHandler = null;
     PlayerInputHandler inputHandler = null;
     PlayerStunController stunController = null;
-    PlayerUIController uiController = null;
-    [SerializeField] WeaponData[] _weaponsData = new WeaponData[(int)PlayerFiringController.Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
+    [SerializeField] WeaponData[] weaponsData = new WeaponData[(int)Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
 
     // Private variables
     float _health = 1;
@@ -39,114 +38,420 @@ public class PlayerManager : MonoBehaviour
     // Public properties
     #region Public properties
     // PlayerManager's properties
-    public WeaponData[] weaponsData => _weaponsData;
-    public bool isLeftPlayer => _isLeftPlayer;
-    public int lives => _lives;
-    public float health => _health;
-    public bool parachuteIsOpen => _parachuteIsOpen;
-    // Movement controller
-    public PlayerMovementController.MovementMode currentMovementMode
+    public WeaponData[] WeaponsData
     {
         get
         {
-            return movementController.currentMovementMode;
+            if (weaponsData[0] != null)
+            {
+                return weaponsData;
+            }
+            else
+            {
+                Debug.Log("Variable is not set up!");
+                return new WeaponData[0];
+            }
+        }
+    }
+    public bool IsLeftPlayer => _isLeftPlayer;
+    public int Lives
+    {
+        get
+        {
+            return _lives;
         }
         set
         {
-            movementController.currentMovementMode = value;
+            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateLives(gameObject, value);            else Debug.LogWarning("Variable not set up!");
+            _lives = value;
+        }
+    }
+    public float Health
+    {
+        get
+        {
+            return _health;
+        }
+        set
+        {
+            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject);                  else Debug.LogWarning("Variable not set up!");
+            _health = value;
+        }
+    }
+    public bool ParachuteIsOpen => _parachuteIsOpen;
+    // Movement controller
+    public PlayerMovementController.MovementMode CurrentMovementMode
+    {
+        get
+        {
+            if (movementController != null)
+            {
+                return movementController.CurrentMovementMode;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return PlayerMovementController.MovementMode.AIRBORNE;
+            }
+        }
+        set
+        {
+            if (movementController != null)
+            {
+                movementController.CurrentMovementMode = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
         }
     }
     // Firing controller
-    public PlayerFiringController.Weapon currentWeapon
+    public Weapon CurrentWeapon
     {
         get
         {
-            return firingController.currentWeapon;
+            if (firingController != null)
+            {
+                return firingController.CurrentWeapon;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return Weapon.PISTOL;
+            }
         }
         set
         {
-            firingController.currentWeapon = value;
+            if (firingController != null)
+            {
+                firingController.CurrentWeapon = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
         }
     }
-    public int currentAmmo => firingController.currentAmmo;
+    public int CurrentAmmo
+    {
+        get
+        {
+            if (firingController != null)
+            {
+                return firingController.CurrentAmmo;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 10;
+            }
+        }
+    }
     // Animation and Orientation controller
-    public GameObject armGO => animationAndOrientationController.armsGO;
+    public Transform ArmTransform
+    {
+        get
+        {
+            if (orientationController != null)
+            {
+                return orientationController.ArmTransform;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return gameObject.transform;
+            }
+        }
+    }
     // Physics handler
-    public float speedLimit => physicsHandler.playerSpeedLimit;
-    public float gravity
+    public float SpeedLimit
     {
         get
         {
-            return physicsHandler.gravity;
-        }
-        set
-        {
-            physicsHandler.gravity = value;
+            if (physicsHandler != null)
+            {
+                return physicsHandler.PlayerSpeedLimit;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return Mathf.Infinity;
+            }
         }
     }
-    public Vector2 velocity
+    public float Gravity
     {
         get
         {
-            return physicsHandler.velocity;
+            if (physicsHandler != null)
+            {
+                return physicsHandler.Gravity;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 1;
+            }
         }
         set
         {
-            physicsHandler.velocity = value;
+            if (physicsHandler != null)
+            {
+                physicsHandler.Gravity = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
         }
     }
-    public float linearDrag
+    public Vector2 Velocity
     {
         get
         {
-            return physicsHandler.linearDrag;
+            if (physicsHandler != null)
+            {
+                return physicsHandler.Velocity;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return new Vector2();
+            }
         }
         set
         {
-            physicsHandler.linearDrag = value;
+            if (physicsHandler != null)
+            {
+                physicsHandler.Velocity = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
+        }
+    }
+    public float LinearDrag
+    {
+        get
+        {
+            if (physicsHandler != null)
+            {
+                return physicsHandler.LinearDrag;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
+        }
+        set
+        {
+            if (physicsHandler != null)
+            {
+                physicsHandler.LinearDrag = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
         }
     }
     // Input handler
-    public InputDevice gamepad
+    public InputDevice Gamepad
     {
         get
         {
-            return inputHandler.gamepad;
+            if (inputHandler != null)
+            {
+                return inputHandler.Gamepad;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return new InputDevice();
+            }
         }
         set
         {
-            inputHandler.gamepad = value;
+            if (inputHandler != null)
+            {
+                inputHandler.Gamepad = value;
+            }
         }
     }
-    public float horizontalInput => inputHandler.horizontalInput;
-    public float verticalInput => inputHandler.verticalInput;
-    public float aimingHorizontalInput => inputHandler.aimingHorizontalInput;
-    public float aimingVerticalInput => inputHandler.aimingVerticalInput;
-    public bool tryingToOpenParachute => inputHandler.tryingToOpenParachute;
-    public bool tryingToFire => inputHandler.tryingToFire;
+    public float HorizontalInput
+    {
+        get
+        {
+            if (inputHandler != null)
+            {
+                return inputHandler.HorizontalInput;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
+        }
+    }
+    public float VerticalInput
+    {
+        get
+        {
+            if (inputHandler != null)
+            {
+                return inputHandler.VerticalInput;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
+        }
+    }
+    public float AimingHorizontalInput
+    {
+        get
+        {
+            if (inputHandler != null)
+            {
+                return inputHandler.AimingHorizontalInput;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
+        }
+    }
+    public float AimingVerticalInput
+    {
+        get
+        {
+            if (inputHandler != null)
+            {
+                return inputHandler.AimingVerticalInput;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
+        }
+    }
+    public bool TryingToOpenParachute
+    {
+        get
+        {
+            if (inputHandler != null)
+            {
+                return inputHandler.TryingToOpenParachute;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return false;
+            }
+        }
+    }
+    public bool TryingToFire
+    {
+        get
+        {
+            if (inputHandler != null)
+            {
+                return inputHandler.TryingToFire;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return false;
+            }
+        }
+    }
     // Stun controller
-    public float stunTimer => stunController.stunTimer;
-    public float stunForceMultiplier => stunController.stunForceMultiplier;
-    public float stunOpportunityTimer
+    public float StunTimer
     {
         get
         {
-            return stunController.stunOpportunityTimer;
-        }
-        set
-        {
-            stunController.stunOpportunityTimer = value;
+            if (stunController != null)
+            {
+                return stunController.StunTimer;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
         }
     }
-    public float projectileHitStunWindow
+    public float StunForceMultiplier
     {
         get
         {
-            return stunController.projectileHitStunWindow;
+            if (stunController != null)
+            {
+                return stunController.StunForceMultiplier;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
+        }
+    }
+    public float StunOpportunityTimer
+    {
+        get
+        {
+            if (stunController != null)
+            {
+                return stunController.StunOpportunityTimer;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 0;
+            }
         }
         set
         {
-            stunController.projectileHitStunWindow = value;
+            if (stunController != null)
+            {
+                stunController.StunOpportunityTimer = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
+        }
+    }
+    public float ProjectileHitStunWindow
+    {
+        get
+        {
+            if (stunController != null)
+            {
+                return stunController.ProjectileHitStunWindow;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+                return 1;
+            }
+        }
+        set
+        {
+            if (stunController != null)
+            {
+                stunController.ProjectileHitStunWindow = value;
+            }
+            else
+            {
+                Debug.LogWarning("Variable is not set up!");
+            }
         }
     }
     #endregion
@@ -157,33 +462,32 @@ public class PlayerManager : MonoBehaviour
     public void ModifyHealth(float damage) // Use to damage (pass a negative number) or to heal (pass a positive number) the player.
     {
         _health += damage;
-        uiController.UpdateHealthBar();
+        if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject);          else Debug.LogWarning("Variable not set up!");
     }
     public void ModifyLives(int life)
     {
         _lives += life;
-        UpdateLives();
     }
-    public void ProjectileHit(GameObject projectile, PlayerFiringController.Weapon type) // Damages player and relays the message to the physics component for knockback.
+    public void ProjectileHit(GameObject projectile, Weapon type) // Damages player and relays the message to the physics component for knockback.
     {
         switch (type)
         {
-            case PlayerFiringController.Weapon.PISTOL:
+            case Weapon.PISTOL:
                 {
-                    ModifyHealth(-weaponsData[0].damage);
-                    physicsHandler.ProjectileHit(projectile, type);
+                    ModifyHealth(-WeaponsData[0].damage);
+                    if (physicsHandler != null)             physicsHandler.ProjectileHit(projectile, type);             else Debug.LogWarning("Variable not set!");
                 }
                 break;
-            case PlayerFiringController.Weapon.SHOTGUN:
+            case Weapon.SHOTGUN:
                 {
-                    ModifyHealth(-weaponsData[1].damage);
-                    physicsHandler.ProjectileHit(projectile, type);
+                    ModifyHealth(-WeaponsData[1].damage);
+                    if (physicsHandler != null)             physicsHandler.ProjectileHit(projectile, type);             else Debug.LogWarning("Variable not set!");
                 }
                 break;
-            case PlayerFiringController.Weapon.MINIGUN:
+            case Weapon.MINIGUN:
                 {
-                    ModifyHealth(-weaponsData[4].damage);
-                    physicsHandler.ProjectileHit(projectile, type);
+                    ModifyHealth(-WeaponsData[4].damage);
+                    if (physicsHandler != null)             physicsHandler.ProjectileHit(projectile, type);             else Debug.LogWarning("Variable not set!");
                 }
                 break;
             default:
@@ -193,97 +497,79 @@ public class PlayerManager : MonoBehaviour
                 break;
         }
         // Reset stun opportunity timer.
-        stunOpportunityTimer = projectileHitStunWindow;
+        StunOpportunityTimer = ProjectileHitStunWindow;
     }
     public void CrateBottomHit(BoxCollider2D crate)
     {
-        if (parachuteIsOpen)
+        if (ParachuteIsOpen)
         {
             ToggleParachute();
         }
-        stunController.Stun();
-        physicsHandler.CrateBottomHit(crate);
+        if (stunController != null)             stunController.Stun();                          else Debug.LogWarning("Variable not set!");
+        if (physicsHandler != null)             physicsHandler.CrateBottomHit(crate);           else Debug.LogWarning("Variable not set!");
     }
     public void ExplosionHit(Vector3 position)
     {
-        ModifyHealth(-weaponsData[3].damage);
-        physicsHandler.ExplosionHit(position);
-        stunOpportunityTimer = projectileHitStunWindow;
+        if (weaponsData[3] != null)             ModifyHealth(-WeaponsData[3].damage);           else Debug.LogWarning("Variable not set!");
+        if (physicsHandler != null)             physicsHandler.ExplosionHit(position);          else Debug.LogWarning("Variable not set!");
+        StunOpportunityTimer = ProjectileHitStunWindow;
     }
     public void SniperHit()
     {
-        ModifyHealth(-weaponsData[2].damage);
-        stunOpportunityTimer = projectileHitStunWindow;
+        if (weaponsData[3] != null)             ModifyHealth(-WeaponsData[2].damage);           else Debug.LogWarning("Variable not set!");
+        StunOpportunityTimer = ProjectileHitStunWindow;
     }
     public void Kill()
     {
         _lives--;
-        if (lives < 1)
+        if (Lives < 1)
         {
-            GameManager.Instance.GameOver(gameObject);
+            if (GameManager.Instance != null)   GameManager.Instance.GameOver(gameObject);      else Debug.LogWarning("Variable not set!");
         }
         else
         {
             _health = 1;
-            uiController.UpdateHealthBar();
-            uiController.UpdateLives();
+            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject);          else Debug.LogWarning("Variable not set up!");
+            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateLives(gameObject, Lives);    else Debug.LogWarning("Variable not set up!");
             transform.position = new Vector3(0, 0, 0);
         }
     }
     public void ToggleParachute()
     {
-        physicsHandler.ToggleGravity();
-        animationAndOrientationController.ToggleParachute();
+        if (physicsHandler != null)             physicsHandler.ToggleGravity();                         else Debug.LogWarning("Variable not set!");
+        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.ToggleParachute(gameObject);   else Debug.LogWarning("Variable not set up!");
         _parachuteIsOpen = !_parachuteIsOpen;
     }
     // Firing controller
     public void SpeedBulletsUp()
     {
-        firingController.SpeedBulletsUp();
-    }
-    // Animation and Orientation controller
-    public void UpdateCurrentWeaponSprite(PlayerFiringController.Weapon weapon)
-    {
-        animationAndOrientationController.UpdateCurrentWeaponSprite(weapon);
-    }
-    public void DisplayStun(float duration)
-    {
-        animationAndOrientationController.DisplayStun(duration);
+        if (firingController != null)           firingController.SpeedBulletsUp();                      else Debug.LogWarning("Variable not set up!");
     }
     // Physics handler
     public void ToggleGravity()
     {
-        physicsHandler.ToggleGravity();
+        if (physicsHandler != null)             physicsHandler.ToggleGravity();                         else Debug.LogWarning("Variable not set!");
     }
     public void ResetGravity()
     {
-        physicsHandler.ResetGravity();
+        if (physicsHandler != null)             physicsHandler.ResetGravity();                          else Debug.LogWarning("Variable not set!");
     }
     public bool IsTouching(Collider2D collider)
     {
-        return physicsHandler.IsTouching(collider);
+        if (physicsHandler != null)             return physicsHandler.IsTouching(collider);             else { Debug.LogWarning("Variable not set!"); return false; }
     }
     public void ApplyFiringKnockback(Vector2 unitaryDirection, float magnitude)
     {
-        physicsHandler.AddForce(unitaryDirection, magnitude);
+        if (physicsHandler != null)             physicsHandler.AddForce(unitaryDirection, magnitude);   else Debug.LogWarning("Variable not set!");
     }
     public void AddForce(Vector2 unitaryDirection, float magnitude)
     {
-        physicsHandler.AddForce(unitaryDirection, magnitude);
+        if (physicsHandler != null)             physicsHandler.AddForce(unitaryDirection, magnitude);   else Debug.LogWarning("Variable not set!");
     }
     // Stun controller
     public void Stun()
     {
-        stunController.Stun();
-    }
-    // UI controller
-    public void UpdateHealthBar()
-    {
-        uiController.UpdateHealthBar();
-    }
-    public void UpdateLives()
-    {
-        uiController.UpdateLives();
+        if (stunController != null)             stunController.Stun();                                  else Debug.LogWarning("Variable not set!");
     }
     #endregion
 
@@ -291,61 +577,36 @@ public class PlayerManager : MonoBehaviour
     #region Inherited methods
     private void Start()
     {
-        if ((movementController = GetComponent<PlayerMovementController>()) == null)
-        {
-            Debug.LogError("PlayerManager.cs: player component not found.");
-        }
-        movementController.playerManager = this;
+        movementController = GetComponent<PlayerMovementController>();
+        movementController.PlayerManager = this;
         movementController.Init();
 
-        if ((firingController = GetComponent<PlayerFiringController>()) == null)
-        {
-            Debug.LogError("PlayerManager.cs: player component not found.");
-        }
-        firingController.playerManager = this;
+        firingController = GetComponent<PlayerFiringController>();
+        firingController.PlayerManager = this;
         firingController.Init();
 
-        if ((animationAndOrientationController = GetComponent<PlayerAnimationAndOrientationController>()) == null)
-        {
-            Debug.LogError("PlayerManager.cs: player component not found.");
-        }
-        animationAndOrientationController.playerManager = this;
-        animationAndOrientationController.Init();
+        orientationController = GetComponent<PlayerOrientation>();
+        orientationController.PlayerManager = this;
+        orientationController.Init();
 
-        if ((physicsHandler = GetComponent<PlayerPhysicsHandler>()) == null)
-        {
-            Debug.LogError("PlayerManager.cs: player component not found.");
-        }
-        physicsHandler.playerManager = this;
+        physicsHandler = GetComponent<PlayerPhysicsHandler>();
+        physicsHandler.PlayerManager = this;
         physicsHandler.Init();
 
-        if ((inputHandler = GetComponent<PlayerInputHandler>()) == null)
-        {
-            Debug.LogError("PlayerManager.cs: player component not found.");
-        }
-        inputHandler.playerManager = this;
+        inputHandler = GetComponent<PlayerInputHandler>();
+        inputHandler.PlayerManager = this;
         inputHandler.Init();
 
-        if ((stunController = GetComponent<PlayerStunController>()) == null)
-        {
-            Debug.LogError("PlayerManager.cs: player component not found.");
-        }
-        stunController.playerManager = this;
+        stunController = GetComponent<PlayerStunController>();
+        stunController.PlayerManager = this;
         stunController.Init();
 
-        if ((uiController = GetComponent<PlayerUIController>()) == null)
-        {
-            Debug.LogError("PlayerManager.cs: player component not found.");
-        }
-        uiController.playerManager = this;
-        uiController.Init();
-
-        currentWeapon = startingWeapon;
+        CurrentWeapon = startingWeapon;
     }
     private void Update()
     {
         // Handle losing condition
-        if (health <= 0)
+        if (Health <= 0)
         {
             Kill();
         }

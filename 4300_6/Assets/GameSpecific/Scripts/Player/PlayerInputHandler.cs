@@ -22,7 +22,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     // Public properties
     #region Public properties
-    public PlayerManager playerManager
+    public PlayerManager PlayerManager
     {
         get
         {
@@ -40,11 +40,11 @@ public class PlayerInputHandler : MonoBehaviour
             }
         }
     }
-    public float horizontalInput => _horizontalInput;
-    public float verticalInput => _verticalInput;
-    public float aimingHorizontalInput => _aimingHorizontalInput;
-    public float aimingVerticalInput => _aimingVerticalInput;
-    public bool tryingToOpenParachute
+    public float HorizontalInput => _horizontalInput;
+    public float VerticalInput => _verticalInput;
+    public float AimingHorizontalInput => _aimingHorizontalInput;
+    public float AimingVerticalInput => _aimingVerticalInput;
+    public bool TryingToOpenParachute
     {
         get
         {
@@ -54,13 +54,13 @@ public class PlayerInputHandler : MonoBehaviour
         {
             if (value)
             {
-                playerManager.ToggleParachute();
+                PlayerManager.ToggleParachute();
             }
             _tryingToOpenParachute = value;
         }
     }
-    public bool tryingToFire => _tryingToFire;
-    public InputDevice gamepad
+    public bool TryingToFire => _tryingToFire;
+    public InputDevice Gamepad
     {
         get
         {
@@ -85,9 +85,9 @@ public class PlayerInputHandler : MonoBehaviour
     #region Private methods
     void UpdateInputs()
     {
-        if (gamepad != null)
+        if (Gamepad != null)
         {
-            if (playerManager.stunTimer > 0)
+            if (PlayerManager.StunTimer > 0)
             {
                 _horizontalInput = 0;
                 _verticalInput = 0;
@@ -105,16 +105,16 @@ public class PlayerInputHandler : MonoBehaviour
                 // Handle parachute inputs toggling in applicable movement modes.
                 if (_gamepad.LeftBumper.WasPressed)
                 {
-                    if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                    if (PlayerManager.CurrentMovementMode != PlayerMovementController.MovementMode.JETPACK)
                     {
-                        tryingToOpenParachute = true;
+                        TryingToOpenParachute = true;
                     }
                 }
                 if (_gamepad.LeftBumper.WasReleased)
                 {
-                    if (playerManager.currentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                    if (PlayerManager.CurrentMovementMode != PlayerMovementController.MovementMode.JETPACK)
                     {
-                        tryingToOpenParachute = false;
+                        TryingToOpenParachute = false;
                     }
                 }
 

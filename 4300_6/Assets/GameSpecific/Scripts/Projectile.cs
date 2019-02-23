@@ -8,50 +8,35 @@ public class Projectile : MonoBehaviour
     #region Attributes
     // Setup variables
     [HideInInspector] public float speed;
-    [HideInInspector] public PlayerFiringController.Weapon type;
+    [HideInInspector] public Weapon type;
+    [HideInInspector] public float visualFeedbackLifetime;
 
     // Inspector variables
     [SerializeField] float explosionRadius = 1.5f;
-    [SerializeField] float visualFeedbackLifetime = 0.5f;
+    [SerializeField] float rocketRotationPerFrameAmplitude = 7;
 
     // References
-    [SerializeField] GameObject projectileSpriteGO = null;
-    [SerializeField] GameObject destructionSpriteGO = null;
-    [SerializeField] Sprite[] projectileSprites = new Sprite[(int)PlayerFiringController.Weapon.MINIGUN + 1];
+    [SerializeField] SpriteRenderer spriteRenderer = null;
     Rigidbody2D bulletRigidbody2D = null;
     CircleCollider2D bulletCollider = null;
 
     // Private variables
-    bool isPlayingDestructionAnimation = false;
     float x; // x variable in the Cos(x) function. Used to create a sinusoidal movement for the rocket projectile.
-    SpriteRenderer currentProjectileSprite = null;
+    bool isPlayingDestructionAnimation = false;
     #endregion
 
     // Private methods
     #region Private methods
     IEnumerator DestroyBullet()
     {
-        if (bulletRigidbody2D != null)
-        {
-            isPlayingDestructionAnimation = true;
+        isPlayingDestructionAnimation = true;
 
-            bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
-            bulletCollider.enabled = false;
-            destructionSpriteGO.SetActive(true);
-            projectileSpriteGO.SetActive(false);
+        if (bulletRigidbody2D != null)          bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;                               else Debug.LogWarning("Variable not set up!");
+        if (bulletCollider != null)             bulletCollider.enabled = false;                                                                 else Debug.LogWarning("Variable not set up!");
+        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayBulletDestruction(transform.position, type, spriteRenderer);    else Debug.LogWarning("Variable not set up!");
 
-            yield return new WaitForSeconds(visualFeedbackLifetime);
-
-            Destroy(gameObject);
-        }
-        else
-        {
-            yield return new WaitForSeconds(0);
-        }
-    }
-    IEnumerator SniperSelfDestroy()
-    {
         yield return new WaitForSeconds(visualFeedbackLifetime);
+
         Destroy(gameObject);
     }
     #endregion
@@ -62,10 +47,9 @@ public class Projectile : MonoBehaviour
     {
         bulletRigidbody2D = GetComponent<Rigidbody2D>();
         bulletCollider = GetComponent<CircleCollider2D>();
-        currentProjectileSprite = projectileSpriteGO.GetComponent<SpriteRenderer>();
-        currentProjectileSprite.sprite = projectileSprites[(int)type];
+        if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayAppropriateProjectile(spriteRenderer, type); else Debug.LogWarning("Variable not set up!");
 
-        if (type == PlayerFiringController.Weapon.SNIPER)
+        if (type == Weapon.SNIPER)
         {
             if (gameObject.tag == "Player1Projectile")
             {
@@ -75,46 +59,22 @@ public class Projectile : MonoBehaviour
             {
                 transform.position = GameManager.Instance.Player2.transform.position;
             }
-            StartCoroutine(SniperSelfDestroy());
+            StartCoroutine(DestroyBullet());
         }
     }
-
-    private void FixedUpdate()
-    {
-        if (type == PlayerFiringController.Weapon.BAZOOKA)
-        {
-            // It is a rocket
-            if (!isPlayingDestructionAnimation)
-            {
-                // Apply sinusoidal rotation
-                x += Time.fixedDeltaTime;
-
-                // Mathf.Cos(x * Mathf.PI * 2) is a cos function with a frequency of 1 and an amplitude of 1.
-                transform.rotation *= Quaternion.Euler(0,0, Mathf.Cos(x * Mathf.PI * 2) * 7); // The 7 is dark magic that sets up the amplitude of the function.
-
-                bulletRigidbody2D.velocity = transform.right * speed;
-            }
-        }
-        else if (type != PlayerFiringController.Weapon.SNIPER)
-        {
-            if (!isPlayingDestructionAnimation)
-            {
-                bulletRigidbody2D.velocity = transform.right * speed;
-            }
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (type != PlayerFiringController.Weapon.BAZOOKA && type != PlayerFiringController.Weapon.SNIPER)
+        if (type != Weapon.BAZOOKA && type != Weapon.SNIPER)
         {
             if (collision.gameObject.tag == "Player1")
             {
-                GameManager.Instance.Player1.ProjectileHit(gameObject, type);
+                if (GameManager.Instance != null)           GameManager.Instance.Player1.ProjectileHit(gameObject, type);           else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHitByProjectile(collision.gameObject);  else Debug.LogWarning("Variable not set up!");
             }
             else if (collision.gameObject.tag == "Player2")
             {
-                GameManager.Instance.Player2.ProjectileHit(gameObject, type);
+                if (GameManager.Instance != null)           GameManager.Instance.Player2.ProjectileHit(gameObject, type);           else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHitByProjectile(collision.gameObject);  else Debug.LogWarning("Variable not set up!");
             }
         }
         else
@@ -122,24 +82,45 @@ public class Projectile : MonoBehaviour
             // It is a rocket.
             if (Vector3.Distance(GameManager.Instance.Player1.transform.position, transform.position) < explosionRadius)
             {
-                GameManager.Instance.Player1.ExplosionHit(transform.position);
+                if (GameManager.Instance != null)           GameManager.Instance.Player1.ExplosionHit(transform.position);                              else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHitByProjectile(GameManager.Instance.Player1.gameObject);   else Debug.LogWarning("Variable not set up!");
             }
             if (Vector3.Distance(GameManager.Instance.Player2.transform.position, transform.position) < explosionRadius)
             {
-                GameManager.Instance.Player2.ExplosionHit(transform.position);
+                if (GameManager.Instance != null)           GameManager.Instance.Player2.ExplosionHit(transform.position);                              else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHitByProjectile(GameManager.Instance.Player2.gameObject);   else Debug.LogWarning("Variable not set up!");
             }
-
-            // Shake screen
-            GameManager.Instance.screenShake.ShakeScreen(2);
-
-            // Play audio
-            SoundManager.Instance.PlaySound("bazooka_hit");
+            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.RocketFeedback();                              else Debug.LogWarning("Variable not set up!");
         }
 
         if (!isPlayingDestructionAnimation)
         {
             StartCoroutine(DestroyBullet());
         }
+    }
+    private void FixedUpdate()
+    {
+        if (type == Weapon.BAZOOKA)
+        {
+            if (!isPlayingDestructionAnimation) // Not currently self destroying
+            {
+                // Apply sinusoidal rotation. Note: Mathf.Cos(2*x*Mathf.PI + Mathf.PI/2) is a cos function with a frequency of 1[Hz], an amplitude of 1, whose incept is at 0[y] and that starts off by going into the negatives.
+                transform.rotation *= Quaternion.Euler(0,0, Mathf.Cos(2*x*Mathf.PI + Mathf.PI/2) * rocketRotationPerFrameAmplitude);
+
+                // Move the projectile.
+                if (bulletRigidbody2D != null)          bulletRigidbody2D.velocity = transform.right * speed;           else Debug.LogWarning("Variable not set up!");
+            }
+        }
+        else if (type != Weapon.SNIPER)
+        {
+            if (!isPlayingDestructionAnimation)
+            {
+
+                if (bulletRigidbody2D != null)          bulletRigidbody2D.velocity = transform.right * speed;           else Debug.LogWarning("Variable not set up!");
+            }
+        }
+
+        x += Time.fixedDeltaTime;
     }
     #endregion
 
