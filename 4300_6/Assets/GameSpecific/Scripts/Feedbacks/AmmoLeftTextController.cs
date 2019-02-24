@@ -5,10 +5,9 @@ using TMPro;
 
 public class AmmoLeftTextController : MonoBehaviour
 {
-    public float lifetime;
-    public Transform target;
-    public float horizontalOffset;
-    public float verticalOffset;
+    [HideInInspector] public Transform target;
+    [HideInInspector] public float horizontalOffset;
+    [HideInInspector] public float verticalOffset;
 
     IEnumerator SelfDestroy(float seconds)
     {
@@ -16,8 +15,12 @@ public class AmmoLeftTextController : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void Init(Transform parent , Transform target, float horizontalOffset, float verticalOffset, string ammoLeft, Color color, int wordsSize, int numbersSize)
+    public void Init(Transform parent , Transform target, float horizontalOffset, float verticalOffset, string ammoLeft, Color color, int wordsSize, int numbersSize, float lifetime)
     {
+        this.target = target;
+        this.horizontalOffset = horizontalOffset;
+        this.verticalOffset = verticalOffset;
+
         transform.SetParent(parent, false);
 
         TMP_Text text = GetComponent<TMP_Text>();

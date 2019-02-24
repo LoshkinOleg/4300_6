@@ -11,10 +11,9 @@ GameObject:
   - component: {fileID: 113694815397017124}
   - component: {fileID: 311583099929869964}
   - component: {fileID: 3115956267841941794}
-  - component: {fileID: 7180580155790719165}
   m_Layer: 0
   m_Name: FeedbackUI
-  m_TagString: FeedbackUI
+  m_TagString: FloatingText_Canvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -81,19 +80,3 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &7180580155790719165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4095479363717058372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9037ea67bcd45548a9fcafb68356a25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textPrefab: {fileID: 1629020238638055373, guid: 86d5ff8f2e97cc64a9d56ccf2d8d5f64,
-    type: 3}
-  horizontalOffset: 0.5
-  verticalOffset: 0.5

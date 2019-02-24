@@ -16,21 +16,27 @@ public class FeedbackManager : MonoBehaviour
     [SerializeField] float outOfAmmoFeedback_verticalOffset = 0.5f;
     [SerializeField] int outOfAmmoTextSize_numbers = 4;
     [SerializeField] int outOfAmmoTextSize_words = 2;
-    [SerializeField] float outOfAmmoFeedback_lifetime = 1f;
     [SerializeField] [Range(0, 2)] float[] screenShakeIntensities = new float[(int)Weapon.MINIGUN + 1];
     [SerializeField] float _bulletDestructionFeedbackLifetime = 0.5f;
     [SerializeField] float _sniperDestructionFeedbackLifetime = 0.5f;
     [SerializeField] float _bazookaDestructionFeedbackLifetime = 0.5f;
+    [SerializeField] float hitAnimationDuration = 0.3f;
+    [SerializeField] float parachuteDeployementTime = 0.2f;
+    [SerializeField] float _stunEffectVerticalOffset = 0.6f;
 
     // References
-    [SerializeField] SpriteRenderer[] parachutesSpriteRenderers = new SpriteRenderer[2];
-    [SerializeField] SpriteRenderer[] weaponSpriteRenderers = new SpriteRenderer[2];
-    [SerializeField] SpriteRenderer[] muzzleFlashSpriteRenderers = new SpriteRenderer[2];
-    [SerializeField] TMP_Text[] livesText = new TMP_Text[2];
-    [SerializeField] Image[] healthBarImages = new Image[2];
     [SerializeField] Sprite[] weaponSprites = new Sprite[(int)Weapon.MINIGUN + 1];
     [SerializeField] Sprite[] projectileSprites = new Sprite[(int)Weapon.MINIGUN + 1];
     [SerializeField] Sprite[] destructionSprites = new Sprite[(int)Weapon.MINIGUN + 1];
+    [SerializeField] Sprite[] muzzleFlashSprites = new Sprite[3];
+    [SerializeField] Sprite[] playerHeadSprites = new Sprite[2];
+    [SerializeField] Sprite[] parachuteSprites = new Sprite[3];
+    SpriteRenderer[] parachutesSpriteRenderers = new SpriteRenderer[2];
+    SpriteRenderer[] weaponSpriteRenderers = new SpriteRenderer[2];
+    SpriteRenderer[] muzzleFlashSpriteRenderers = new SpriteRenderer[2];
+    SpriteRenderer[] playerHeadSpriteRenderers = new SpriteRenderer[2];
+    TMP_Text[] livesText = new TMP_Text[2];
+    Image[] healthBarImages = new Image[2];
 
     // Prefabs
     [SerializeField] GameObject stunEffectPrefab = null;
@@ -42,77 +48,57 @@ public class FeedbackManager : MonoBehaviour
     public float BulletDestructionFeedbackLifetime => _bulletDestructionFeedbackLifetime;
     public float SniperDestructionFeedbackLifetime => _sniperDestructionFeedbackLifetime;
     public float BazookaDestructionFeedbackLifetime => _bazookaDestructionFeedbackLifetime;
+    public float StunEffectVerticalOffset => _stunEffectVerticalOffset;
 
     // Private variables
     static FeedbackManager _instance = null;
+    bool[] isSwitchingMuzzleFlash = new bool[2];
+    float[] parachuteDeployementTimer = new float[2];
     #endregion
 
     // Public methods
     #region Public methods
-    public void DisplayAmmoLeft(GameObject caller)
+    public void DisplayMuzzleFlash(PlayerManager caller)
     {
-
-    }
-    public void DisplayMuzzleFlash(GameObject caller)
-    {
-        PlayerManager playerManager = caller.GetComponent<PlayerManager>();
-
-        if (playerManager.TryingToFire && playerManager.CurrentAmmo > 0)
+        if (caller.TryingToFire && caller.CurrentAmmo > 0)
         {
             if (caller.tag == "Player1")
             {
-                if (!muzzleFlashGOs[0].activeSelf)
-                {
-                    muzzleFlashGOs[0].SetActive(true);
-                }
+                StartCoroutine(SwitchMuzzleFlashSprite(caller.WeaponsData[(int)caller.CurrentWeapon].firerate, 0));
             }
             else
             {
-                if (!muzzleFlashGOs[1].activeSelf)
-                {
-                    muzzleFlashGOs[1].SetActive(true);
-                }
+                StartCoroutine(SwitchMuzzleFlashSprite(caller.WeaponsData[(int)caller.CurrentWeapon].firerate, 1));
             }
-
-        }
-        else
-        {
-            if (caller.tag == "Player1")
-            {
-                if (muzzleFlashGOs[0].activeSelf)
-                {
-                    muzzleFlashGOs[0].SetActive(false);
-                }
-            }
-            else
-            {
-                if (muzzleFlashGOs[1].activeSelf)
-                {
-                    muzzleFlashGOs[1].SetActive(false);
-                }
-            }
-
         }
     }
     public void DisplayStunEffect(GameObject caller, float duration)
     {
         StunEffectController newStunEffect = Instantiate(stunEffectPrefab).GetComponent<StunEffectController>();
-        newStunEffect.target = caller;
+        newStunEffect.target = caller.transform;
         newStunEffect.lifetime = duration;
+        newStunEffect.verticalOffset = StunEffectVerticalOffset;
     }
-    public void DisplayAmmoLeft(GameObject caller, string ammoLeft, Color color)
+    public void DisplayAmmoLeft(GameObject caller, string ammoLeft, Color color, float lifetime)
     {
-        Instantiate(ammoLeftPrefab).GetComponent<AmmoLeftTextController>().Init(gameObject.transform, caller.transform, outOfAmmoFeedback_horizontalOffset, outOfAmmoFeedback_verticalOffset, ammoLeft, color, outOfAmmoTextSize_words, outOfAmmoTextSize_numbers);
+        Instantiate(ammoLeftPrefab).GetComponent<AmmoLeftTextController>().Init(gameObject.transform, caller.transform, outOfAmmoFeedback_horizontalOffset, outOfAmmoFeedback_verticalOffset, ammoLeft, color, outOfAmmoTextSize_words, outOfAmmoTextSize_numbers, lifetime);
     }
-    public void DisplayHitByProjectile(GameObject playerHit)
+    public void DisplayHit(GameObject caller)
     {
-
+        if (caller.tag == "Player1")
+        {
+            StartCoroutine(DisplayHurtHead(0));
+        }
+        else
+        {
+            StartCoroutine(DisplayHurtHead(1));
+        }
     }
-    public void DisplayBulletDestruction(Vector3 position, Weapon type, SpriteRenderer renderer)
+    public void DisplayBulletDestruction(Weapon type, SpriteRenderer renderer)
     {
-
+        renderer.sprite = destructionSprites[(int)type];
     }
-    public void DisplayAppropriateProjectile(SpriteRenderer renderer, Weapon type)
+    public void DisplayAppropriateProjectile(Weapon type, SpriteRenderer renderer)
     {
         renderer.sprite = projectileSprites[(int)type];
     }
@@ -147,54 +133,75 @@ public class FeedbackManager : MonoBehaviour
     }
     public void PlayMinigunSound(PlayerFiringController.MinigunStage stage)
     {
-        switch (stage)
+        if (SoundManager.Instance != null)
         {
-            case PlayerFiringController.MinigunStage.STOPPED:
-                {
-                    SoundManager.Instance.StopSound("minigun_spinup");
-                    SoundManager.Instance.StopSound("minigun_fire");
-                    SoundManager.Instance.StopSound("minigun_slowdown");
-                }
-                break;
-            case PlayerFiringController.MinigunStage.SPINNING_UP:
-                {
-                    SoundManager.Instance.PlaySound("minigun_spinup");
-                }
-                break;
-            case PlayerFiringController.MinigunStage.FIRING:
-                {
-                    SoundManager.Instance.PlaySound("minigun_fire");
-                }
-                break;
-            case PlayerFiringController.MinigunStage.SLOWING_DOWN:
-                {
-                    SoundManager.Instance.PlaySound("minigun_slowdown");
-                }
-                break;
+            switch (stage)
+            {
+                case PlayerFiringController.MinigunStage.STOPPED:
+                    {
+                        SoundManager.Instance.StopSound("minigun_spinup");
+                        SoundManager.Instance.StopSound("minigun_fire");
+                        SoundManager.Instance.StopSound("minigun_slowdown");
+                    }
+                    break;
+                case PlayerFiringController.MinigunStage.SPINNING_UP:
+                    {
+                        SoundManager.Instance.PlaySound("minigun_spinup");
+                    }
+                    break;
+                case PlayerFiringController.MinigunStage.FIRING:
+                    {
+                        SoundManager.Instance.PlaySound("minigun_fire");
+                    }
+                    break;
+                case PlayerFiringController.MinigunStage.SLOWING_DOWN:
+                    {
+                        SoundManager.Instance.PlaySound("minigun_slowdown");
+                    }
+                    break;
+            }
         }
+
     }
     public void PlayOutOfAmmoSound()
     {
-        if (SoundManager.Instance != null)
-        {
-            if (!isPlayingOutOfAmmo)
-            {
-                SoundManager.Instance.PlaySound("out_of_ammo");
-                isPlayingOutOfAmmo = true;
-                outOfAmmoTimer = outOfAmmoTime;
-                firingTimer = 1 / currentFirerate;
-            }
-        }
+        if (SoundManager.Instance != null)          SoundManager.Instance.PlayOutOfAmmoSound();             else Debug.LogWarning("Variable not set up!");
     }
-    public void ToggleParachute(GameObject caller)
+    public void ToggleParachute(PlayerManager caller)
     {
-        if (caller.tag == "Player1")
+        int player;
+        if (caller.gameObject.tag == "Player1")
         {
-            parachutesGOs[0].SetActive(!parachutesGOs[0].activeSelf);
+            player = 0;
         }
         else
         {
-            parachutesGOs[1].SetActive(!parachutesGOs[1].activeSelf);
+            player = 1;
+        }
+
+        if (parachutesSpriteRenderers[player].sprite == parachuteSprites[0]) // Parachute closed
+        {
+            parachutesSpriteRenderers[player].sprite = parachuteSprites[1];
+            parachuteDeployementTimer[player] = parachuteDeployementTime;
+        }
+        else if (parachutesSpriteRenderers[player].sprite == parachuteSprites[1]) // In transition
+        {
+            if (parachuteDeployementTimer[player] < 0)
+            {
+                if (caller.ParachuteIsOpen) // Closing parachute
+                {
+                    parachutesSpriteRenderers[player].sprite = parachuteSprites[0];
+                }
+                else // Opening parachute
+                {
+                    parachutesSpriteRenderers[player].sprite = parachuteSprites[2];
+                }
+            }
+        }
+        else // Parachute open
+        {
+            parachutesSpriteRenderers[player].sprite = parachuteSprites[1];
+            parachuteDeployementTimer[player] = parachuteDeployementTime;
         }
     }
     public void InstantiateWeaponCatridge(GameObject caller, Weapon type)
@@ -206,40 +213,79 @@ public class FeedbackManager : MonoBehaviour
     }
     public void RocketFeedback()
     {
-        ShakeScreen(screenShakeIntensities[3]);
+        ShakeScreen(Weapon.BAZOOKA);
         SoundManager.Instance.PlaySound("bazooka_hit");
     }
-    public void ShakeScreen(float intensity = 2f)
+    public void ShakeScreen(Weapon type)
     {
-        GameManager.Instance.screenShake.ShakeScreen(intensity);
+        GameManager.Instance.screenShake.ShakeScreen(screenShakeIntensities[(int)type]);
     }
     public void UpdateCurrentWeaponSprite(GameObject caller, Weapon weapon)
     {
         if (caller.tag == "Player1")
         {
-            muzzleFlashGOs[0].transform.localPosition = muzzleFlashPositions[(int)weapon];
-            weaponSpritesGOs[0].GetComponent<SpriteRenderer>().sprite = weaponSprites[(int)weapon];
+            muzzleFlashSpriteRenderers[0].gameObject.transform.localPosition = muzzleFlashPositions[(int)weapon];
+            weaponSpriteRenderers[0].sprite = weaponSprites[(int)weapon];
         }
         else
         {
-            muzzleFlashGOs[1].transform.localPosition = muzzleFlashPositions[(int)weapon];
-            weaponSpritesGOs[1].GetComponent<SpriteRenderer>().sprite = weaponSprites[(int)weapon];
+            muzzleFlashSpriteRenderers[1].gameObject.transform.localPosition = muzzleFlashPositions[(int)weapon];
+            weaponSpriteRenderers[1].sprite = weaponSprites[(int)weapon];
         }
     }
     public void UpdateLives(GameObject caller, int lives)
     {
         if (caller.tag == "Player1")
         {
-            text.text = lives.ToString();
+            livesText[0].text = lives.ToString();
         }
         else
         {
-
+            livesText[1].text = lives.ToString();
         }
     }
-    public void UpdateHealth(GameObject caller)
+    public void UpdateHealth(GameObject caller, float health)
     {
-        healthImage.fillAmount = playerManager.Health;
+        if (caller.tag == "Player1")
+        {
+            healthBarImages[0].fillAmount = health;
+        }
+        else
+        {
+            healthBarImages[1].fillAmount = health;
+        }
+    }
+    #endregion
+
+    // Private methods
+    #region Private methods
+    IEnumerator SwitchMuzzleFlashSprite(float frequency, int player)
+    {
+        isSwitchingMuzzleFlash[player] = true;
+
+        if (muzzleFlashSpriteRenderers[0].sprite == muzzleFlashSprites[1])
+        {
+            muzzleFlashSpriteRenderers[0].sprite = muzzleFlashSprites[2];
+        }
+        else // If it's sprite n° 2 or a blank sprite.
+        {
+            muzzleFlashSpriteRenderers[0].sprite = muzzleFlashSprites[1];
+        }
+
+        yield return new WaitForSeconds(1/frequency);
+
+        // Reset sprite to blank.
+        muzzleFlashSpriteRenderers[0].sprite = muzzleFlashSprites[0];
+
+        isSwitchingMuzzleFlash[player] = false;
+    }
+    IEnumerator DisplayHurtHead(int player)
+    {
+        playerHeadSpriteRenderers[player].sprite = playerHeadSprites[1];
+
+        yield return new WaitForSeconds(hitAnimationDuration);
+
+        playerHeadSpriteRenderers[player].sprite = playerHeadSprites[0];
     }
     #endregion
 
@@ -248,6 +294,25 @@ public class FeedbackManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+        PlayerManager player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<PlayerManager>();
+        PlayerManager player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerManager>();
+        parachutesSpriteRenderers[0] = player1.parachuteSpriteRenderer;
+        parachutesSpriteRenderers[1] = player2.parachuteSpriteRenderer;
+        weaponSpriteRenderers[0] = player1.weaponSpriteRenderer;
+        weaponSpriteRenderers[1] = player2.weaponSpriteRenderer;
+        muzzleFlashSpriteRenderers[0] = player1.muzzleFlashSpriteRenderer;
+        muzzleFlashSpriteRenderers[1] = player2.muzzleFlashSpriteRenderer;
+        playerHeadSpriteRenderers[0] = player1.headSpriteRenderer;
+        playerHeadSpriteRenderers[1] = player2.headSpriteRenderer;
+
+    }
+    private void Start()
+    {
+        HealthAndLivesUIController ui = GameObject.FindGameObjectWithTag("HPandLivesUI").GetComponent<HealthAndLivesUIController>();
+        livesText[0] = ui.livesText_player1;
+        livesText[1] = ui.livesText_player2;
+        healthBarImages[0] = ui.healthBar_player1;
+        healthBarImages[1] = ui.healthBar_player2;
     }
     #endregion
 

@@ -33,7 +33,7 @@ public class Projectile : MonoBehaviour
 
         if (bulletRigidbody2D != null)          bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;                               else Debug.LogWarning("Variable not set up!");
         if (bulletCollider != null)             bulletCollider.enabled = false;                                                                 else Debug.LogWarning("Variable not set up!");
-        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayBulletDestruction(transform.position, type, spriteRenderer);    else Debug.LogWarning("Variable not set up!");
+        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayBulletDestruction(type, spriteRenderer);                        else Debug.LogWarning("Variable not set up!");
 
         yield return new WaitForSeconds(visualFeedbackLifetime);
 
@@ -47,7 +47,7 @@ public class Projectile : MonoBehaviour
     {
         bulletRigidbody2D = GetComponent<Rigidbody2D>();
         bulletCollider = GetComponent<CircleCollider2D>();
-        if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayAppropriateProjectile(spriteRenderer, type); else Debug.LogWarning("Variable not set up!");
+        if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayAppropriateProjectile(type, spriteRenderer); else Debug.LogWarning("Variable not set up!");
 
         if (type == Weapon.SNIPER)
         {
@@ -69,12 +69,12 @@ public class Projectile : MonoBehaviour
             if (collision.gameObject.tag == "Player1")
             {
                 if (GameManager.Instance != null)           GameManager.Instance.Player1.ProjectileHit(gameObject, type);           else Debug.LogWarning("Variable not set up!");
-                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHitByProjectile(collision.gameObject);  else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHit(collision.gameObject);  else Debug.LogWarning("Variable not set up!");
             }
             else if (collision.gameObject.tag == "Player2")
             {
                 if (GameManager.Instance != null)           GameManager.Instance.Player2.ProjectileHit(gameObject, type);           else Debug.LogWarning("Variable not set up!");
-                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHitByProjectile(collision.gameObject);  else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHit(collision.gameObject);  else Debug.LogWarning("Variable not set up!");
             }
         }
         else
@@ -83,12 +83,12 @@ public class Projectile : MonoBehaviour
             if (Vector3.Distance(GameManager.Instance.Player1.transform.position, transform.position) < explosionRadius)
             {
                 if (GameManager.Instance != null)           GameManager.Instance.Player1.ExplosionHit(transform.position);                              else Debug.LogWarning("Variable not set up!");
-                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHitByProjectile(GameManager.Instance.Player1.gameObject);   else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHit(GameManager.Instance.Player1.gameObject);   else Debug.LogWarning("Variable not set up!");
             }
             if (Vector3.Distance(GameManager.Instance.Player2.transform.position, transform.position) < explosionRadius)
             {
                 if (GameManager.Instance != null)           GameManager.Instance.Player2.ExplosionHit(transform.position);                              else Debug.LogWarning("Variable not set up!");
-                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHitByProjectile(GameManager.Instance.Player2.gameObject);   else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHit(GameManager.Instance.Player2.gameObject);   else Debug.LogWarning("Variable not set up!");
             }
             if (FeedbackManager.Instance != null)           FeedbackManager.Instance.RocketFeedback();                              else Debug.LogWarning("Variable not set up!");
         }

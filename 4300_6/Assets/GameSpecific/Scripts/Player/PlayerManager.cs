@@ -17,7 +17,7 @@ public class PlayerManager : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
-    [SerializeField] bool _isLeftPlayer;
+    [SerializeField] bool _isLeftPlayer = true;
     [SerializeField] Weapon startingWeapon = Weapon.PISTOL;
 
     // References
@@ -28,6 +28,10 @@ public class PlayerManager : MonoBehaviour
     PlayerInputHandler inputHandler = null;
     PlayerStunController stunController = null;
     [SerializeField] WeaponData[] weaponsData = new WeaponData[(int)Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
+    public SpriteRenderer headSpriteRenderer = null;
+    public SpriteRenderer parachuteSpriteRenderer = null;
+    public SpriteRenderer weaponSpriteRenderer = null;
+    public SpriteRenderer muzzleFlashSpriteRenderer = null;
 
     // Private variables
     float _health = 1;
@@ -74,7 +78,7 @@ public class PlayerManager : MonoBehaviour
         }
         set
         {
-            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject);                  else Debug.LogWarning("Variable not set up!");
+            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject, value);                  else Debug.LogWarning("Variable not set up!");
             _health = value;
         }
     }
@@ -462,7 +466,7 @@ public class PlayerManager : MonoBehaviour
     public void ModifyHealth(float damage) // Use to damage (pass a negative number) or to heal (pass a positive number) the player.
     {
         _health += damage;
-        if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject);          else Debug.LogWarning("Variable not set up!");
+        if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject, _health);          else Debug.LogWarning("Variable not set up!");
     }
     public void ModifyLives(int life)
     {
@@ -497,6 +501,7 @@ public class PlayerManager : MonoBehaviour
                 break;
         }
         // Reset stun opportunity timer.
+        if (FeedbackManager.Instance != null)               FeedbackManager.Instance.DisplayHit(gameObject);            else Debug.LogWarning("Variable not set!");
         StunOpportunityTimer = ProjectileHitStunWindow;
     }
     public void CrateBottomHit(BoxCollider2D crate)
@@ -505,18 +510,22 @@ public class PlayerManager : MonoBehaviour
         {
             ToggleParachute();
         }
-        if (stunController != null)             stunController.Stun();                          else Debug.LogWarning("Variable not set!");
-        if (physicsHandler != null)             physicsHandler.CrateBottomHit(crate);           else Debug.LogWarning("Variable not set!");
+        if (stunController != null)             stunController.Stun();                              else Debug.LogWarning("Variable not set!");
+        if (physicsHandler != null)             physicsHandler.CrateBottomHit(crate);               else Debug.LogWarning("Variable not set!");
+        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayHit(gameObject);    else Debug.LogWarning("Variable not set!");
     }
     public void ExplosionHit(Vector3 position)
     {
-        if (weaponsData[3] != null)             ModifyHealth(-WeaponsData[3].damage);           else Debug.LogWarning("Variable not set!");
-        if (physicsHandler != null)             physicsHandler.ExplosionHit(position);          else Debug.LogWarning("Variable not set!");
+        if (weaponsData[3] != null)             ModifyHealth(-WeaponsData[3].damage);               else Debug.LogWarning("Variable not set!");
+        if (physicsHandler != null)             physicsHandler.ExplosionHit(position);              else Debug.LogWarning("Variable not set!");
+        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayHit(gameObject);    else Debug.LogWarning("Variable not set!");
         StunOpportunityTimer = ProjectileHitStunWindow;
     }
     public void SniperHit()
     {
-        if (weaponsData[3] != null)             ModifyHealth(-WeaponsData[2].damage);           else Debug.LogWarning("Variable not set!");
+        if (weaponsData[3] != null)             ModifyHealth(-WeaponsData[2].damage);               else Debug.LogWarning("Variable not set!");
+        if (physicsHandler != null)             physicsHandler.SniperHit();                         else Debug.LogWarning("Variable not set!");
+        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayHit(gameObject);    else Debug.LogWarning("Variable not set!");
         StunOpportunityTimer = ProjectileHitStunWindow;
     }
     public void Kill()
@@ -529,7 +538,7 @@ public class PlayerManager : MonoBehaviour
         else
         {
             _health = 1;
-            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject);          else Debug.LogWarning("Variable not set up!");
+            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateHealth(gameObject, _health);          else Debug.LogWarning("Variable not set up!");
             if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateLives(gameObject, Lives);    else Debug.LogWarning("Variable not set up!");
             transform.position = new Vector3(0, 0, 0);
         }
@@ -537,7 +546,7 @@ public class PlayerManager : MonoBehaviour
     public void ToggleParachute()
     {
         if (physicsHandler != null)             physicsHandler.ToggleGravity();                         else Debug.LogWarning("Variable not set!");
-        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.ToggleParachute(gameObject);   else Debug.LogWarning("Variable not set up!");
+        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.ToggleParachute(this);         else Debug.LogWarning("Variable not set up!");
         _parachuteIsOpen = !_parachuteIsOpen;
     }
     // Firing controller

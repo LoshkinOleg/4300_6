@@ -271,12 +271,12 @@ SpriteRenderer:
   m_SortingLayerID: 1702784059
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d15b7b66d29027d4aae92693d09ddb0d, type: 3}
+  m_Sprite: {fileID: 21300002, guid: e9569e3ded8f1c64a8c8d81b7969aa96, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 0.56, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -431,12 +431,12 @@ SpriteRenderer:
   m_SortingLayerID: 1702784059
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d15b7b66d29027d4aae92693d09ddb0d, type: 3}
+  m_Sprite: {fileID: 21300002, guid: e9569e3ded8f1c64a8c8d81b7969aa96, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 0.57, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -603,9 +603,10 @@ GameObject:
   - component: {fileID: 5505999575396004105}
   - component: {fileID: 5505999575396004108}
   - component: {fileID: 5505999575396004107}
+  - component: {fileID: 7457531532034374243}
   m_Layer: 5
   m_Name: HPandLives
-  m_TagString: Untagged
+  m_TagString: HPandLivesUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -674,6 +675,22 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &7457531532034374243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5505999575396004104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bab9ce2ce8a48b943babdaa695e1c93c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  livesText_player1: {fileID: 3916543387526377341}
+  livesText_player2: {fileID: 1633889711088117282}
+  healthBar_player1: {fileID: 5505999575723092575}
+  healthBar_player2: {fileID: 5505999575256480462}
 --- !u!1 &5505999575723092573
 GameObject:
   m_ObjectHideFlags: 0

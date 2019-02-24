@@ -33,10 +33,6 @@ public class PlayerFiringController : MonoBehaviour
     // Speedup mechanic
     bool _isSpeedup;
     float bulletsSpeedupTimer;
-    // Sound related
-    bool isPlayingOutOfAmmo;
-    float outOfAmmoTime;
-    float outOfAmmoTimer;
     // Minigun related
     MinigunStage _minigunSoundStage = MinigunStage.STOPPED;
     bool isSpinningUp;
@@ -131,7 +127,7 @@ public class PlayerFiringController : MonoBehaviour
                     color = Color.black;
                     text = "*Clack!*";
                 }
-                if (FeedbackManager.Instance != null)            FeedbackManager.Instance.DisplayAmmoLeft(gameObject, text, color);          else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)            FeedbackManager.Instance.DisplayAmmoLeft(gameObject, text, color, 1f);          else Debug.LogWarning("Variable not set up!");
             }
 
             _currentAmmo = value;
@@ -224,7 +220,6 @@ public class PlayerFiringController : MonoBehaviour
     {
         spinupTime = SoundManager.Instance.minigunSpinupTime;
         slowdownTime = SoundManager.Instance.minigunSlowdownTime;
-        outOfAmmoTime = SoundManager.Instance.outOfAmmoTime;
     }
     #endregion
 
@@ -276,7 +271,8 @@ public class PlayerFiringController : MonoBehaviour
                         Vector2 direction = Vector3.Normalize(-PlayerManager.ArmTransform.transform.right);
                         PlayerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
-                        if (FeedbackManager.Instance != null)            FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);             else Debug.LogWarning("Variable not set up!");
+                        if (FeedbackManager.Instance != null)           FeedbackManager.Instance.DisplayMuzzleFlash(PlayerManager);                                else Debug.LogWarning("Variable not set!");
+                        if (FeedbackManager.Instance != null)           FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);             else Debug.LogWarning("Variable not set up!");
 
                         // Sound is managed by currentMinigunStage property.
                     }
@@ -392,9 +388,18 @@ public class PlayerFiringController : MonoBehaviour
             Vector2 direction = Vector3.Normalize(-PlayerManager.ArmTransform.transform.right);
             PlayerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
-            // Instantiate catridge
-            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);          else Debug.LogWarning("Variable not set up!");
-            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.PlayFiringSound(CurrentWeapon);                                else Debug.LogWarning("Variable not set up!");
+            // Trigger feedbacks
+            if (FeedbackManager.Instance != null)
+            {
+                FeedbackManager.Instance.DisplayMuzzleFlash(PlayerManager);
+                FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);
+                FeedbackManager.Instance.PlayFiringSound(CurrentWeapon);
+                FeedbackManager.Instance.ShakeScreen(CurrentWeapon);
+            }
+            else
+            {
+                Debug.LogWarning("Variable not set!");
+            }
         }
     }
     void ProcessShooting()
@@ -417,6 +422,7 @@ public class PlayerFiringController : MonoBehaviour
                             CurrentMinigunStage = MinigunStage.SLOWING_DOWN;
                         }
                     }
+                    firingTimer = 1 / currentFirerate;
                     // Play out of ammo audio feedback.
                     if (FeedbackManager.Instance != null)           FeedbackManager.Instance.PlayOutOfAmmoSound();          else Debug.LogWarning("Variable not set up!");
                 }
@@ -475,7 +481,6 @@ public class PlayerFiringController : MonoBehaviour
         // Update timers and timer related variables.
         firingTimer -= Time.deltaTime;
         bulletsSpeedupTimer -= Time.deltaTime;
-        outOfAmmoTimer -= Time.deltaTime;
         if (CurrentMinigunStage == MinigunStage.SPINNING_UP)
         {
             spinupTimer -= Time.deltaTime;
@@ -485,10 +490,6 @@ public class PlayerFiringController : MonoBehaviour
             slowdownTimer -= Time.deltaTime;
         }
 
-        if (outOfAmmoTimer < 0)
-        {
-            isPlayingOutOfAmmo = false;
-        }
         if (bulletsSpeedupTimer < 0)
         {
             if (IsSpeedup)

@@ -18,22 +18,20 @@ public class GameManager : MonoBehaviour
     static GameManager _instance = null;
     PlayerManager _player1 = null;
     PlayerManager _player2 = null;
-    Rigidbody2D _player1RB = null;
-    Rigidbody2D _player2RB = null;
-    FeedbacksUIController _feedbackUIController;
+    //Rigidbody2D _player1RB = null;
+    //Rigidbody2D _player2RB = null;
     ScreenShake _screenShake = null;
 
     // Public properties
     public static GameManager Instance => _instance;
     public PlayerManager Player1 => _player1;
     public PlayerManager Player2 => _player2;
-    public Rigidbody2D Player1RB => _player1RB;
-    public Rigidbody2D Player2RB => _player2RB;
+    //public Rigidbody2D Player1RB => _player1RB;
+    //public Rigidbody2D Player2RB => _player2RB;
     public float GameViewHorizontalDistanceInMeters => _gameViewHorizontalDistanceInMeters;
     public float GameViewVerticalDistanceInMeters => _gameViewVerticalDistanceInMeters;
     public Vector3 AveragePlayerPosition => _averagePlayerPosition;
     public BoxCollider2D BottomBoundsCollider => _bottomBoundsCollider;
-    public FeedbacksUIController feedbackUIController => _feedbackUIController;
     public ScreenShake screenShake => _screenShake;
 
     // Private variables
@@ -59,46 +57,56 @@ public class GameManager : MonoBehaviour
 
     // Private methods
     #region Private methods
-    void OnScoreLoaded(Scene scene, LoadSceneMode mode) // Displays the winner when the "Score" scene is loaded.
+    void OnSceneChange(Scene scene, LoadSceneMode mode) // Sets up GM depending on scene we're in.
     {
-        if (scene.name == "Score")
+        switch (scene.name)
         {
-            TMPro.TMP_Text winnerText = GameObject.FindGameObjectWithTag("WinnerText").GetComponent<TMPro.TMP_Text>();
+            case "MainMenu":
+                {
+                    if (SoundManager.Instance == null)
+                    {
+                        Instantiate(soundManager);
+                    }
+                }
+                break;
+            case "Level1":
+                {
+                    if (PickupManager.instance == null && CrateManager.instance == null)
+                    {
+                        Instantiate(level1Managers);
+                    }
+                    else if ((PickupManager.instance != null && CrateManager.instance == null) || (PickupManager.instance == null && CrateManager.instance != null))
+                    {
+                        Debug.LogError("GameManager.cs: Reference to one of the managers is missing: PickupManager: " + PickupManager.instance + " ; CrateManager: " + CrateManager.instance);
+                    }
 
-            if (loser == Player1)
-            {
-                winnerText.text = "Player 2!";
-            }
-            else
-            {
-                winnerText.text = "Player 1!";
-            }
-        }
-        else if(scene.name == "Level1")
-        {
-            if (PickupManager.instance == null && CrateManager.instance == null)
-            {
-                Instantiate(level1Managers);
-            }
-            else if ((PickupManager.instance != null && CrateManager.instance == null) || (PickupManager.instance == null && CrateManager.instance != null))
-            {
-                Debug.LogError("GameManager.cs: Reference to one of the managers is missing: PickupManager: " + PickupManager.instance + " ; CrateManager: " + CrateManager.instance);
-            }
+                    _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<PlayerManager>();
+                    //_player1RB = _player1.gameObject.GetComponent<Rigidbody2D>();
+                    _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerManager>();
+                    //_player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
+                    _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
+                    _screenShake = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<ScreenShake>();
+                }
+                break;
+            case "Score":
+                {
+                    TMPro.TMP_Text winnerText = GameObject.FindGameObjectWithTag("WinnerText").GetComponent<TMPro.TMP_Text>();
 
-            _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<PlayerManager>();
-            _player1RB = _player1.gameObject.GetComponent<Rigidbody2D>();
-            _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerManager>();
-            _player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
-            _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
-            _feedbackUIController = GameObject.FindGameObjectWithTag("FeedbackUI").GetComponent<FeedbacksUIController>();
-            _screenShake = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<ScreenShake>();
-        }
-        else if (scene.name == "MainMenu")
-        {
-            if (SoundManager.Instance == null)
-            {
-                Instantiate(soundManager);
-            }
+                    if (loser == Player1)
+                    {
+                        winnerText.text = "Player 2!";
+                    }
+                    else
+                    {
+                        winnerText.text = "Player 1!";
+                    }
+                }
+                break;
+            default:
+                {
+                    Debug.LogError("Unknown scene passed to OnSceneChange: " + scene.name);
+                }
+                break;
         }
     }
     void AssignADevice(InputDevice device)
@@ -139,7 +147,7 @@ public class GameManager : MonoBehaviour
     {
         _instance = this;
         DontDestroyOnLoad(gameObject);
-        SceneManager.sceneLoaded += OnScoreLoaded;
+        SceneManager.sceneLoaded += OnSceneChange;
         if (SoundManager.Instance == null)
         {
             Instantiate(soundManager);

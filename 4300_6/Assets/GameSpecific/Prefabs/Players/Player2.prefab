@@ -174,7 +174,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8221788827991801502
 Transform:
   m_ObjectHideFlags: 0
@@ -184,7 +184,7 @@ Transform:
   m_GameObject: {fileID: 880138148661917815}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3382648638257323775}
   m_RootOrder: 1
@@ -393,7 +393,6 @@ GameObject:
   - component: {fileID: 2977228392474048615}
   - component: {fileID: 4848834887403473505}
   - component: {fileID: 757692163130730270}
-  - component: {fileID: 3922258878792094714}
   - component: {fileID: 7209747188384941542}
   - component: {fileID: 6476255565809335451}
   - component: {fileID: 6704930890737359362}
@@ -475,27 +474,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isLeftPlayer: 0
   startingWeapon: 0
-  _weaponsData:
+  weaponsData:
   - {fileID: 11400000, guid: 00fecf7fd3db9284b9ae33e05cd101b3, type: 2}
   - {fileID: 11400000, guid: c8e07e9efb8d6f44db5e7ca0ebe6e93c, type: 2}
   - {fileID: 11400000, guid: 4d6f2db399baab6468003a7e86844b3a, type: 2}
   - {fileID: 11400000, guid: 38a8248eda039ce4382c7f7609636a4d, type: 2}
   - {fileID: 11400000, guid: 2518788aef5d3694b85918a423628eea, type: 2}
---- !u!114 &3922258878792094714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4848834887403473507}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4078a23e4276c054f9f182fe668cd093, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerManager: {fileID: 0}
-  healthImageGO: {fileID: 0}
-  livesTextGO: {fileID: 0}
+  headSpriteRenderer: {fileID: 1698477133916682384}
+  parachuteSpriteRenderer: {fileID: 8664007867377175912}
+  weaponSpriteRenderer: {fileID: 3074605618154261513}
+  muzzleFlashSpriteRenderer: {fileID: 8303971960879997617}
 --- !u!114 &7209747188384941542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,7 +497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stunDuration: 0.5
-  _stunForceMultiplier: 100
+  _stunForceMultiplier: 350
   _projectileHitStunWindow: 0.25
   stunDragValue: 4
   _playerManager: {fileID: 0}
@@ -529,7 +517,7 @@ MonoBehaviour:
   _playerSpeedLimit: 5
   screenEdgeBuffer: 1
   bufferForceMultiplier: 35
-  _playerManager: {fileID: 0}
+  playerManager: {fileID: 0}
 --- !u!114 &6704930890737359362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,13 +559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerManager: {fileID: 0}
-  bulletsPrefabs:
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  - {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d, type: 3}
-  catridgePrefab: {fileID: 2041673576769441654, guid: 22ca5358b66266d4b84c27579a525d66,
+  bulletsPrefab: {fileID: 4222088480428699918, guid: 11319dfe7c1334b478d72a15271773e2,
     type: 3}
 --- !u!114 &3520650665117570390
 MonoBehaviour:
@@ -592,28 +574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerManager: {fileID: 0}
-  parachuteGO: {fileID: 325984145752485330}
-  _armsGO: {fileID: 4557199037961504857}
-  weaponGO: {fileID: 8801712592679848232}
-  muzzleFlashGO: {fileID: 880138148661917815}
-  muzzleFlashPositions:
-  - {x: 0.9, y: 0}
-  - {x: 1.2, y: 0}
-  - {x: 1.5, y: 0}
-  - {x: 1.5, y: 0}
-  - {x: 1.5, y: 0}
-  weaponsSprites:
-  - {fileID: 21300000, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  - {fileID: 21300002, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  - {fileID: 21300004, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  - {fileID: 21300006, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  - {fileID: 21300010, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  headGO: {fileID: 6945589580515665122}
-  heads:
-  - {fileID: 21300000, guid: 673577a70e4ba2a4faeea078bb5d2111, type: 3}
-  - {fileID: 21300006, guid: 673577a70e4ba2a4faeea078bb5d2111, type: 3}
-  stunPrefab: {fileID: 4393019113291355537, guid: 82abdfc48bf1d8643af2cb2538490e20,
-    type: 3}
+  _armTransform: {fileID: 3382648638257323775}
 --- !u!1 &6945589580515665122
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,6 +21,7 @@ public class SoundManager : MonoBehaviour
     float _minigunSpinupTime;
     float _minigunSlowdownTime;
     float _outOfAmmoTime;
+    float outOfAmmoTimer;
     #endregion
 
     // Public methods
@@ -28,6 +29,14 @@ public class SoundManager : MonoBehaviour
     public void PlaySound(string name)
     {
         sounds[name].start();
+    }
+    public void PlayOutOfAmmoSound()
+    {
+        if (outOfAmmoTimer < 0)
+        {
+            sounds["out_of_ammo"].start();
+            outOfAmmoTimer = _outOfAmmoTime;
+        }
     }
     public void StopSound(string name)
     {
@@ -71,6 +80,10 @@ public class SoundManager : MonoBehaviour
         sounds["out_of_ammo"].getDescription(out description);
         description.getLength(out duration);
         _outOfAmmoTime = duration / 1000 + 0.5f;
+    }
+    private void Update()
+    {
+        outOfAmmoTimer -= Time.deltaTime;
     }
     #endregion
 }

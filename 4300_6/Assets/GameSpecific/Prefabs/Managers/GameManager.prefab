@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdf0a13c7d102cf48b2262216fbffb03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupAndCrateManagers: {fileID: 3853715874473687400, guid: 5e608eb871b208142b08a2b53885a7f1,
+  level1Managers: {fileID: 3853715874473687400, guid: 5e608eb871b208142b08a2b53885a7f1,
     type: 3}
   soundManager: {fileID: 6260657872254428704, guid: a13144a03ecffc94fa9996aef42c4787,
     type: 3}

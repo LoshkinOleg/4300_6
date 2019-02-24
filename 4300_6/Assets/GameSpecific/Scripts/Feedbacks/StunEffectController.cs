@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class StunEffectController : MonoBehaviour
 {
-    [HideInInspector] public GameObject target = null;
+    [HideInInspector] public Transform target = null;
     [HideInInspector] public float lifetime = 0.5f;
-    [SerializeField] float verticalOffset = 0.6f;
+    [HideInInspector] public float verticalOffset = 0.6f;
+
+    public void Init(Transform target, float lifetime, float verticalOffset)
+    {
+        this.target = target;
+        this.lifetime = lifetime;
+        this.verticalOffset = verticalOffset;
+    }
 
     IEnumerator SelfDestroyAfterSeconds()
     {
