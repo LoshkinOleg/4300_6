@@ -107,27 +107,28 @@ MonoBehaviour:
   - {x: 0.5, y: 0, z: 0}
   - {x: 1.5, y: 0, z: 0}
   catridgeSpinRange:
-  - 1
-  - 1
-  catridgeEjectionForceRange:
-  - 1
+  - -10
   - 10
+  catridgeEjectionForceRange:
+  - -5
+  - 5
   outOfAmmoFeedback_horizontalOffset: 0.5
   outOfAmmoFeedback_verticalOffset: 0.5
   outOfAmmoTextSize_numbers: 4
   outOfAmmoTextSize_words: 2
   screenShakeIntensities:
-  - 0.125
-  - 0.393
-  - 0.816
-  - 1.39
-  - 0.218
+  - 0.195
+  - 1.118
+  - 1.051
+  - 0.748
+  - 0.492
   _bulletDestructionFeedbackLifetime: 0.5
   _sniperDestructionFeedbackLifetime: 0.5
   _bazookaDestructionFeedbackLifetime: 0.5
   hitAnimationDuration: 0.3
   parachuteDeployementTime: 0.2
   _stunEffectVerticalOffset: 0.6
+  muzzleFlashDuration: 0.3
   weaponSprites:
   - {fileID: 21300000, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
   - {fileID: 21300002, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
@@ -143,7 +144,7 @@ MonoBehaviour:
   destructionSprites:
   - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
   - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
-  - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
+  - {fileID: 21300000, guid: a56de675f5239a5478b4ca2de5f1e6b2, type: 3}
   - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
   - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
   muzzleFlashSprites:

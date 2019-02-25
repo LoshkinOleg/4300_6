@@ -72,6 +72,8 @@ public class PlayerFiringController : MonoBehaviour
         }
         set
         {
+            _currentWeapon = value;
+
             // Set up variables
             currentProjectileSpeed = PlayerManager.WeaponsData[(int)value].projectileSpeed;
             currentFirerate = PlayerManager.WeaponsData[(int)value].firerate;
@@ -84,7 +86,6 @@ public class PlayerFiringController : MonoBehaviour
             // Display appropriate weapon.
             if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateCurrentWeaponSprite(gameObject, value);          else Debug.LogWarning("Variable not set up!");
 
-            _currentWeapon = value;
         }
     }
     public int CurrentAmmo
@@ -117,17 +118,12 @@ public class PlayerFiringController : MonoBehaviour
                     color = Color.red;
                     text = value.ToString();
                 }
-                else if (value == 0)
+                else
                 {
                     color = Color.black;
                     text = value.ToString();
                 }
-                else
-                {
-                    color = Color.black;
-                    text = "*Clack!*";
-                }
-                if (FeedbackManager.Instance != null)            FeedbackManager.Instance.DisplayAmmoLeft(gameObject, text, color, 1f);          else Debug.LogWarning("Variable not set up!");
+                if (FeedbackManager.Instance != null)           FeedbackManager.Instance.DisplayAmmoLeft(gameObject, text, color, 1f);          else Debug.LogWarning("Variable not set up!");
             }
 
             _currentAmmo = value;
@@ -271,8 +267,15 @@ public class PlayerFiringController : MonoBehaviour
                         Vector2 direction = Vector3.Normalize(-PlayerManager.ArmTransform.transform.right);
                         PlayerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
-                        if (FeedbackManager.Instance != null)           FeedbackManager.Instance.DisplayMuzzleFlash(PlayerManager);                                else Debug.LogWarning("Variable not set!");
-                        if (FeedbackManager.Instance != null)           FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);             else Debug.LogWarning("Variable not set up!");
+                        if (FeedbackManager.Instance != null)
+                        {
+                            FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);
+                            FeedbackManager.Instance.ShakeScreen(CurrentWeapon);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Variable not set!");
+                        }
 
                         // Sound is managed by currentMinigunStage property.
                     }
@@ -367,7 +370,7 @@ public class PlayerFiringController : MonoBehaviour
                         if (bulletsPrefab != null && FeedbackManager.Instance != null)
                         {
                             // Instantiate a projectile without any spread applied.
-                            Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, new Quaternion()).GetComponent<Projectile>();
+                            Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, PlayerManager.ArmTransform.rotation).GetComponent<Projectile>();
                             newProjectile.speed = currentProjectileSpeed;
                             newProjectile.type = CurrentWeapon;
                             newProjectile.visualFeedbackLifetime = FeedbackManager.Instance.BazookaDestructionFeedbackLifetime;
@@ -391,7 +394,6 @@ public class PlayerFiringController : MonoBehaviour
             // Trigger feedbacks
             if (FeedbackManager.Instance != null)
             {
-                FeedbackManager.Instance.DisplayMuzzleFlash(PlayerManager);
                 FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);
                 FeedbackManager.Instance.PlayFiringSound(CurrentWeapon);
                 FeedbackManager.Instance.ShakeScreen(CurrentWeapon);
@@ -424,7 +426,7 @@ public class PlayerFiringController : MonoBehaviour
                     }
                     firingTimer = 1 / currentFirerate;
                     // Play out of ammo audio feedback.
-                    if (FeedbackManager.Instance != null)           FeedbackManager.Instance.PlayOutOfAmmoSound();          else Debug.LogWarning("Variable not set up!");
+                    if (FeedbackManager.Instance != null)           FeedbackManager.Instance.DisplayOutOfAmmoFeedbacks(gameObject);          else Debug.LogWarning("Variable not set up!");
                 }
             }
 
@@ -459,14 +461,29 @@ public class PlayerFiringController : MonoBehaviour
                     case MinigunStage.STOPPED:
                         {
                             // Switch to pistol if we're out of ammo.
-                            CurrentWeapon = Weapon.PISTOL;
+                            if (CurrentAmmo <= 0)
+                            {
+                                CurrentWeapon = Weapon.PISTOL;
+                            }
                         }
                         break;
                 }
             }
-            else // Switch to pistol if we're out of ammo.
+            else if (CurrentAmmo <= 0) // Switch to pistol if we're out of ammo.
             {
                 CurrentWeapon = Weapon.PISTOL;
+            }
+        }
+
+        if (CurrentWeapon != Weapon.MINIGUN)
+        {
+            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateMuzzleFlash(PlayerManager);          else Debug.LogWarning("Variable not set!");
+        }
+        else
+        {
+            if (CurrentMinigunStage != MinigunStage.SPINNING_UP) // Prevents the muzzle flash from being displayed during spinup
+            {
+                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.UpdateMuzzleFlash(PlayerManager);          else Debug.LogWarning("Variable not set!");
             }
         }
     }

@@ -22,6 +22,7 @@ public class AmmoLeftTextController : MonoBehaviour
         this.verticalOffset = verticalOffset;
 
         transform.SetParent(parent, false);
+        transform.position = target.position + new Vector3(horizontalOffset, verticalOffset, 0);
 
         TMP_Text text = GetComponent<TMP_Text>();
         text.text = ammoLeft;
@@ -37,10 +38,4 @@ public class AmmoLeftTextController : MonoBehaviour
 
         StartCoroutine(SelfDestroy(lifetime));
     }
-
-    private void FixedUpdate()
-    {
-        transform.position = target.position + new Vector3(horizontalOffset, verticalOffset, 0);
-    }
-
 }

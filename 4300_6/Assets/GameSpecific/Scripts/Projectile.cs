@@ -35,7 +35,13 @@ public class Projectile : MonoBehaviour
         if (bulletCollider != null)             bulletCollider.enabled = false;                                                                 else Debug.LogWarning("Variable not set up!");
         if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayBulletDestruction(type, spriteRenderer);                        else Debug.LogWarning("Variable not set up!");
 
+        // debug
+        Debug.Log("Starting to destroy bullet!");
+
         yield return new WaitForSeconds(visualFeedbackLifetime);
+
+        // debug
+        Debug.Log("Bullet destroyed!");
 
         Destroy(gameObject);
     }
@@ -104,8 +110,8 @@ public class Projectile : MonoBehaviour
         {
             if (!isPlayingDestructionAnimation) // Not currently self destroying
             {
-                // Apply sinusoidal rotation. Note: Mathf.Cos(2*x*Mathf.PI + Mathf.PI/2) is a cos function with a frequency of 1[Hz], an amplitude of 1, whose incept is at 0[y] and that starts off by going into the negatives.
-                transform.rotation *= Quaternion.Euler(0,0, Mathf.Cos(2*x*Mathf.PI + Mathf.PI/2) * rocketRotationPerFrameAmplitude);
+                // Apply sinusoidal rotation. Note: Mathf.Cos(2*x*Mathf.PI + Mathf.PI) is a cos function with a frequency of 1[Hz], an amplitude of 1, whose incept is at -1[y].
+                transform.rotation *= Quaternion.Euler(0,0, Mathf.Cos(2*x*Mathf.PI + Mathf.PI) * rocketRotationPerFrameAmplitude);
 
                 // Move the projectile.
                 if (bulletRigidbody2D != null)          bulletRigidbody2D.velocity = transform.right * speed;           else Debug.LogWarning("Variable not set up!");

@@ -23,6 +23,7 @@ public class FeedbackManager : MonoBehaviour
     [SerializeField] float hitAnimationDuration = 0.3f;
     [SerializeField] float parachuteDeployementTime = 0.2f;
     [SerializeField] float _stunEffectVerticalOffset = 0.6f;
+    [SerializeField] float muzzleFlashDuration = 0.3f;
 
     // References
     [SerializeField] Sprite[] weaponSprites = new Sprite[(int)Weapon.MINIGUN + 1];
@@ -37,6 +38,7 @@ public class FeedbackManager : MonoBehaviour
     SpriteRenderer[] playerHeadSpriteRenderers = new SpriteRenderer[2];
     TMP_Text[] livesText = new TMP_Text[2];
     Image[] healthBarImages = new Image[2];
+    GameObject floatingTextFeedbackUI = null;
 
     // Prefabs
     [SerializeField] GameObject stunEffectPrefab = null;
@@ -52,36 +54,22 @@ public class FeedbackManager : MonoBehaviour
 
     // Private variables
     static FeedbackManager _instance = null;
-    bool[] isSwitchingMuzzleFlash = new bool[2];
+    float[] muzzleFlashTimer = new float[2];
     float[] parachuteDeployementTimer = new float[2];
     #endregion
 
     // Public methods
     #region Public methods
-    public void DisplayMuzzleFlash(PlayerManager caller)
-    {
-        if (caller.TryingToFire && caller.CurrentAmmo > 0)
-        {
-            if (caller.tag == "Player1")
-            {
-                StartCoroutine(SwitchMuzzleFlashSprite(caller.WeaponsData[(int)caller.CurrentWeapon].firerate, 0));
-            }
-            else
-            {
-                StartCoroutine(SwitchMuzzleFlashSprite(caller.WeaponsData[(int)caller.CurrentWeapon].firerate, 1));
-            }
-        }
-    }
     public void DisplayStunEffect(GameObject caller, float duration)
     {
-        StunEffectController newStunEffect = Instantiate(stunEffectPrefab).GetComponent<StunEffectController>();
+        StunEffectController newStunEffect = Instantiate(stunEffectPrefab, caller.transform.position + new Vector3(0,StunEffectVerticalOffset,0), new Quaternion()).GetComponent<StunEffectController>();
         newStunEffect.target = caller.transform;
         newStunEffect.lifetime = duration;
         newStunEffect.verticalOffset = StunEffectVerticalOffset;
     }
     public void DisplayAmmoLeft(GameObject caller, string ammoLeft, Color color, float lifetime)
     {
-        Instantiate(ammoLeftPrefab).GetComponent<AmmoLeftTextController>().Init(gameObject.transform, caller.transform, outOfAmmoFeedback_horizontalOffset, outOfAmmoFeedback_verticalOffset, ammoLeft, color, outOfAmmoTextSize_words, outOfAmmoTextSize_numbers, lifetime);
+        Instantiate(ammoLeftPrefab).GetComponent<AmmoLeftTextController>().Init(floatingTextFeedbackUI.transform, caller.transform, outOfAmmoFeedback_horizontalOffset, outOfAmmoFeedback_verticalOffset, ammoLeft, color, outOfAmmoTextSize_words, outOfAmmoTextSize_numbers, lifetime);
     }
     public void DisplayHit(GameObject caller)
     {
@@ -156,6 +144,7 @@ public class FeedbackManager : MonoBehaviour
                     break;
                 case PlayerFiringController.MinigunStage.SLOWING_DOWN:
                     {
+                        SoundManager.Instance.StopSound("minigun_fire");
                         SoundManager.Instance.PlaySound("minigun_slowdown");
                     }
                     break;
@@ -163,9 +152,10 @@ public class FeedbackManager : MonoBehaviour
         }
 
     }
-    public void PlayOutOfAmmoSound()
+    public void DisplayOutOfAmmoFeedbacks(GameObject caller)
     {
         if (SoundManager.Instance != null)          SoundManager.Instance.PlayOutOfAmmoSound();             else Debug.LogWarning("Variable not set up!");
+        DisplayAmmoLeft(caller, "*Clack!*", Color.black, 1f);
     }
     public void ToggleParachute(PlayerManager caller)
     {
@@ -255,30 +245,48 @@ public class FeedbackManager : MonoBehaviour
             healthBarImages[1].fillAmount = health;
         }
     }
+    public void UpdateMuzzleFlash(PlayerManager caller)
+    {
+        int player;
+        if (caller.tag == "Player1")
+        {
+            player = 0;
+        }
+        else
+        {
+            player = 1;
+        }
+
+        if (caller.TryingToFire && caller.CurrentAmmo > 0)
+        {
+            // Set muzzle flash timer to start counting down since we're firing bullets that we have.
+            muzzleFlashTimer[player] = muzzleFlashDuration;
+
+            // Switch sprite if it's the first run of this function during this firing session.
+            if (muzzleFlashTimer[player] > 0)
+            {
+                if (muzzleFlashSpriteRenderers[player].sprite == muzzleFlashSprites[0])
+                {
+                    muzzleFlashSpriteRenderers[player].sprite = muzzleFlashSprites[1];
+                }
+            }
+        }
+        else // If we're not trying to fire the ammo we have or if we're out of ammo.
+        {
+            // Let the timer run out, then switch sprite back to blank sprite.
+            if (muzzleFlashTimer[player] <= 0)
+            {
+                if (muzzleFlashSpriteRenderers[player].sprite == muzzleFlashSprites[1])
+                {
+                    muzzleFlashSpriteRenderers[player].sprite = muzzleFlashSprites[0];
+                }
+            }
+        }
+    }
     #endregion
 
     // Private methods
     #region Private methods
-    IEnumerator SwitchMuzzleFlashSprite(float frequency, int player)
-    {
-        isSwitchingMuzzleFlash[player] = true;
-
-        if (muzzleFlashSpriteRenderers[0].sprite == muzzleFlashSprites[1])
-        {
-            muzzleFlashSpriteRenderers[0].sprite = muzzleFlashSprites[2];
-        }
-        else // If it's sprite n° 2 or a blank sprite.
-        {
-            muzzleFlashSpriteRenderers[0].sprite = muzzleFlashSprites[1];
-        }
-
-        yield return new WaitForSeconds(1/frequency);
-
-        // Reset sprite to blank.
-        muzzleFlashSpriteRenderers[0].sprite = muzzleFlashSprites[0];
-
-        isSwitchingMuzzleFlash[player] = false;
-    }
     IEnumerator DisplayHurtHead(int player)
     {
         playerHeadSpriteRenderers[player].sprite = playerHeadSprites[1];
@@ -304,6 +312,7 @@ public class FeedbackManager : MonoBehaviour
         muzzleFlashSpriteRenderers[1] = player2.muzzleFlashSpriteRenderer;
         playerHeadSpriteRenderers[0] = player1.headSpriteRenderer;
         playerHeadSpriteRenderers[1] = player2.headSpriteRenderer;
+        floatingTextFeedbackUI = GameObject.FindGameObjectWithTag("FloatingText_Canvas");
 
     }
     private void Start()
@@ -313,6 +322,19 @@ public class FeedbackManager : MonoBehaviour
         livesText[1] = ui.livesText_player2;
         healthBarImages[0] = ui.healthBar_player1;
         healthBarImages[1] = ui.healthBar_player2;
+
+        // Hide muzzle flash upon start.
+        foreach (var item in muzzleFlashSpriteRenderers)
+        {
+            item.sprite = muzzleFlashSprites[0];
+        }
+    }
+    private void Update()
+    {
+        for (int i = 0; i < muzzleFlashTimer.Length; i++)
+        {
+            muzzleFlashTimer[i] -= Time.deltaTime;
+        }
     }
     #endregion
 

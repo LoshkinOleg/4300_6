@@ -31,20 +31,12 @@ public class ScreenShake : MonoBehaviour
         {
             if (amplitudeNeedsResetting)
             {
-                vCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 1;
-                vCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = 1;
+                vCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 0;
+                vCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = 0;
                 amplitudeNeedsResetting = false;
             }
         }
 
         time -= Time.fixedDeltaTime;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            ShakeScreen(2);
-        }
     }
 }

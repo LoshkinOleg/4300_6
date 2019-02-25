@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class CatridgeDestroyer : MonoBehaviour
 {
-    private void OnCollisionEnter2D(Collision2D collision)
+    [SerializeField] float lifetime = 1f;
+
+    IEnumerator SelfDestroy()
     {
+        yield return new WaitForSeconds(lifetime);
         Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        StartCoroutine(SelfDestroy());
     }
 }

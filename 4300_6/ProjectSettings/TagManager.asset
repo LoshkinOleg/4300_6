@@ -12,6 +12,7 @@ TagManager:
   - Player1Projectile
   - FloatingText_Canvas
   - HPandLivesUI
+  - Catridge
   layers:
   - Default
   - TransparentFX
