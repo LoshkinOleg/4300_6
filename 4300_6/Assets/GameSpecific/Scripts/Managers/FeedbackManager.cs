@@ -55,7 +55,7 @@ public class FeedbackManager : MonoBehaviour
     // Private variables
     static FeedbackManager _instance = null;
     float[] muzzleFlashTimer = new float[2];
-    float[] parachuteDeployementTimer = new float[2];
+    // float[] parachuteDeployementTimer = new float[2];
     #endregion
 
     // Public methods
@@ -172,9 +172,10 @@ public class FeedbackManager : MonoBehaviour
         if (parachutesSpriteRenderers[player].sprite == parachuteSprites[0]) // Parachute closed
         {
             parachutesSpriteRenderers[player].sprite = parachuteSprites[1];
-            parachuteDeployementTimer[player] = parachuteDeployementTime;
+            StartCoroutine(DisplayParachuteSpriteAfterSeconds(parachutesSpriteRenderers[player], parachuteSprites[2]));
+            // parachuteDeployementTimer[player] = parachuteDeployementTime;
         }
-        else if (parachutesSpriteRenderers[player].sprite == parachuteSprites[1]) // In transition
+        /*else if (parachutesSpriteRenderers[player].sprite == parachuteSprites[1]) // In transition
         {
             if (parachuteDeployementTimer[player] < 0)
             {
@@ -187,11 +188,12 @@ public class FeedbackManager : MonoBehaviour
                     parachutesSpriteRenderers[player].sprite = parachuteSprites[2];
                 }
             }
-        }
+        }*/
         else // Parachute open
         {
             parachutesSpriteRenderers[player].sprite = parachuteSprites[1];
-            parachuteDeployementTimer[player] = parachuteDeployementTime;
+            StartCoroutine(DisplayParachuteSpriteAfterSeconds(parachutesSpriteRenderers[player], parachuteSprites[0]));
+            // parachuteDeployementTimer[player] = parachuteDeployementTime;
         }
     }
     public void InstantiateWeaponCatridge(GameObject caller, Weapon type)
@@ -257,7 +259,7 @@ public class FeedbackManager : MonoBehaviour
             player = 1;
         }
 
-        if (caller.TryingToFire && caller.CurrentAmmo > 0)
+        if (caller.TryingToFire && caller.CurrentAmmo > 0 && caller.HasRecentlyShot)
         {
             // Set muzzle flash timer to start counting down since we're firing bullets that we have.
             muzzleFlashTimer[player] = muzzleFlashDuration;
@@ -295,6 +297,11 @@ public class FeedbackManager : MonoBehaviour
 
         playerHeadSpriteRenderers[player].sprite = playerHeadSprites[0];
     }
+    IEnumerator DisplayParachuteSpriteAfterSeconds(SpriteRenderer renderer, Sprite sprite)
+    {
+        yield return new WaitForSeconds(parachuteDeployementTime);
+        renderer.sprite = sprite;
+    }
     #endregion
 
     // Inherited methods
@@ -328,6 +335,11 @@ public class FeedbackManager : MonoBehaviour
         {
             item.sprite = muzzleFlashSprites[0];
         }
+        // Hide parachutes upon start.
+        foreach (var item in parachutesSpriteRenderers)
+        {
+            item.sprite = parachuteSprites[0];
+        }
     }
     private void Update()
     {
@@ -335,6 +347,11 @@ public class FeedbackManager : MonoBehaviour
         {
             muzzleFlashTimer[i] -= Time.deltaTime;
         }
+        /*
+        for (int i = 0; i < parachuteDeployementTimer.Length; i++)
+        {
+            parachuteDeployementTimer[i] -= Time.deltaTime;
+        }*/
     }
     #endregion
 

@@ -18,6 +18,7 @@ public class PlayerStunController : MonoBehaviour
     // Private variables
     float _stunTimer;
     float _stunOpportunityTimer;
+    float defaultDrag;
     #endregion
 
     // Public properties
@@ -76,7 +77,7 @@ public class PlayerStunController : MonoBehaviour
     }
     public void Init()
     {
-
+        defaultDrag = PlayerManager.LinearDrag;
     }
     #endregion
 
@@ -105,7 +106,7 @@ public class PlayerStunController : MonoBehaviour
             if (Mathf.Abs(PlayerManager.Gravity) != 2)
             {
                 PlayerManager.ResetGravity();
-                PlayerManager.LinearDrag = 1f; // Reset drag
+                PlayerManager.LinearDrag = defaultDrag; // Reset drag
             }
         }
 

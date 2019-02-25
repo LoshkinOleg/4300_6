@@ -13,6 +13,8 @@ TagManager:
   - FloatingText_Canvas
   - HPandLivesUI
   - Catridge
+  - Player1Shield
+  - Player2Shield
   layers:
   - Default
   - TransparentFX

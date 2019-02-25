@@ -35,13 +35,7 @@ public class Projectile : MonoBehaviour
         if (bulletCollider != null)             bulletCollider.enabled = false;                                                                 else Debug.LogWarning("Variable not set up!");
         if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayBulletDestruction(type, spriteRenderer);                        else Debug.LogWarning("Variable not set up!");
 
-        // debug
-        Debug.Log("Starting to destroy bullet!");
-
         yield return new WaitForSeconds(visualFeedbackLifetime);
-
-        // debug
-        Debug.Log("Bullet destroyed!");
 
         Destroy(gameObject);
     }
@@ -70,38 +64,47 @@ public class Projectile : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (type != Weapon.BAZOOKA && type != Weapon.SNIPER)
+        string tag = collision.gameObject.tag;
+        
+        if ((tag == "Player1Shield" && gameObject.tag == "Player1Projectile") || (tag == "Player2Shield" && gameObject.tag == "Player2Projectile"))
         {
-            if (collision.gameObject.tag == "Player1")
-            {
-                if (GameManager.Instance != null)           GameManager.Instance.Player1.ProjectileHit(gameObject, type);           else Debug.LogWarning("Variable not set up!");
-                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHit(collision.gameObject);  else Debug.LogWarning("Variable not set up!");
-            }
-            else if (collision.gameObject.tag == "Player2")
-            {
-                if (GameManager.Instance != null)           GameManager.Instance.Player2.ProjectileHit(gameObject, type);           else Debug.LogWarning("Variable not set up!");
-                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHit(collision.gameObject);  else Debug.LogWarning("Variable not set up!");
-            }
+            return;
         }
         else
         {
-            // It is a rocket.
-            if (Vector3.Distance(GameManager.Instance.Player1.transform.position, transform.position) < explosionRadius)
+            if (type != Weapon.BAZOOKA && type != Weapon.SNIPER)
             {
-                if (GameManager.Instance != null)           GameManager.Instance.Player1.ExplosionHit(transform.position);                              else Debug.LogWarning("Variable not set up!");
-                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHit(GameManager.Instance.Player1.gameObject);   else Debug.LogWarning("Variable not set up!");
+                if (tag == "Player1")
+                {
+                    if (GameManager.Instance != null) GameManager.Instance.Player1.ProjectileHit(gameObject, type); else Debug.LogWarning("Variable not set up!");
+                    if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayHit(collision.gameObject); else Debug.LogWarning("Variable not set up!");
+                }
+                else if (tag == "Player2")
+                {
+                    if (GameManager.Instance != null) GameManager.Instance.Player2.ProjectileHit(gameObject, type); else Debug.LogWarning("Variable not set up!");
+                    if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayHit(collision.gameObject); else Debug.LogWarning("Variable not set up!");
+                }
             }
-            if (Vector3.Distance(GameManager.Instance.Player2.transform.position, transform.position) < explosionRadius)
+            else
             {
-                if (GameManager.Instance != null)           GameManager.Instance.Player2.ExplosionHit(transform.position);                              else Debug.LogWarning("Variable not set up!");
-                if (FeedbackManager.Instance != null)       FeedbackManager.Instance.DisplayHit(GameManager.Instance.Player2.gameObject);   else Debug.LogWarning("Variable not set up!");
+                // It is a rocket.
+                if (Vector3.Distance(GameManager.Instance.Player1.transform.position, transform.position) < explosionRadius)
+                {
+                    if (GameManager.Instance != null) GameManager.Instance.Player1.ExplosionHit(transform.position); else Debug.LogWarning("Variable not set up!");
+                    if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayHit(GameManager.Instance.Player1.gameObject); else Debug.LogWarning("Variable not set up!");
+                }
+                if (Vector3.Distance(GameManager.Instance.Player2.transform.position, transform.position) < explosionRadius)
+                {
+                    if (GameManager.Instance != null) GameManager.Instance.Player2.ExplosionHit(transform.position); else Debug.LogWarning("Variable not set up!");
+                    if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayHit(GameManager.Instance.Player2.gameObject); else Debug.LogWarning("Variable not set up!");
+                }
+                if (FeedbackManager.Instance != null) FeedbackManager.Instance.RocketFeedback(); else Debug.LogWarning("Variable not set up!");
             }
-            if (FeedbackManager.Instance != null)           FeedbackManager.Instance.RocketFeedback();                              else Debug.LogWarning("Variable not set up!");
-        }
 
-        if (!isPlayingDestructionAnimation)
-        {
-            StartCoroutine(DestroyBullet());
+            if (!isPlayingDestructionAnimation)
+            {
+                StartCoroutine(DestroyBullet());
+            }
         }
     }
     private void FixedUpdate()

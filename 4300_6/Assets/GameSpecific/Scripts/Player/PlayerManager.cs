@@ -152,6 +152,20 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
+    public bool HasRecentlyShot
+    {
+        get
+        {
+            if (firingController != null)
+            {
+                return firingController.HasRecentlyShot;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
     // Animation and Orientation controller
     public Transform ArmTransform
     {

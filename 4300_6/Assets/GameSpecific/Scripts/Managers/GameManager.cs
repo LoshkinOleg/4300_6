@@ -71,19 +71,13 @@ public class GameManager : MonoBehaviour
                 break;
             case "Level1":
                 {
-                    if (PickupManager.instance == null && CrateManager.instance == null)
+                    if (PickupManager.instance == null)
                     {
                         Instantiate(level1Managers);
                     }
-                    else if ((PickupManager.instance != null && CrateManager.instance == null) || (PickupManager.instance == null && CrateManager.instance != null))
-                    {
-                        Debug.LogError("GameManager.cs: Reference to one of the managers is missing: PickupManager: " + PickupManager.instance + " ; CrateManager: " + CrateManager.instance);
-                    }
 
                     _player1 = GameObject.FindGameObjectWithTag("Player1").GetComponent<PlayerManager>();
-                    //_player1RB = _player1.gameObject.GetComponent<Rigidbody2D>();
                     _player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerManager>();
-                    //_player2RB = _player2.gameObject.GetComponent<Rigidbody2D>();
                     _bottomBoundsCollider = GameObject.FindGameObjectWithTag("BottomBounds").GetComponent<BoxCollider2D>();
                     _screenShake = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<ScreenShake>();
                 }
@@ -100,6 +94,8 @@ public class GameManager : MonoBehaviour
                     {
                         winnerText.text = "Player 1!";
                     }
+
+                    if (SoundManager.Instance != null)          SoundManager.Instance.StopAllSounds();          else Debug.LogWarning("Variable not set!");
                 }
                 break;
             default:

@@ -95,7 +95,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8639902279329764571
 Transform:
   m_ObjectHideFlags: 0
@@ -513,7 +513,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b9c6d6af2a10cd4bb2823b9997687e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragForce: 0.1
   _playerSpeedLimit: 5
   screenEdgeBuffer: 1
   bufferForceMultiplier: 35
@@ -559,6 +558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerManager: {fileID: 0}
+  hasRecentlyShotDuration: 0.5
   bulletsPrefab: {fileID: 4222088480428699918, guid: 0ead47d79ae99d848b24e986e11fc71d,
     type: 3}
 --- !u!114 &3520650665117570390

@@ -7,7 +7,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
-    [SerializeField] float dragForce = 0.1f;
+    // [SerializeField] float dragForce = 0.1f;
     [SerializeField] float _playerSpeedLimit = 5;
     [SerializeField] float screenEdgeBuffer = 1f;
     [SerializeField] float bufferForceMultiplier = 35f;
@@ -215,36 +215,18 @@ public class PlayerPhysicsHandler : MonoBehaviour
 
     // Private methods
     #region Private methods
-    void ApplyDrag()
-    {
-        if (PlayerManager.HorizontalInput == 0)
-        {
-            if (playerRigidbody != null)
-            {
-                if (Mathf.Abs(playerRigidbody.velocity.x) > 0.05f) // Applies drag if the horizontal speed is greater than 0.05f
-                {
-                    playerRigidbody.velocity += new Vector2(-Mathf.Sign(playerRigidbody.velocity.x) * dragForce, 0);
-                }
-                else // Stops all horizontal movement if the speed if smaller than 0.05f
-                {
-                    playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Variable not set!");
-            }
-        }
-    }
     void ApplySpeedLimit()
     {
         if (playerRigidbody != null)
         {
-            float velocityFloat = playerRigidbody.velocity.magnitude;
-
-            if (velocityFloat > _playerSpeedLimit)
+            if (PlayerManager.StunOpportunityTimer <= 0 && !PlayerManager.HasRecentlyShot)
             {
-                playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) * _playerSpeedLimit;
+                float velocityFloat = playerRigidbody.velocity.magnitude;
+
+                if (velocityFloat > _playerSpeedLimit)
+                {
+                    playerRigidbody.velocity = (Vector2)Vector3.Normalize(playerRigidbody.velocity) * _playerSpeedLimit;
+                }
             }
         }
         else
@@ -282,8 +264,7 @@ public class PlayerPhysicsHandler : MonoBehaviour
     private void FixedUpdate()
     {
         ApplyBufferForces();
-        // ApplySpeedLimit();
-        // ApplyDrag();
+        ApplySpeedLimit();
     }
     #endregion
 }

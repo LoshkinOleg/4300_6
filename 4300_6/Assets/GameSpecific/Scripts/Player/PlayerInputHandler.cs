@@ -93,6 +93,8 @@ public class PlayerInputHandler : MonoBehaviour
                 _verticalInput = 0;
                 _aimingHorizontalInput = 0;
                 _aimingVerticalInput = 0;
+                _tryingToFire = false;
+                _tryingToOpenParachute = false;
             }
             else
             {

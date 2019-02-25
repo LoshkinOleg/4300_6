@@ -42,6 +42,13 @@ public class SoundManager : MonoBehaviour
     {
         sounds[name].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
     }
+    public void StopAllSounds()
+    {
+        foreach (var item in sounds)
+        {
+            item.Value.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
+    }
     #endregion
 
     // Inherited methods

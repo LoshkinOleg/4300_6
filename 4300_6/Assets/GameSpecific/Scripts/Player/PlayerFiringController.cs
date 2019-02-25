@@ -18,6 +18,9 @@ public class PlayerFiringController : MonoBehaviour
     // Set up variables
     [HideInInspector] public PlayerManager _playerManager = null;
 
+    // Inspector variables
+    [SerializeField] float hasRecentlyShotDuration = 0.5f;
+
     // Prefabs
     [SerializeField] GameObject bulletsPrefab = null;
     
@@ -30,6 +33,8 @@ public class PlayerFiringController : MonoBehaviour
     float currentFiringKnockback;
     int _currentAmmo;
     float firingTimer;
+    bool _hasRecentlyShot;
+    float hasRecentlyShotTimer;
     // Speedup mechanic
     bool _isSpeedup;
     float bulletsSpeedupTimer;
@@ -127,6 +132,13 @@ public class PlayerFiringController : MonoBehaviour
             }
 
             _currentAmmo = value;
+        }
+    }
+    public bool HasRecentlyShot
+    {
+        get
+        {
+            return _hasRecentlyShot;
         }
     }
     #endregion
@@ -338,7 +350,7 @@ public class PlayerFiringController : MonoBehaviour
                         if (bulletsPrefab != null && FeedbackManager.Instance != null)
                         {
                             // Instantiate sniper firing FX
-                            Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, new Quaternion()).GetComponent<Projectile>();
+                            Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, PlayerManager.ArmTransform.rotation).GetComponent<Projectile>();
                             newProjectile.speed = 0;
                             newProjectile.type = CurrentWeapon;
                             newProjectile.visualFeedbackLifetime = FeedbackManager.Instance.SniperDestructionFeedbackLifetime;
@@ -388,6 +400,8 @@ public class PlayerFiringController : MonoBehaviour
             CurrentAmmo--;
 
             // Apply firing knockback
+            _hasRecentlyShot = true;
+            hasRecentlyShotTimer = hasRecentlyShotDuration;
             Vector2 direction = Vector3.Normalize(-PlayerManager.ArmTransform.transform.right);
             PlayerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
@@ -475,6 +489,7 @@ public class PlayerFiringController : MonoBehaviour
             }
         }
 
+        // Update muzzle flash sprite.
         if (CurrentWeapon != Weapon.MINIGUN)
         {
             if (FeedbackManager.Instance != null)           FeedbackManager.Instance.UpdateMuzzleFlash(PlayerManager);          else Debug.LogWarning("Variable not set!");
@@ -498,6 +513,7 @@ public class PlayerFiringController : MonoBehaviour
         // Update timers and timer related variables.
         firingTimer -= Time.deltaTime;
         bulletsSpeedupTimer -= Time.deltaTime;
+        hasRecentlyShotTimer -= Time.deltaTime;
         if (CurrentMinigunStage == MinigunStage.SPINNING_UP)
         {
             spinupTimer -= Time.deltaTime;
@@ -513,6 +529,11 @@ public class PlayerFiringController : MonoBehaviour
             {
                 IsSpeedup = false;
             }
+        }
+
+        if (hasRecentlyShotTimer < 0)
+        {
+            _hasRecentlyShot = false;
         }
     }
     #endregion
