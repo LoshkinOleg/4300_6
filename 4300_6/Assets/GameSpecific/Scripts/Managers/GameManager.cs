@@ -18,16 +18,12 @@ public class GameManager : MonoBehaviour
     static GameManager _instance = null;
     PlayerManager _player1 = null;
     PlayerManager _player2 = null;
-    //Rigidbody2D _player1RB = null;
-    //Rigidbody2D _player2RB = null;
     ScreenShake _screenShake = null;
 
     // Public properties
     public static GameManager Instance => _instance;
     public PlayerManager Player1 => _player1;
     public PlayerManager Player2 => _player2;
-    //public Rigidbody2D Player1RB => _player1RB;
-    //public Rigidbody2D Player2RB => _player2RB;
     public float GameViewHorizontalDistanceInMeters => _gameViewHorizontalDistanceInMeters;
     public float GameViewVerticalDistanceInMeters => _gameViewVerticalDistanceInMeters;
     public Vector3 AveragePlayerPosition => _averagePlayerPosition;
@@ -153,6 +149,14 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         InputManager.OnActiveDeviceChanged += AssignADevice; // Putting this in Start should hopefully avoid errors.
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
     #endregion
 }

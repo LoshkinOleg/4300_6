@@ -47,6 +47,8 @@ public class PlayerFiringController : MonoBehaviour
     float spinupTime;
     float slowdownTimer;
     float slowdownTime;
+    // Reload related
+    bool isPlayingReloadingSound;
     #endregion
 
     // Public properties
@@ -226,8 +228,16 @@ public class PlayerFiringController : MonoBehaviour
     }
     public void Init()
     {
-        spinupTime = SoundManager.Instance.minigunSpinupTime;
-        slowdownTime = SoundManager.Instance.minigunSlowdownTime;
+        if (SoundManager.Instance != null)
+        {
+            spinupTime = SoundManager.Instance.minigunSpinupTime;
+            slowdownTime = SoundManager.Instance.minigunSlowdownTime;
+        }
+        else
+        {
+            Debug.LogWarning("Variable not set!");
+        }
+
     }
     #endregion
 
@@ -400,8 +410,12 @@ public class PlayerFiringController : MonoBehaviour
             CurrentAmmo--;
 
             // Apply firing knockback
-            _hasRecentlyShot = true;
-            hasRecentlyShotTimer = hasRecentlyShotDuration;
+            if (CurrentWeapon != Weapon.PISTOL && CurrentWeapon != Weapon.MINIGUN)
+            {
+                // Remove speed limit restriction temporarily so that the knockback can function properly. Don't remove the restriction for fast firing weapons though.
+                _hasRecentlyShot = true;
+                hasRecentlyShotTimer = hasRecentlyShotDuration;
+            }
             Vector2 direction = Vector3.Normalize(-PlayerManager.ArmTransform.transform.right);
             PlayerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
@@ -522,7 +536,6 @@ public class PlayerFiringController : MonoBehaviour
         {
             slowdownTimer -= Time.deltaTime;
         }
-
         if (bulletsSpeedupTimer < 0)
         {
             if (IsSpeedup)
@@ -530,10 +543,40 @@ public class PlayerFiringController : MonoBehaviour
                 IsSpeedup = false;
             }
         }
-
         if (hasRecentlyShotTimer < 0)
         {
             _hasRecentlyShot = false;
+        }
+
+
+        if (SoundManager.Instance != null)
+        {
+            if (firingTimer > 0 && firingTimer - SoundManager.Instance.reloadTime <= 0)
+            {
+                if (CurrentWeapon != Weapon.PISTOL && CurrentWeapon != Weapon.MINIGUN)
+                {
+                    if (!isPlayingReloadingSound)
+                    {
+                        isPlayingReloadingSound = true;
+                        if (FeedbackManager.Instance != null)
+                        {
+                            FeedbackManager.Instance.DisplayReloadingFeedbacks(PlayerManager);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Variable not set!");
+                        }
+                    }
+                }
+            }
+            else if (firingTimer < 0)
+            {
+                isPlayingReloadingSound = false;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Variable not set!");
         }
     }
     #endregion

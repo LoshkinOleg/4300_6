@@ -28,11 +28,12 @@ MonoBehaviour:
   - {fileID: 114017510601688016}
   - {fileID: 114855496267803220}
   - {fileID: 114214013657650894}
+  - {fileID: 114496743637608856}
   MasterBanks:
   - {fileID: 114633999199224158}
   StringsBanks:
   - {fileID: 114968974961322694}
-  stringsBankWriteTime: 636863666057351872
+  stringsBankWriteTime: 636867061755066575
   cacheVersion: 3
 --- !u!114 &114017510601688016
 MonoBehaviour:
@@ -718,6 +719,29 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 890
+--- !u!114 &114496743637608856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/shotgun_reloading
+  guid: 3c95acb776433e48825ce3ad1b889847
+  Banks:
+  - {fileID: 114633999199224158}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 691
 --- !u!114 &114502310400710094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -867,11 +891,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: C:\Users\Dante\Desktop\FinalProject\4300_7\FMODProject\TheParatroopersSounds\Build\Desktop\Master
     Bank.bank
-  lastModified: 636863666057301886
+  lastModified: 636867061755016589
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 206208
+    Value: 215616
   Exists: 1
 --- !u!114 &114649494268871502
 MonoBehaviour:
@@ -1292,9 +1316,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: C:\Users\Dante\Desktop\FinalProject\4300_7\FMODProject\TheParatroopersSounds\Build\Desktop\Master
     Bank.strings.bank
-  lastModified: 636863666057351872
+  lastModified: 636867061755066575
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 1248
+    Value: 1300
   Exists: 1

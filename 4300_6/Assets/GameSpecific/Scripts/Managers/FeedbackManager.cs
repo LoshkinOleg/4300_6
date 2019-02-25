@@ -24,6 +24,7 @@ public class FeedbackManager : MonoBehaviour
     [SerializeField] float parachuteDeployementTime = 0.2f;
     [SerializeField] float _stunEffectVerticalOffset = 0.6f;
     [SerializeField] float muzzleFlashDuration = 0.3f;
+    [SerializeField] float reloadSparkleLifetime = 0.3f;
 
     // References
     [SerializeField] Sprite[] weaponSprites = new Sprite[(int)Weapon.MINIGUN + 1];
@@ -32,10 +33,13 @@ public class FeedbackManager : MonoBehaviour
     [SerializeField] Sprite[] muzzleFlashSprites = new Sprite[3];
     [SerializeField] Sprite[] playerHeadSprites = new Sprite[2];
     [SerializeField] Sprite[] parachuteSprites = new Sprite[3];
+    [SerializeField] Sprite[] reloadSparkleSprite = new Sprite[2];
+    [SerializeField] Sprite[] reloadingAnimationSprites = new Sprite[(int)Weapon.MINIGUN + 1];
     SpriteRenderer[] parachutesSpriteRenderers = new SpriteRenderer[2];
-    SpriteRenderer[] weaponSpriteRenderers = new SpriteRenderer[2];
+    SpriteRenderer[] armsSpriteRenderers = new SpriteRenderer[2];
     SpriteRenderer[] muzzleFlashSpriteRenderers = new SpriteRenderer[2];
     SpriteRenderer[] playerHeadSpriteRenderers = new SpriteRenderer[2];
+    SpriteRenderer[] reloadSparkleSpriteRenderers = new SpriteRenderer[2];
     TMP_Text[] livesText = new TMP_Text[2];
     Image[] healthBarImages = new Image[2];
     GameObject floatingTextFeedbackUI = null;
@@ -55,7 +59,6 @@ public class FeedbackManager : MonoBehaviour
     // Private variables
     static FeedbackManager _instance = null;
     float[] muzzleFlashTimer = new float[2];
-    // float[] parachuteDeployementTimer = new float[2];
     #endregion
 
     // Public methods
@@ -89,6 +92,33 @@ public class FeedbackManager : MonoBehaviour
     public void DisplayAppropriateProjectile(Weapon type, SpriteRenderer renderer)
     {
         renderer.sprite = projectileSprites[(int)type];
+    }
+    public void DisplayReloadingFeedbacks(PlayerManager caller)
+    {
+        // Change arms to reloading sprites.
+        int player = caller.IsLeftPlayer ? 0 : 1;
+        switch (caller.CurrentWeapon)
+        {
+            case Weapon.SHOTGUN:
+                {
+                    armsSpriteRenderers[player].sprite = reloadingAnimationSprites[0];
+                }
+                break;
+            case Weapon.SNIPER:
+                {
+                    armsSpriteRenderers[player].sprite = reloadingAnimationSprites[1];
+                }
+                break;
+            case Weapon.BAZOOKA:
+                {
+                    armsSpriteRenderers[player].sprite = reloadingAnimationSprites[2];
+                }
+                break;
+        }
+
+        // Play sound and display reloading sparkle.
+        SoundManager.Instance.PlaySound("shotgun_reloading");
+        StartCoroutine(DisplayReloadingSparkleAndResetArms(caller));
     }
     public void PlayFiringSound(Weapon type)
     {
@@ -217,12 +247,12 @@ public class FeedbackManager : MonoBehaviour
         if (caller.tag == "Player1")
         {
             muzzleFlashSpriteRenderers[0].gameObject.transform.localPosition = muzzleFlashPositions[(int)weapon];
-            weaponSpriteRenderers[0].sprite = weaponSprites[(int)weapon];
+            armsSpriteRenderers[0].sprite = weaponSprites[(int)weapon];
         }
         else
         {
             muzzleFlashSpriteRenderers[1].gameObject.transform.localPosition = muzzleFlashPositions[(int)weapon];
-            weaponSpriteRenderers[1].sprite = weaponSprites[(int)weapon];
+            armsSpriteRenderers[1].sprite = weaponSprites[(int)weapon];
         }
     }
     public void UpdateLives(GameObject caller, int lives)
@@ -302,6 +332,31 @@ public class FeedbackManager : MonoBehaviour
         yield return new WaitForSeconds(parachuteDeployementTime);
         renderer.sprite = sprite;
     }
+    IEnumerator ResetReloadSparkle(SpriteRenderer renderer, Sprite sprite)
+    {
+        yield return new WaitForSeconds(reloadSparkleLifetime);
+        renderer.sprite = sprite;
+    }
+    IEnumerator DisplayReloadingSparkleAndResetArms(PlayerManager caller)
+    {
+        yield return new WaitForSeconds(SoundManager.Instance.reloadTime);
+
+        // Display reloading sparkle and start callback to reset it back to invisible after some time.
+        if (caller.IsLeftPlayer)
+        {
+            reloadSparkleSpriteRenderers[0].sprite = reloadSparkleSprite[1];
+            StartCoroutine(ResetReloadSparkle(reloadSparkleSpriteRenderers[0], reloadSparkleSprite[0]));
+        }
+        else
+        {
+            reloadSparkleSpriteRenderers[1].sprite = reloadSparkleSprite[1];
+            StartCoroutine(ResetReloadSparkle(reloadSparkleSpriteRenderers[1], reloadSparkleSprite[0]));
+        }
+
+        // Reset arms
+        int player = caller.IsLeftPlayer ? 0 : 1;
+        armsSpriteRenderers[player].sprite = weaponSprites[(int)caller.CurrentWeapon];
+    }
     #endregion
 
     // Inherited methods
@@ -313,12 +368,14 @@ public class FeedbackManager : MonoBehaviour
         PlayerManager player2 = GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerManager>();
         parachutesSpriteRenderers[0] = player1.parachuteSpriteRenderer;
         parachutesSpriteRenderers[1] = player2.parachuteSpriteRenderer;
-        weaponSpriteRenderers[0] = player1.weaponSpriteRenderer;
-        weaponSpriteRenderers[1] = player2.weaponSpriteRenderer;
+        armsSpriteRenderers[0] = player1.armsSpriteRenderer;
+        armsSpriteRenderers[1] = player2.armsSpriteRenderer;
         muzzleFlashSpriteRenderers[0] = player1.muzzleFlashSpriteRenderer;
         muzzleFlashSpriteRenderers[1] = player2.muzzleFlashSpriteRenderer;
         playerHeadSpriteRenderers[0] = player1.headSpriteRenderer;
         playerHeadSpriteRenderers[1] = player2.headSpriteRenderer;
+        reloadSparkleSpriteRenderers[0] = player1.reloadSparkleSpriteRenderer;
+        reloadSparkleSpriteRenderers[1] = player2.reloadSparkleSpriteRenderer;
         floatingTextFeedbackUI = GameObject.FindGameObjectWithTag("FloatingText_Canvas");
 
     }
@@ -347,11 +404,6 @@ public class FeedbackManager : MonoBehaviour
         {
             muzzleFlashTimer[i] -= Time.deltaTime;
         }
-        /*
-        for (int i = 0; i < parachuteDeployementTimer.Length; i++)
-        {
-            parachuteDeployementTimer[i] -= Time.deltaTime;
-        }*/
     }
     #endregion
 

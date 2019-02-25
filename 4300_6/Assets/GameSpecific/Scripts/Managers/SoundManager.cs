@@ -14,6 +14,7 @@ public class SoundManager : MonoBehaviour
     public float minigunSpinupTime => _minigunSpinupTime;
     public float minigunSlowdownTime => _minigunSlowdownTime;
     public float outOfAmmoTime => _outOfAmmoTime;
+    public float reloadTime => _reloadTime;
 
     // Private variables
     static SoundManager _instance = null;
@@ -22,6 +23,7 @@ public class SoundManager : MonoBehaviour
     float _minigunSlowdownTime;
     float _outOfAmmoTime;
     float outOfAmmoTimer;
+    float _reloadTime;
     #endregion
 
     // Public methods
@@ -53,11 +55,6 @@ public class SoundManager : MonoBehaviour
 
     // Inherited methods
     #region Inherited methods
-    private void Awake()
-    {
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
     private void OnDestroy()
     {
         foreach (var item in sounds)
@@ -65,8 +62,11 @@ public class SoundManager : MonoBehaviour
             item.Value.release();
         }
     }
-    private void Start()
+    private void Awake()
     {
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+
         for (int i = 0; i < paths.Length; i++)
         {
             sounds[paths[i].Remove(0,7)] = RuntimeManager.CreateInstance(paths[i]);
@@ -78,15 +78,19 @@ public class SoundManager : MonoBehaviour
 
         sounds["minigun_spinup"].getDescription(out description);
         description.getLength(out duration);
-        _minigunSpinupTime = duration / 1000;
+        _minigunSpinupTime = (float)duration / 1000f;
 
         sounds["minigun_slowdown"].getDescription(out description);
         description.getLength(out duration);
-        _minigunSlowdownTime = duration / 1000;
+        _minigunSlowdownTime = (float)duration / 1000f;
 
         sounds["out_of_ammo"].getDescription(out description);
         description.getLength(out duration);
-        _outOfAmmoTime = duration / 1000 + 0.5f;
+        _outOfAmmoTime = (float)duration / 1000f + 0.5f; // The 0.5f keeps the sound from looping the same 0.1 seconds constantly resulting in some very bad auditive feedback.
+
+        sounds["shotgun_reloading"].getDescription(out description);
+        description.getLength(out duration);
+        _reloadTime = (float)duration / 1000f;
     }
     private void Update()
     {

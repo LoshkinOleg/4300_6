@@ -131,6 +131,139 @@ public class PlayerInputHandler : MonoBehaviour
                 }
             }
         }
+        else
+        { // Keyboard controls
+            if (PlayerManager.IsLeftPlayer)
+            {
+                if (PlayerManager.StunTimer > 0)
+                {
+                    _horizontalInput = 0;
+                    _verticalInput = 0;
+                    _aimingHorizontalInput = 0;
+                    _aimingVerticalInput = 0;
+                    _tryingToFire = false;
+                    _tryingToOpenParachute = false;
+                }
+                else
+                {
+                    if (Input.GetKey(KeyCode.A))
+                    {
+                        _horizontalInput = -1;
+                    }
+                    else if (Input.GetKey(KeyCode.D))
+                    {
+                        _horizontalInput = 1;
+                    }
+                    else
+                    {
+                        _horizontalInput = 0;
+                    }
+                    if (Input.GetKey(KeyCode.W))
+                    {
+                        _aimingVerticalInput = 1;
+                    }
+                    else if (Input.GetKey(KeyCode.S))
+                    {
+                        _aimingVerticalInput = -1;
+                    }
+                    else
+                    {
+                        _aimingVerticalInput = 0;
+                    }
+
+                    // Handle parachute inputs toggling in applicable movement modes.
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        if (PlayerManager.CurrentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                        {
+                            TryingToOpenParachute = true;
+                        }
+                    }
+                    if (Input.GetKeyUp(KeyCode.Space))
+                    {
+                        if (PlayerManager.CurrentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                        {
+                            TryingToOpenParachute = false;
+                        }
+                    }
+
+                    // Handle firing inputs.
+                    if (Input.GetKeyDown(KeyCode.LeftControl))
+                    {
+                        _tryingToFire = true;
+                    }
+                    if (Input.GetKeyUp(KeyCode.LeftControl))
+                    {
+                        _tryingToFire = false;
+                    }
+                }
+            }
+            else
+            {
+                if (PlayerManager.StunTimer > 0)
+                {
+                    _horizontalInput = 0;
+                    _verticalInput = 0;
+                    _aimingHorizontalInput = 0;
+                    _aimingVerticalInput = 0;
+                    _tryingToFire = false;
+                    _tryingToOpenParachute = false;
+                }
+                else
+                {
+                    if (Input.GetKey(KeyCode.LeftArrow))
+                    {
+                        _horizontalInput = -1;
+                    }
+                    else if (Input.GetKey(KeyCode.RightArrow))
+                    {
+                        _horizontalInput = 1;
+                    }
+                    else
+                    {
+                        _horizontalInput = 0;
+                    }
+                    if (Input.GetKey(KeyCode.UpArrow))
+                    {
+                        _aimingVerticalInput = 1;
+                    }
+                    else if (Input.GetKey(KeyCode.DownArrow))
+                    {
+                        _aimingVerticalInput = -1;
+                    }
+                    else
+                    {
+                        _aimingVerticalInput = 0;
+                    }
+
+                    // Handle parachute inputs toggling in applicable movement modes.
+                    if (Input.GetKeyDown(KeyCode.Keypad0))
+                    {
+                        if (PlayerManager.CurrentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                        {
+                            TryingToOpenParachute = true;
+                        }
+                    }
+                    if (Input.GetKeyUp(KeyCode.Keypad0))
+                    {
+                        if (PlayerManager.CurrentMovementMode != PlayerMovementController.MovementMode.JETPACK)
+                        {
+                            TryingToOpenParachute = false;
+                        }
+                    }
+
+                    // Handle firing inputs.
+                    if (Input.GetKeyDown(KeyCode.KeypadPlus))
+                    {
+                        _tryingToFire = true;
+                    }
+                    if (Input.GetKeyUp(KeyCode.KeypadPlus))
+                    {
+                        _tryingToFire = false;
+                    }
+                }
+            }
+        }
     }
     #endregion
 

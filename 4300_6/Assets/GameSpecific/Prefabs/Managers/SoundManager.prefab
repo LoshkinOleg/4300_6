@@ -57,6 +57,7 @@ MonoBehaviour:
   - event:/player_hit
   - event:/shotgun_fire
   - event:/sniper_fire
+  - event:/shotgun_reloading
 --- !u!114 &8915974241945718233
 MonoBehaviour:
   m_ObjectHideFlags: 0

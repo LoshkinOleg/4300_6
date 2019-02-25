@@ -30,8 +30,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] WeaponData[] weaponsData = new WeaponData[(int)Weapon.MINIGUN + 1]; // 0: pistol, 1: shotgun, 2: sniper, 3: bazooka, 4: minigun
     public SpriteRenderer headSpriteRenderer = null;
     public SpriteRenderer parachuteSpriteRenderer = null;
-    public SpriteRenderer weaponSpriteRenderer = null;
+    public SpriteRenderer armsSpriteRenderer = null;
     public SpriteRenderer muzzleFlashSpriteRenderer = null;
+    public SpriteRenderer reloadSparkleSpriteRenderer = null;
 
     // Private variables
     float _health = 1;

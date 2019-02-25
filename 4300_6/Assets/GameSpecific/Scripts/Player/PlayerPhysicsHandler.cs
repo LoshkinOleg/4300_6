@@ -7,7 +7,6 @@ public class PlayerPhysicsHandler : MonoBehaviour
     // Attributes
     #region Attributes
     // Inspector variables
-    // [SerializeField] float dragForce = 0.1f;
     [SerializeField] float _playerSpeedLimit = 5;
     [SerializeField] float screenEdgeBuffer = 1f;
     [SerializeField] float bufferForceMultiplier = 35f;

@@ -129,6 +129,7 @@ MonoBehaviour:
   parachuteDeployementTime: 0.2
   _stunEffectVerticalOffset: 0.6
   muzzleFlashDuration: 0.3
+  reloadSparkleLifetime: 0.3
   weaponSprites:
   - {fileID: 21300000, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
   - {fileID: 21300002, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
@@ -158,6 +159,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
   - {fileID: 21300002, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
   - {fileID: 21300000, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
+  reloadSparkleSprite:
+  - {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
+  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
+  reloadingAnimationSprites:
+  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
+  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
+  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
+  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
+  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
   stunEffectPrefab: {fileID: 4393019113291355537, guid: 82abdfc48bf1d8643af2cb2538490e20,
     type: 3}
   catridgePrefabs:
