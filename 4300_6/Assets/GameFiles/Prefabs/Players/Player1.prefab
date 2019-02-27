@@ -479,6 +479,8 @@ GameObject:
   - component: {fileID: 1059125894382690669}
   - component: {fileID: 7294951321575141521}
   - component: {fileID: 3520650665117570390}
+  - component: {fileID: 6519716473086683122}
+  - component: {fileID: 3412155908828574073}
   m_Layer: 9
   m_Name: Player1
   m_TagString: Player1
@@ -554,17 +556,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isLeftPlayer: 1
   startingWeapon: 0
-  weaponsData:
+  _frontArmTransform: {fileID: 5149609634305365850}
+  _backArmTransform: {fileID: 3378503120185329881}
+  _firingAndReloadingFX_Transform: {fileID: 8221788827991801502}
+  _parachute_SpriteRenderer: {fileID: 8664007867377175912}
+  _frontArm_SpriteRenderer: {fileID: 3074605618154261513}
+  _backArm_SpriteRenderer: {fileID: 2102914195002567310}
+  _firingAndReloadingFX_SpriteRenderer: {fileID: 8303971960879997617}
+  _weaponsData:
   - {fileID: 11400000, guid: 00fecf7fd3db9284b9ae33e05cd101b3, type: 2}
   - {fileID: 11400000, guid: c8e07e9efb8d6f44db5e7ca0ebe6e93c, type: 2}
   - {fileID: 11400000, guid: 4d6f2db399baab6468003a7e86844b3a, type: 2}
   - {fileID: 11400000, guid: 38a8248eda039ce4382c7f7609636a4d, type: 2}
   - {fileID: 11400000, guid: 2518788aef5d3694b85918a423628eea, type: 2}
-  headSpriteRenderer: {fileID: 1698477133916682384}
-  parachuteSpriteRenderer: {fileID: 8664007867377175912}
-  armsSpriteRenderer: {fileID: 3074605618154261513}
-  muzzleFlashSpriteRenderer: {fileID: 8303971960879997617}
-  reloadSparkleSpriteRenderer: {fileID: 0}
 --- !u!114 &7209747188384941542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -578,7 +582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stunDuration: 0.5
-  _stunForceMultiplier: 350
+  _stunForceMultiplier: 250
   _projectileHitStunWindow: 0.25
   stunDragValue: 4
   _playerManager: {fileID: 0}
@@ -656,6 +660,107 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerManager: {fileID: 0}
   _armTransform: {fileID: 3382648638257323775}
+--- !u!114 &6519716473086683122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4848834887403473507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fc0acdc98a4c2241940108026c6ba7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerManager: {fileID: 0}
+  uiHighlightLifetime: 0.3
+  healthbar_Sprites:
+  - {fileID: 21300000, guid: 348d4058ecc163d4f8ba9425c1aa5b1d, type: 3}
+  - {fileID: 21300000, guid: ca63b913723fc8c4f9994ac175f01a9b, type: 3}
+  life_Sprites:
+  - {fileID: 21300000, guid: f82011fad8e71d54ba6063be5c64d53b, type: 3}
+  - {fileID: 21300000, guid: 831efbfb5ea06ea47bc26c7a942bd2ae, type: 3}
+--- !u!114 &3412155908828574073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4848834887403473507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de7166458aa857543a425587925c54b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerManager: {fileID: 0}
+  frontArmPositions:
+  - {x: 0.02, y: 0, z: 0}
+  - {x: 0.01, y: -0.01, z: 0}
+  - {x: 0.01, y: 0, z: 0}
+  - {x: 0.01, y: 0, z: 0}
+  - {x: 0.01, y: 0, z: 0}
+  backArmPositions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0.24, y: -0.01, z: 0}
+  - {x: 0.19, y: 0.01, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0.14, y: -0.07, z: 0}
+  firingAndReloadingFX_positions:
+  - {x: 0.44, y: 0.05, z: 0}
+  - {x: 0.63, y: -0.02, z: 0}
+  - {x: 0.7, y: -0.01, z: 0}
+  - {x: 0.45, y: 0.04, z: 0}
+  - {x: 0.62, y: -0.25, z: 0}
+  firingAndReloadingFX_lifetime: 0.3
+  catridgeSpinForceRange:
+  - 0
+  - 10
+  catridgeEjectionForceRange:
+  - -5
+  - 5
+  ammoLeftFeedback_horizontalOffset: 0.5
+  ammoLeftFeedback_verticalOffset: 0.5
+  ammoLeftFeedback_numbersFontSize: 4
+  ammoLeftFeedback_wordsFontSize: 2
+  ammoLeftFeedback_lifetime: 1
+  _bulletDestructionFeedbackLifetime: 0.5
+  _sniperDestructionFeedbackLifetime: 0.5
+  _bazookaDestructionFeedbackLifetime: 0.5
+  parachuteDeployementTime: 0.2
+  stunEffectVerticalOffset: 0.6
+  parachute_SpriteRenderer: {fileID: 8664007867377175912}
+  frontArm_SpriteRenderer: {fileID: 3074605618154261513}
+  backArm_SpriteRenderer: {fileID: 2102914195002567310}
+  firingAndReloadingFX_SpriteRenderer: {fileID: 8303971960879997617}
+  blank_Sprite: {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
+  frontArm_Sprites:
+  - {fileID: 21300002, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
+  - {fileID: 21300006, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
+  - {fileID: 21300008, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
+  - {fileID: 21300004, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
+  - {fileID: 21300000, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
+  backArm_Sprites:
+  - {fileID: 21300000, guid: f190c1f6af7eae24d826c724f0c096ea, type: 3}
+  - {fileID: 21300002, guid: f190c1f6af7eae24d826c724f0c096ea, type: 3}
+  reloadingArm_Sprites:
+  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
+  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
+  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
+  firingAndReloadingFX_Sprites:
+  - {fileID: 21300000, guid: 2d733951632c61b48a3d4712f3e854d1, type: 3}
+  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
+  parachute_Sprites:
+  - {fileID: 21300000, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
+  - {fileID: 21300002, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
+  catridge_Sprites:
+  - {fileID: 21300002, guid: 7bb0e76910f4b4f4fbeeb6dc8f671575, type: 3}
+  - {fileID: 21300000, guid: 7bb0e76910f4b4f4fbeeb6dc8f671575, type: 3}
+  catridgePrefab: {fileID: 2041673576769441654, guid: 22ca5358b66266d4b84c27579a525d66,
+    type: 3}
+  ammoLeftPrefab: {fileID: 1629020238638055373, guid: 86d5ff8f2e97cc64a9d56ccf2d8d5f64,
+    type: 3}
+  stunEffectPrefab: {fileID: 3684319498437215703, guid: b19d33be5acbd814c9af88101ac8d682,
+    type: 3}
 --- !u!1 &6945589580515665122
 GameObject:
   m_ObjectHideFlags: 0

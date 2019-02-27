@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5044937060001580866}
   - component: {fileID: 3692715183436944658}
   - component: {fileID: 2455572566554133034}
-  - component: {fileID: 2883190093160949163}
   m_Layer: 0
   m_Name: Level1Managers
   m_TagString: Untagged
@@ -48,7 +47,7 @@ MonoBehaviour:
   chanceForPickupToSpawnPerSecond: 35
   _speedupPickupTime: 5
   _speedupMultiplier: 2
-  healthPickupValue: 0.5
+  healthPickupValue: 0
   _pickupSpeedLimit: 1.5
   _jetpackDuration: 10
   _jetpackVelocity: 7
@@ -87,94 +86,4 @@ MonoBehaviour:
   _crateSpeedLimit: 1
   chanceToSpawnCratePerSecond: 20
   cratePrefab: {fileID: 6194907134823173452, guid: 43e36453f6ec19245a34bb326ae71f4d,
-    type: 3}
---- !u!114 &2883190093160949163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3853715874473687400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da2d5b1e01843744b86a5f46141540c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  muzzleFlashPositions:
-  - {x: 2, y: 0, z: 0}
-  - {x: 2.5, y: 0, z: 0}
-  - {x: 1, y: 0, z: 0}
-  - {x: 0.5, y: 0, z: 0}
-  - {x: 1.5, y: 0, z: 0}
-  catridgeSpinRange:
-  - -10
-  - 10
-  catridgeEjectionForceRange:
-  - -5
-  - 5
-  outOfAmmoFeedback_horizontalOffset: 0.5
-  outOfAmmoFeedback_verticalOffset: 0.5
-  outOfAmmoTextSize_numbers: 4
-  outOfAmmoTextSize_words: 2
-  screenShakeIntensities:
-  - 0.195
-  - 1.118
-  - 1.051
-  - 0.748
-  - 0.492
-  _bulletDestructionFeedbackLifetime: 0.5
-  _sniperDestructionFeedbackLifetime: 0.5
-  _bazookaDestructionFeedbackLifetime: 0.5
-  hitAnimationDuration: 0.3
-  parachuteDeployementTime: 0.2
-  _stunEffectVerticalOffset: 0.6
-  muzzleFlashDuration: 0.3
-  reloadSparkleLifetime: 0.3
-  weaponSprites:
-  - {fileID: 21300000, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  - {fileID: 21300002, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  - {fileID: 21300004, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  - {fileID: 21300006, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  - {fileID: 21300010, guid: 02cbe44e098af86408d62f1b4bde8ac7, type: 3}
-  projectileSprites:
-  - {fileID: 21300000, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
-  - {fileID: 21300004, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
-  - {fileID: 21300000, guid: a56de675f5239a5478b4ca2de5f1e6b2, type: 3}
-  - {fileID: 21300006, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
-  - {fileID: 21300002, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
-  destructionSprites:
-  - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
-  - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
-  - {fileID: 21300000, guid: a56de675f5239a5478b4ca2de5f1e6b2, type: 3}
-  - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
-  - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
-  muzzleFlashSprites:
-  - {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
-  - {fileID: 21300000, guid: 2d733951632c61b48a3d4712f3e854d1, type: 3}
-  - {fileID: 21300002, guid: 2d733951632c61b48a3d4712f3e854d1, type: 3}
-  playerHeadSprites:
-  - {fileID: 21300000, guid: 673577a70e4ba2a4faeea078bb5d2111, type: 3}
-  - {fileID: 21300006, guid: 673577a70e4ba2a4faeea078bb5d2111, type: 3}
-  parachuteSprites:
-  - {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
-  - {fileID: 21300002, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
-  - {fileID: 21300000, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
-  reloadSparkleSprite:
-  - {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
-  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
-  reloadingAnimationSprites:
-  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
-  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
-  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
-  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
-  - {fileID: 21300000, guid: db18f0707211dfe4e9e604426c6c57ba, type: 3}
-  stunEffectPrefab: {fileID: 4393019113291355537, guid: 82abdfc48bf1d8643af2cb2538490e20,
-    type: 3}
-  catridgePrefabs:
-  - {fileID: 2041673576769441654, guid: 22ca5358b66266d4b84c27579a525d66, type: 3}
-  - {fileID: 2041673576769441654, guid: 22ca5358b66266d4b84c27579a525d66, type: 3}
-  - {fileID: 2041673576769441654, guid: 22ca5358b66266d4b84c27579a525d66, type: 3}
-  - {fileID: 2041673576769441654, guid: 22ca5358b66266d4b84c27579a525d66, type: 3}
-  - {fileID: 2041673576769441654, guid: 22ca5358b66266d4b84c27579a525d66, type: 3}
-  ammoLeftPrefab: {fileID: 1629020238638055373, guid: 86d5ff8f2e97cc64a9d56ccf2d8d5f64,
     type: 3}

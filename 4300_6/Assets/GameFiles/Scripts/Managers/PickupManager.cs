@@ -10,7 +10,7 @@ public class PickupManager : MonoBehaviour
     [SerializeField] float chanceForPickupToSpawnPerSecond = 100;
     [SerializeField] float _speedupPickupTime = 5;
     [SerializeField] float _speedupMultiplier = 2f;
-    [SerializeField] float healthPickupValue = 0.5f;
+    [SerializeField] int healthPickupValue = 15;
     [SerializeField] float _pickupSpeedLimit = 3;
     [SerializeField] float _jetpackDuration = 10;
     [SerializeField] float _jetpackVelocity = 7;

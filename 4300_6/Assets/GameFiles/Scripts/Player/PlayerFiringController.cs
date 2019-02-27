@@ -39,7 +39,7 @@ public class PlayerFiringController : MonoBehaviour
     bool _isSpeedup;
     float bulletsSpeedupTimer;
     // Minigun related
-    MinigunStage _minigunSoundStage = MinigunStage.STOPPED;
+    MinigunStage _currentMinigunStage = MinigunStage.STOPPED;
     bool isSpinningUp;
     bool isFiringMinigun;
     bool isSlowingDown;
@@ -91,7 +91,7 @@ public class PlayerFiringController : MonoBehaviour
             // Reset minigun stage.
             CurrentMinigunStage = MinigunStage.STOPPED;
             // Display appropriate weapon.
-            FeedbackManager.Instance.UpdateCurrentWeaponSprite(PlayerManager);
+            PlayerManager.UpdateCurrentWeaponSprite();
 
         }
     }
@@ -130,17 +130,60 @@ public class PlayerFiringController : MonoBehaviour
                     color = Color.black;
                     text = value.ToString();
                 }
-                if (FeedbackManager.Instance != null)           FeedbackManager.Instance.DisplayAmmoLeft(gameObject, text, color, 1f);          else Debug.LogWarning("Variable not set up!");
+                PlayerManager.DisplayAmmoLeft(text, color);
             }
 
             _currentAmmo = value;
         }
     }
-    public bool HasRecentlyShot
+    public bool HasRecentlyShot => _hasRecentlyShot;
+    public MinigunStage CurrentMinigunStage // Triggers the right minigun sound when assigned to.
     {
         get
         {
-            return _hasRecentlyShot;
+            return _currentMinigunStage;
+        }
+        private set
+        {
+            // Play according sound when going from state A to state B if allowed.
+            switch (_currentMinigunStage)
+            {
+                case MinigunStage.STOPPED: // Going from STOPPED
+                    {
+                        if (value == MinigunStage.SPINNING_UP) // To SPINNING_UP
+                        {
+                            // In this case, can only play a sound if we're going from STOPPED to SPINNING_UP.
+                            PlayerManager.PlayMinigunSound();
+                        }
+                    }
+                    break;
+                case MinigunStage.SPINNING_UP:
+                    {
+                        if (value == MinigunStage.STOPPED || value == MinigunStage.FIRING)
+                        {
+                            PlayerManager.PlayMinigunSound();
+                        }
+                    }
+                    break;
+                case MinigunStage.FIRING:
+                    {
+                        if (value == MinigunStage.STOPPED || value == MinigunStage.SLOWING_DOWN)
+                        {
+                            PlayerManager.PlayMinigunSound();
+                        }
+                    }
+                    break;
+                case MinigunStage.SLOWING_DOWN:
+                    {
+                        if (value == MinigunStage.STOPPED || value == MinigunStage.FIRING)
+                        {
+                            PlayerManager.PlayMinigunSound();
+                        }
+                    }
+                    break;
+            }
+
+            _currentMinigunStage = value;
         }
     }
     #endregion
@@ -167,55 +210,6 @@ public class PlayerFiringController : MonoBehaviour
                 currentFirerate /= PickupManager.Instance.speedupMultiplier;
             }
             _isSpeedup = value;
-        }
-    }
-    MinigunStage CurrentMinigunStage // Triggers the right minigun sound when assigned to.
-    {
-        get
-        {
-            return _minigunSoundStage;
-        }
-        set
-        {
-            // Play according sound when going from state A to state B if allowed.
-            switch (CurrentMinigunStage)
-            {
-                case MinigunStage.STOPPED: // Going from STOPPED
-                    {
-                        if (value == MinigunStage.SPINNING_UP) // To SPINNING_UP
-                        {
-                            // In this case, can only play a sound if we're going from STOPPED to SPINNING_UP.
-                            FeedbackManager.Instance.PlayMinigunSound(value);
-                        }
-                    }
-                    break;
-                case MinigunStage.SPINNING_UP:
-                    {
-                        if (value == MinigunStage.STOPPED || value == MinigunStage.FIRING)
-                        {
-                            FeedbackManager.Instance.PlayMinigunSound(value);
-                        }
-                    }
-                    break;
-                case MinigunStage.FIRING:
-                    {
-                        if (value == MinigunStage.STOPPED || value == MinigunStage.SLOWING_DOWN)
-                        {
-                            FeedbackManager.Instance.PlayMinigunSound(value);
-                        }
-                    }
-                    break;
-                case MinigunStage.SLOWING_DOWN:
-                    {
-                        if (value == MinigunStage.STOPPED || value == MinigunStage.FIRING)
-                        {
-                            FeedbackManager.Instance.PlayMinigunSound(value);
-                        }
-                    }
-                    break;
-            }
-
-            _minigunSoundStage = value;
         }
     }
     #endregion
@@ -265,7 +259,7 @@ public class PlayerFiringController : MonoBehaviour
                         Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, rotation).GetComponent<Projectile>();
                         newProjectile.speed = currentProjectileSpeed;
                         newProjectile.type = CurrentWeapon;
-                        newProjectile.visualFeedbackLifetime = FeedbackManager.Instance.BulletDestructionFeedbackLifetime;
+                        newProjectile.visualFeedbackLifetime = PlayerManager.BulletDestructionFeedbackLifetime;
                         
                         firingTimer = 1 / currentFirerate;
                         CurrentAmmo--;
@@ -273,8 +267,8 @@ public class PlayerFiringController : MonoBehaviour
                         Vector2 direction = Vector3.Normalize(-PlayerManager.ArmsTransform.transform.right);
                         PlayerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
-                        FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);
-                        FeedbackManager.Instance.ShakeScreen(CurrentWeapon);
+                        PlayerManager.InstantiateWeaponCatridge();
+                        PlayerManager.ShakeScreen();
 
                         // Sound is managed by currentMinigunStage property.
                     }
@@ -299,7 +293,7 @@ public class PlayerFiringController : MonoBehaviour
                         Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, rotation).GetComponent<Projectile>();
                         newProjectile.speed = currentProjectileSpeed;
                         newProjectile.type = CurrentWeapon;
-                        newProjectile.visualFeedbackLifetime = FeedbackManager.Instance.BulletDestructionFeedbackLifetime;
+                        newProjectile.visualFeedbackLifetime = PlayerManager.BulletDestructionFeedbackLifetime;
                     }
                     break;
                 case Weapon.SHOTGUN:
@@ -313,7 +307,7 @@ public class PlayerFiringController : MonoBehaviour
                             Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, rotation).GetComponent<Projectile>();
                             newProjectile.speed = currentProjectileSpeed;
                             newProjectile.type = CurrentWeapon;
-                            newProjectile.visualFeedbackLifetime = FeedbackManager.Instance.BulletDestructionFeedbackLifetime;
+                            newProjectile.visualFeedbackLifetime = PlayerManager.BulletDestructionFeedbackLifetime;
                         }
                     }
                     break;
@@ -323,7 +317,7 @@ public class PlayerFiringController : MonoBehaviour
                         Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, PlayerManager.ArmsTransform.rotation).GetComponent<Projectile>();
                         newProjectile.speed = 0;
                         newProjectile.type = CurrentWeapon;
-                        newProjectile.visualFeedbackLifetime = FeedbackManager.Instance.SniperDestructionFeedbackLifetime;
+                        newProjectile.visualFeedbackLifetime = PlayerManager.SniperDestructionFeedbackLifetime;
 
                         // Cast a hitscan. Apply sniper hit mechanics if a player is hit.
                         if (PlayerManager.IsLeftPlayer)
@@ -348,7 +342,7 @@ public class PlayerFiringController : MonoBehaviour
                         Projectile newProjectile = Instantiate(bulletsPrefab, transform.position, PlayerManager.ArmsTransform.rotation).GetComponent<Projectile>();
                         newProjectile.speed = currentProjectileSpeed;
                         newProjectile.type = CurrentWeapon;
-                        newProjectile.visualFeedbackLifetime = FeedbackManager.Instance.BazookaDestructionFeedbackLifetime;
+                        newProjectile.visualFeedbackLifetime = PlayerManager.BazookaDestructionFeedbackLifetime;
                     }
                     break;
             }
@@ -368,9 +362,9 @@ public class PlayerFiringController : MonoBehaviour
             PlayerManager.ApplyFiringKnockback(direction, currentFiringKnockback);
 
             // Trigger feedbacks
-            FeedbackManager.Instance.InstantiateWeaponCatridge(gameObject, CurrentWeapon);
-            FeedbackManager.Instance.PlayFiringSound(CurrentWeapon);
-            FeedbackManager.Instance.ShakeScreen(CurrentWeapon);
+            PlayerManager.InstantiateWeaponCatridge();
+            PlayerManager.PlayFiringSound();
+            PlayerManager.ShakeScreen();
         }
     }
     void ProcessShooting()
@@ -395,7 +389,7 @@ public class PlayerFiringController : MonoBehaviour
                     }
                     firingTimer = 1 / currentFirerate;
                     // Play out of ammo audio feedback.
-                    FeedbackManager.Instance.DisplayOutOfAmmoFeedbacks(gameObject);
+                    PlayerManager.DisplayOutOfAmmoFeedbacks();
                 }
             }
 
@@ -447,13 +441,13 @@ public class PlayerFiringController : MonoBehaviour
         // Update muzzle flash sprite.
         if (CurrentWeapon != Weapon.MINIGUN)
         {
-            FeedbackManager.Instance.UpdateMuzzleFlash(PlayerManager);
+            PlayerManager.UpdateMuzzleFlash();
         }
         else
         {
             if (CurrentMinigunStage != MinigunStage.SPINNING_UP) // Prevents the muzzle flash from being displayed during spinup
             {
-                FeedbackManager.Instance.UpdateMuzzleFlash(PlayerManager);
+                PlayerManager.UpdateMuzzleFlash();
             }
         }
     }
@@ -496,7 +490,7 @@ public class PlayerFiringController : MonoBehaviour
                 if (!isPlayingReloadingSound)
                 {
                     isPlayingReloadingSound = true;
-                    FeedbackManager.Instance.DisplayReloadingFeedbacks(PlayerManager);
+                    PlayerManager.DisplayReloadingFeedbacks();
                 }
             }
         }

@@ -17,6 +17,8 @@ public class Projectile : MonoBehaviour
 
     // References
     [SerializeField] SpriteRenderer spriteRenderer = null;
+    [SerializeField] Sprite[] projectile_Sprites = new Sprite[3]; // 0: pistol and minigun, 1: shotgun, 2: bazooka
+    [SerializeField] Sprite[] projectileDestruction_Sprites = new Sprite[3]; // 0: pistol, shotgun and minigun, 1: sniper, 2: bazooka
     Rigidbody2D bulletRigidbody2D = null;
     CircleCollider2D bulletCollider = null;
 
@@ -31,13 +33,26 @@ public class Projectile : MonoBehaviour
     {
         isPlayingDestructionAnimation = true;
 
-        if (bulletRigidbody2D != null)          bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;                               else Debug.LogWarning("Variable not set up!");
-        if (bulletCollider != null)             bulletCollider.enabled = false;                                                                 else Debug.LogWarning("Variable not set up!");
-        if (FeedbackManager.Instance != null)   FeedbackManager.Instance.DisplayBulletDestruction(type, spriteRenderer);                        else Debug.LogWarning("Variable not set up!");
+        bulletRigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+        bulletCollider.enabled = false;
+        DisplayBulletDestruction();
 
         yield return new WaitForSeconds(visualFeedbackLifetime);
 
         Destroy(gameObject);
+    }
+    void DisplayBulletDestruction()
+    {
+        spriteRenderer.sprite = projectileDestruction_Sprites[(int)type];
+    }
+    void DisplayAppropriateProjectile()
+    {
+        spriteRenderer.sprite = projectile_Sprites[(int)type];
+    }
+    public void RocketFeedback()
+    {
+        GameManager.Instance.ScreenShake.ShakeScreen(type);
+        SoundManager.Instance.PlaySound("bazooka_hit");
     }
     #endregion
 
@@ -47,17 +62,17 @@ public class Projectile : MonoBehaviour
     {
         bulletRigidbody2D = GetComponent<Rigidbody2D>();
         bulletCollider = GetComponent<CircleCollider2D>();
-        if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayAppropriateProjectile(type, spriteRenderer); else Debug.LogWarning("Variable not set up!");
+        DisplayAppropriateProjectile();
 
         if (type == Weapon.SNIPER)
         {
             if (gameObject.tag == "Player1Projectile")
             {
-                transform.position = GameManager.Instance.Player1.transform.position;
+                transform.position = GameManager.Instance.Players[0].transform.position;
             }
             else
             {
-                transform.position = GameManager.Instance.Player2.transform.position;
+                transform.position = GameManager.Instance.Players[1].transform.position;
             }
             StartCoroutine(DestroyBullet());
         }
@@ -76,29 +91,25 @@ public class Projectile : MonoBehaviour
             {
                 if (tag == "Player1")
                 {
-                    if (GameManager.Instance != null) GameManager.Instance.Player1.ProjectileHit(gameObject, type); else Debug.LogWarning("Variable not set up!");
-                    if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayHit(collision.gameObject); else Debug.LogWarning("Variable not set up!");
+                    GameManager.Instance.Players[0].ProjectileHit(gameObject, type);
                 }
                 else if (tag == "Player2")
                 {
-                    if (GameManager.Instance != null) GameManager.Instance.Player2.ProjectileHit(gameObject, type); else Debug.LogWarning("Variable not set up!");
-                    if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayHit(collision.gameObject); else Debug.LogWarning("Variable not set up!");
+                    GameManager.Instance.Players[1].ProjectileHit(gameObject, type);
                 }
             }
             else
             {
                 // It is a rocket.
-                if (Vector3.Distance(GameManager.Instance.Player1.transform.position, transform.position) < explosionRadius)
+                if (Vector3.Distance(GameManager.Instance.Players[0].transform.position, transform.position) < explosionRadius)
                 {
-                    if (GameManager.Instance != null) GameManager.Instance.Player1.ExplosionHit(transform.position); else Debug.LogWarning("Variable not set up!");
-                    if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayHit(GameManager.Instance.Player1.gameObject); else Debug.LogWarning("Variable not set up!");
+                    GameManager.Instance.Players[0].ExplosionHit(transform.position);
                 }
-                if (Vector3.Distance(GameManager.Instance.Player2.transform.position, transform.position) < explosionRadius)
+                if (Vector3.Distance(GameManager.Instance.Players[1].transform.position, transform.position) < explosionRadius)
                 {
-                    if (GameManager.Instance != null) GameManager.Instance.Player2.ExplosionHit(transform.position); else Debug.LogWarning("Variable not set up!");
-                    if (FeedbackManager.Instance != null) FeedbackManager.Instance.DisplayHit(GameManager.Instance.Player2.gameObject); else Debug.LogWarning("Variable not set up!");
+                    GameManager.Instance.Players[1].ExplosionHit(transform.position);
                 }
-                if (FeedbackManager.Instance != null) FeedbackManager.Instance.RocketFeedback(); else Debug.LogWarning("Variable not set up!");
+                RocketFeedback();
             }
 
             if (!isPlayingDestructionAnimation)
@@ -117,7 +128,7 @@ public class Projectile : MonoBehaviour
                 transform.rotation *= Quaternion.Euler(0,0, Mathf.Cos(2*x*Mathf.PI + Mathf.PI) * rocketRotationPerFrameAmplitude);
 
                 // Move the projectile.
-                if (bulletRigidbody2D != null)          bulletRigidbody2D.velocity = transform.right * speed;           else Debug.LogWarning("Variable not set up!");
+                bulletRigidbody2D.velocity = transform.right * speed;
             }
         }
         else if (type != Weapon.SNIPER)
@@ -125,7 +136,7 @@ public class Projectile : MonoBehaviour
             if (!isPlayingDestructionAnimation)
             {
 
-                if (bulletRigidbody2D != null)          bulletRigidbody2D.velocity = transform.right * speed;           else Debug.LogWarning("Variable not set up!");
+                bulletRigidbody2D.velocity = transform.right * speed;
             }
         }
 

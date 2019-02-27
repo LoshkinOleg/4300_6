@@ -39,7 +39,7 @@ public class PlayerManager : MonoBehaviour
     PlayerUIController uiController = null;
 
     // Private variables
-    int _health = 3;
+    float _health = 1;
     int healthBars = 10;
     int _lives = 3;
     bool _parachuteIsOpen;
@@ -52,7 +52,7 @@ public class PlayerManager : MonoBehaviour
     public bool IsLeftPlayer => _isLeftPlayer;
     public bool ParachuteIsOpen => _parachuteIsOpen;
     public int Lives => _lives;
-    public int Health => _health;
+    public float Health => _health;
     public Transform FrontArmTransform => _frontArmTransform;
     public Transform BackArmTransform => _backArmTransform;
     public Transform FiringAndReloadingFX_Transform => _firingAndReloadingFX_Transform;
@@ -61,20 +61,71 @@ public class PlayerManager : MonoBehaviour
     public SpriteRenderer BackArm_SpriteRenderer => _backArm_SpriteRenderer;
     public SpriteRenderer FiringAndReloadingFX_SpriteRenderer => _firingAndReloadingFX_SpriteRenderer;
     // Movement controller
-    public PlayerMovementController.MovementMode CurrentMovementMode => movementController.CurrentMovementMode;
+    public PlayerMovementController.MovementMode CurrentMovementMode
+    {
+        get
+        {
+            return movementController.CurrentMovementMode;
+        }
+        set
+        {
+            movementController.CurrentMovementMode = value;
+        }
+    }
     // Firing controller
     public Weapon CurrentWeapon => firingController.CurrentWeapon;
     public int CurrentAmmo => firingController.CurrentAmmo;
     public bool HasRecentlyShot => firingController.HasRecentlyShot;
+    public PlayerFiringController.MinigunStage CurrentMinigunStage => firingController.CurrentMinigunStage;
     // Animation and Orientation controller
     public Transform ArmsTransform => orientationController.ArmsTransform;
     // Physics handler
     public float SpeedLimit => physicsHandler.PlayerSpeedLimit;
-    public float Gravity => physicsHandler.Gravity;
-    public Vector2 Velocity => physicsHandler.Velocity;
-    public float LinearDrag => physicsHandler.LinearDrag;
+    public float Gravity
+    {
+        get
+        {
+            return physicsHandler.Gravity;
+        }
+        set
+        {
+            physicsHandler.Gravity = value;
+        }
+    }
+    public Vector2 Velocity
+    {
+        get
+        {
+            return physicsHandler.Velocity;
+        }
+        set
+        {
+            physicsHandler.Velocity = value;
+        }
+    }
+    public float LinearDrag
+    {
+        get
+        {
+            return physicsHandler.LinearDrag;
+        }
+        set
+        {
+            physicsHandler.LinearDrag = value;
+        }
+    }
     // Input handler
-    public InputDevice Gamepad => inputHandler.Gamepad;
+    public InputDevice Gamepad
+    {
+        get
+        {
+            return inputHandler.Gamepad;
+        }
+        set
+        {
+            inputHandler.Gamepad = value;
+        }
+    }
     public float HorizontalInput => inputHandler.HorizontalInput;
     public float VerticalInput => inputHandler.VerticalInput;
     public float AimingHorizontalInput => inputHandler.AimingHorizontalInput;
@@ -86,6 +137,10 @@ public class PlayerManager : MonoBehaviour
     public float StunForceMultiplier => stunController.StunForceMultiplier;
     public float StunOpportunityTimer => stunController.StunOpportunityTimer;
     public float ProjectileHitStunWindow => stunController.ProjectileHitStunWindow;
+    // Feedback controller
+    public float BulletDestructionFeedbackLifetime => feedbackController.BulletDestructionFeedbackLifetime;
+    public float SniperDestructionFeedbackLifetime => feedbackController.SniperDestructionFeedbackLifetime;
+    public float BazookaDestructionFeedbackLifetime => feedbackController.BazookaDestructionFeedbackLifetime;
     #endregion
 
     // PUBLIC METHODS
@@ -93,7 +148,7 @@ public class PlayerManager : MonoBehaviour
     // PlayerManager's methods
     public void ModifyHealth(int damage) // Use to damage (pass a negative number) or to heal (pass a positive number) the player.
     {
-        _health += damage;
+        _health += (float)damage * 1f/3f;
 
         if (_health < 1)
         {
@@ -222,6 +277,47 @@ public class PlayerManager : MonoBehaviour
     {
         stunController.Stun();
     }
+    // Feedback controller
+    public void UpdateCurrentWeaponSprite()
+    {
+        feedbackController.UpdateCurrentWeaponSprite();
+    }
+    public void DisplayAmmoLeft(string text,Color color)
+    {
+        feedbackController.DisplayAmmoLeft(text,color);
+    }
+    public void PlayMinigunSound()
+    {
+        feedbackController.PlayMinigunSound();
+    }
+    public void InstantiateWeaponCatridge()
+    {
+        feedbackController.InstantiateWeaponCatridge();
+    }
+    public void ShakeScreen()
+    {
+        feedbackController.ShakeScreen();
+    }
+    public void PlayFiringSound()
+    {
+        feedbackController.PlayFiringSound();
+    }
+    public void DisplayOutOfAmmoFeedbacks()
+    {
+        feedbackController.DisplayOutOfAmmoFeedbacks();
+    }
+    public void UpdateMuzzleFlash()
+    {
+        feedbackController.UpdateMuzzleFlash();
+    }
+    public void DisplayReloadingFeedbacks()
+    {
+        feedbackController.DisplayReloadingFeedbacks();
+    }
+    public void DisplayStunEffect(float stunDuration)
+    {
+        feedbackController.DisplayStunEffect(stunDuration);
+    }
     #endregion
 
     // Private methods
@@ -229,14 +325,16 @@ public class PlayerManager : MonoBehaviour
     void DestroyHealthBar()
     {
         healthBars--;
-        _health = 3;
-        feedbackController.HighlightHealthBar();
+        _health = 1;
+        uiController.CurrentHealthBar--;
+        uiController.HighlightHealthBar();
     }
     void AddAHealthBar()
     {
         healthBars++;
-        _health = 3;
-        feedbackController.HighlightHealthBar();
+        _health = 1;
+        uiController.CurrentHealthBar++;
+        uiController.HighlightHealthBar();
     }
     void Respawn()
     {

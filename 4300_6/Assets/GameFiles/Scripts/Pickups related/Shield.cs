@@ -13,7 +13,7 @@ public class Shield : MonoBehaviour
         }
         set
         {
-            if (value == GameManager.Instance.Player1.gameObject)
+            if (value == GameManager.Instance.Players[0].gameObject)
             {
                 leftPlayerIsTarget = true;
                 gameObject.tag = "Player1Shield";

@@ -2714,10 +2714,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bab9ce2ce8a48b943babdaa695e1c93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  livesText_player1: {fileID: 3916543387526377341}
-  livesText_player2: {fileID: 4999436132496666983}
-  healthBar_player1: {fileID: 0}
-  healthBar_player2: {fileID: 0}
+  _player1_livesText: {fileID: 3916543387526377341}
+  _player2_livesText: {fileID: 4999436132496666983}
+  _player1_healthbars:
+  - {fileID: 854783022651725035}
+  - {fileID: 6975361209563811842}
+  - {fileID: 6705201958525774925}
+  - {fileID: 8504335682276761734}
+  - {fileID: 3457897166735249740}
+  - {fileID: 5005192328282530739}
+  - {fileID: 7100764410652979151}
+  - {fileID: 3975698189739911337}
+  - {fileID: 6540465904550500950}
+  - {fileID: 3553443814192581798}
+  _player2_healthbars:
+  - {fileID: 5958115796023098589}
+  - {fileID: 3547183750655807528}
+  - {fileID: 8855843505098687860}
+  - {fileID: 6134793404106391515}
+  - {fileID: 3476449192067445332}
+  - {fileID: 5960782942079499565}
+  - {fileID: 3624765745051510759}
+  - {fileID: 3014863732244511228}
+  - {fileID: 8360927932359250551}
+  - {fileID: 8662501101680250171}
+  _player1_livesSpriteRenderer: {fileID: 6926810722481963558}
+  _player2_livesSpriteRenderer: {fileID: 3805464451379622935}
 --- !u!1 &5568893303205207440
 GameObject:
   m_ObjectHideFlags: 0

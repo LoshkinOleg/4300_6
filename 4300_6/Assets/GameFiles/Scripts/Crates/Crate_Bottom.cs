@@ -8,11 +8,11 @@ public class Crate_Bottom : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player1")
         {
-            GameManager.Instance.Player1.CrateBottomHit(GetComponentInParent<CrateRootIdentifier>().gameObject.GetComponent<BoxCollider2D>());
+            GameManager.Instance.Players[0].CrateBottomHit(GetComponentInParent<CrateRootIdentifier>().gameObject.GetComponent<BoxCollider2D>());
         }
         else if (collision.gameObject.tag == "Player2")
         {
-            GameManager.Instance.Player2.CrateBottomHit(GetComponentInParent<CrateRootIdentifier>().gameObject.GetComponent<BoxCollider2D>());
+            GameManager.Instance.Players[1].CrateBottomHit(GetComponentInParent<CrateRootIdentifier>().gameObject.GetComponent<BoxCollider2D>());
         }
     }
 }

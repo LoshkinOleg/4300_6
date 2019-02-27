@@ -128,19 +128,19 @@ public class PlayerPhysicsHandler : MonoBehaviour
             case Weapon.PISTOL:
                 {
                     Vector2 forceToApply = directionOfKnockback * PlayerManager.WeaponsData[0].hitKnockback;
-                    if (playerRigidbody != null)            playerRigidbody.AddForce(forceToApply);             else Debug.LogWarning("Variable not set!");
+                    playerRigidbody.AddForce(forceToApply);
                 }
                 break;
             case Weapon.SHOTGUN:
                 {
                     Vector2 forceToApply = directionOfKnockback * PlayerManager.WeaponsData[1].hitKnockback;
-                    if (playerRigidbody != null)            playerRigidbody.AddForce(forceToApply);             else Debug.LogWarning("Variable not set!");
+                    playerRigidbody.AddForce(forceToApply);
                 }
                 break;
             case Weapon.MINIGUN:
                 {
                     Vector2 forceToApply = directionOfKnockback * PlayerManager.WeaponsData[4].hitKnockback;
-                    if (playerRigidbody != null)            playerRigidbody.AddForce(forceToApply);             else Debug.LogWarning("Variable not set!");
+                    playerRigidbody.AddForce(forceToApply);
                 }
                 break;
             default:
@@ -160,46 +160,46 @@ public class PlayerPhysicsHandler : MonoBehaviour
             }
             else
             {
-                if (playerRigidbody != null)            playerRigidbody.AddForce(Vector2.down * PlayerManager.StunForceMultiplier);             else Debug.LogWarning("Variable not set!");
+                playerRigidbody.AddForce(Vector2.down * PlayerManager.StunForceMultiplier);
             }
         }
     }
     public void ExplosionHit(Vector2 position)
     {
         Vector2 direction = -(position - (Vector2)transform.position);
-        if (playerRigidbody != null)            playerRigidbody.AddForce(direction * PlayerManager.WeaponsData[3].hitKnockback);            else Debug.LogWarning("Variable not set!");
+        playerRigidbody.AddForce(direction * PlayerManager.WeaponsData[3].hitKnockback);
     }
     public void SniperHit()
     {
         Vector2 direction;
         if (PlayerManager.IsLeftPlayer)
         {
-            direction = -(GameManager.Instance.Player2.transform.position - transform.position);
+            direction = -(GameManager.Instance.Players[1].transform.position - transform.position);
         }
         else
         {
-            direction = -(GameManager.Instance.Player1.transform.position - transform.position);
+            direction = -(GameManager.Instance.Players[0].transform.position - transform.position);
         }
-        if (playerRigidbody != null)            playerRigidbody.AddForce(direction * PlayerManager.WeaponsData[2].hitKnockback);            else Debug.LogWarning("Variable not set!");
+        playerRigidbody.AddForce(direction * PlayerManager.WeaponsData[2].hitKnockback);
     }
     public void ToggleGravity()
     {
-        if (playerRigidbody != null)            playerRigidbody.gravityScale = -playerRigidbody.gravityScale;           else Debug.LogWarning("Variable not set!");
+        playerRigidbody.gravityScale = -playerRigidbody.gravityScale;
     }
     public void ResetGravity()
     {
         if (PlayerManager.ParachuteIsOpen)
         {
-            if (playerRigidbody != null)        playerRigidbody.gravityScale = -2;          else Debug.LogWarning("Variable not set!");
+            playerRigidbody.gravityScale = -1;
         }
         else
         {
-            if (playerRigidbody != null)        playerRigidbody.gravityScale = 2;           else Debug.LogWarning("Variable not set!");
+            playerRigidbody.gravityScale = 1;
         }
     }
     public void AddForce(Vector2 unitaryDirection, float magnitude)
     {
-        if (playerRigidbody != null)            playerRigidbody.AddForce(unitaryDirection * magnitude);             else Debug.LogWarning("Variable not set!");
+        playerRigidbody.AddForce(unitaryDirection * magnitude);
     }
     public bool IsTouching(Collider2D collider)
     {

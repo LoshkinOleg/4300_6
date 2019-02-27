@@ -5,13 +5,15 @@ using Cinemachine;
 
 public class ScreenShake : MonoBehaviour
 {
+    [SerializeField] [Range(0, 2)] float[] firingScreenShakeIntensities = new float[(int)Weapon.MINIGUN + 1];
+
     CinemachineVirtualCamera vCamera = null;
     float time;
     bool amplitudeNeedsResetting;
 
-    public void ShakeScreen(float time)
+    public void ShakeScreen(Weapon type)
     {
-        this.time = time;
+        time = firingScreenShakeIntensities[(int)type];
         amplitudeNeedsResetting = true;
     }
 

@@ -85,8 +85,7 @@ public class GameManager : MonoBehaviour
                     // Check if we've successfully set up.
                     if (SoundManager.Instance       == null ||
                         PickupManager.Instance      == null ||
-                        CrateManager.Instance       == null ||
-                        FeedbackManager.Instance    == null)
+                        CrateManager.Instance       == null)
                     {
                         Debug.LogError("GM not set up properly!");
                     }

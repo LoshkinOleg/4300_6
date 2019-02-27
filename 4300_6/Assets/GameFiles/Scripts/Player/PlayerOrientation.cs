@@ -156,36 +156,28 @@ public class PlayerOrientation : MonoBehaviour
                 case PlayerDirection.LEFT:
                     {
                         transform.eulerAngles = new Vector3(0, 180, 0);
-
-                        if (_armTransform != null)
+                        switch (currentGunDirection)
                         {
-                            switch (currentGunDirection)
-                            {
-                                case GunDirection.FORWARD:
-                                    {
-                                        _armTransform.localEulerAngles = new Vector3(0, 0, 0);
-                                    }
-                                    break;
-                                case GunDirection.UP:
-                                    {
-                                        _armTransform.localEulerAngles = new Vector3(0, 0, -90);
-                                    }
-                                    break;
-                                case GunDirection.DOWN:
-                                    {
-                                        _armTransform.localEulerAngles = new Vector3(0, 0, 90);
-                                    }
-                                    break;
-                                case GunDirection.ANYWHERE:
-                                    {
-                                        _armTransform.localEulerAngles = new Vector3(0, 180, Mathf.Atan2(PlayerManager.AimingVerticalInput, PlayerManager.AimingHorizontalInput) * Mathf.Rad2Deg);
-                                    }
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Variable is not set up!");
+                            case GunDirection.FORWARD:
+                                {
+                                    _armTransform.localEulerAngles = new Vector3(0, 0, 0);
+                                }
+                                break;
+                            case GunDirection.UP:
+                                {
+                                    _armTransform.localEulerAngles = new Vector3(0, 0, -90);
+                                }
+                                break;
+                            case GunDirection.DOWN:
+                                {
+                                    _armTransform.localEulerAngles = new Vector3(0, 0, 90);
+                                }
+                                break;
+                            case GunDirection.ANYWHERE:
+                                {
+                                    _armTransform.localEulerAngles = new Vector3(0, 180, Mathf.Atan2(PlayerManager.AimingVerticalInput, PlayerManager.AimingHorizontalInput) * Mathf.Rad2Deg);
+                                }
+                                break;
                         }
 
                     }
@@ -193,36 +185,28 @@ public class PlayerOrientation : MonoBehaviour
                 case PlayerDirection.RIGHT:
                     {
                         transform.eulerAngles = new Vector3(0, 0, 0);
-
-                        if (_armTransform != null)
+                        switch (currentGunDirection)
                         {
-                            switch (currentGunDirection)
-                            {
-                                case GunDirection.FORWARD:
-                                    {
-                                        _armTransform.localEulerAngles = new Vector3(0, 0, 0);
-                                    }
-                                    break;
-                                case GunDirection.UP:
-                                    {
-                                        _armTransform.localEulerAngles = new Vector3(0, 0, -90);
-                                    }
-                                    break;
-                                case GunDirection.DOWN:
-                                    {
-                                        _armTransform.localEulerAngles = new Vector3(0, 0, 90);
-                                    }
-                                    break;
-                                case GunDirection.ANYWHERE:
-                                    {
-                                        _armTransform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(PlayerManager.AimingVerticalInput, PlayerManager.AimingHorizontalInput) * Mathf.Rad2Deg);
-                                    }
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Variable is not set up!");
+                            case GunDirection.FORWARD:
+                                {
+                                    _armTransform.localEulerAngles = new Vector3(0, 0, 0);
+                                }
+                                break;
+                            case GunDirection.UP:
+                                {
+                                    _armTransform.localEulerAngles = new Vector3(0, 0, -90);
+                                }
+                                break;
+                            case GunDirection.DOWN:
+                                {
+                                    _armTransform.localEulerAngles = new Vector3(0, 0, 90);
+                                }
+                                break;
+                            case GunDirection.ANYWHERE:
+                                {
+                                    _armTransform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(PlayerManager.AimingVerticalInput, PlayerManager.AimingHorizontalInput) * Mathf.Rad2Deg);
+                                }
+                                break;
                         }
                     }
                     break;
@@ -260,40 +244,24 @@ public class PlayerOrientation : MonoBehaviour
     {
         if (PlayerManager.IsLeftPlayer)
         {
-            if (GameManager.Instance != null)
+            if ((GameManager.Instance.Players[1].gameObject.transform.position - transform.position).x >= 0)
             {
-                if ((GameManager.Instance.Player2.gameObject.transform.position - transform.position).x >= 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
             }
             else
             {
-                Debug.LogWarning("Variable not set up!");
-                return true;
+                return false;
             }
         }
         else
         {
-            if (GameManager.Instance != null)
+            if ((GameManager.Instance.Players[0].gameObject.transform.position - transform.position).x >= 0)
             {
-                if ((GameManager.Instance.Player1.gameObject.transform.position - transform.position).x >= 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
             }
             else
             {
-                Debug.LogWarning("Variable not set up!");
-                return true;
+                return false;
             }
         }
     }
