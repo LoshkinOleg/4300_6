@@ -15,6 +15,7 @@ TagManager:
   - Catridge
   - Player1Shield
   - Player2Shield
+  - PausePanel
   layers:
   - Default
   - TransparentFX
