@@ -293,6 +293,10 @@ public class PlayerFeedbackController : MonoBehaviour
         }
 
     }
+    public void PlayHurtSound()
+    {
+        SoundManager.Instance.PlaySound("player_hit");
+    }
     #endregion
 
     // Private methods

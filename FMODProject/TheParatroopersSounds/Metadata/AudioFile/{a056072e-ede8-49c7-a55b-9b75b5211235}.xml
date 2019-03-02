@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{a056072e-ede8-49c7-a55b-9b75b5211235}">
+        <property name="assetPath">
+            <value>Hide_by_Noiz_Complaint.wav</value>
+        </property>
+        <property name="isStreaming">
+            <value>true</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>261.71301587301588</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{0ef40eeb-13af-41f7-9b1f-1085a0cc5578}</destination>
+        </relationship>
+    </object>
+</objects>

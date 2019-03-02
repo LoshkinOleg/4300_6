@@ -65,6 +65,7 @@ public class PlayerManager : MonoBehaviour
             if (value - _health < 0) // If we're being damaged
             {
                 feedbackController.HighlightPlayer(Color.red);
+                feedbackController.PlayHurtSound();
             }
             else // If we're being healed.
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuFunctions : MonoBehaviour
 {
@@ -9,6 +10,18 @@ public class MenuFunctions : MonoBehaviour
     [SerializeField] GameObject mainMenuPanel = null;
     [SerializeField] GameObject creditsMenuPanel = null;
     [SerializeField] GameObject howToPlayPanel = null;
+    [SerializeField] Toggle musicToggle = null;
+    
+    public bool musicIsPlaying
+    {
+        set
+        {
+            if (musicToggle.isOn != SoundManager.Instance.MusicIsPlaying)
+            {
+                SoundManager.Instance.ToggleMusic();
+            }
+        }
+    }
 
     public void Play()
     {
@@ -61,5 +74,16 @@ public class MenuFunctions : MonoBehaviour
     public void Resume()
     {
         GameManager.Instance.TogglePause();
+    }
+
+    private void Start()
+    {
+        if (musicToggle != null)
+        {
+            if (musicToggle.isOn != SoundManager.Instance.MusicIsPlaying)
+            {
+                musicToggle.isOn = SoundManager.Instance.MusicIsPlaying;
+            }
+        }
     }
 }

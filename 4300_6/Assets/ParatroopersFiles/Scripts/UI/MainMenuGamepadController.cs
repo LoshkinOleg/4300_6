@@ -8,11 +8,11 @@ using UnityEngine.UI;
 public class MainMenuGamepadController : MonoBehaviour
 {
     [SerializeField] EventSystem mainMenu_eventSystem = null;
-    [SerializeField] GameObject[] mainMenuButtons = new GameObject[3];
+    [SerializeField] GameObject[] mainMenuButtons = new GameObject[4];
     [SerializeField] GameObject creditsBack_button = null;
     [SerializeField] GameObject howToPlay_play_button = null;
 
-    int mainMenuSelectedButton = 1;
+    int mainMenuSelectedButton = 2;
     public static bool creditsAreOpen;
     public static bool howToPlayIsOpen;
 
@@ -27,7 +27,7 @@ public class MainMenuGamepadController : MonoBehaviour
             }
             else if (InputManager.ActiveDevice.LeftStick.Down.WasPressed || InputManager.ActiveDevice.RightStick.Down.WasPressed || InputManager.ActiveDevice.DPadDown.WasPressed)
             {
-                mainMenuSelectedButton = mainMenuSelectedButton + 1 >= 2 ? 2 : mainMenuSelectedButton + 1;
+                mainMenuSelectedButton = mainMenuSelectedButton + 1 >= 3 ? 3 : mainMenuSelectedButton + 1;
             }
             mainMenu_eventSystem.SetSelectedGameObject(mainMenuButtons[mainMenuSelectedButton]);
         }
@@ -47,10 +47,10 @@ public class MainMenuGamepadController : MonoBehaviour
             {
                 switch (mainMenuSelectedButton)
                 {
-                    case 0:
+                    case 1:
                         howToPlayIsOpen = true;
                         break;
-                    case 1:
+                    case 2:
                         creditsAreOpen = true;
                         break;
                 }
@@ -58,7 +58,15 @@ public class MainMenuGamepadController : MonoBehaviour
             else if (creditsAreOpen) creditsAreOpen = false;
             else if (howToPlayIsOpen) howToPlayIsOpen = false;
 
-            mainMenu_eventSystem.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
+            if (mainMenuSelectedButton == 0 && !creditsAreOpen && !howToPlayIsOpen)
+            {
+                Toggle toggle = mainMenu_eventSystem.currentSelectedGameObject.GetComponent<Toggle>();
+                toggle.isOn = !toggle.isOn;
+            }
+            else
+            {
+                mainMenu_eventSystem.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
+            }
         }
     }
 }

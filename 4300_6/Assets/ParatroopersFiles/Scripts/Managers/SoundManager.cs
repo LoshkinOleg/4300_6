@@ -19,6 +19,7 @@ public class SoundManager : MonoBehaviour
     float _outOfAmmoTime;
     float _reloadTime;
     float outOfAmmoTimer;
+    bool _musicIsPlaying = true;
     #endregion
 
     // Public properties
@@ -28,6 +29,7 @@ public class SoundManager : MonoBehaviour
     public float MinigunSlowdownTime => _minigunSlowdownTime;
     public float OutOfAmmoTime => _outOfAmmoTime;
     public float ReloadTime => _reloadTime;
+    public bool MusicIsPlaying => _musicIsPlaying;
     #endregion
 
     // Public methods
@@ -54,6 +56,18 @@ public class SoundManager : MonoBehaviour
         {
             item.Value.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
+    }
+    public void ToggleMusic()
+    {
+        if (_musicIsPlaying)
+        {
+            sounds["music"].stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
+        else
+        {
+            sounds["music"].start();
+        }
+        _musicIsPlaying = !_musicIsPlaying;
     }
     #endregion
 
@@ -96,6 +110,10 @@ public class SoundManager : MonoBehaviour
         sounds["shotgun_reloading"].getDescription(out description);
         description.getLength(out duration);
         _reloadTime = duration / 1000f;
+    }
+    private void Start()
+    {
+        PlaySound("music");
     }
     private void Update()
     {
