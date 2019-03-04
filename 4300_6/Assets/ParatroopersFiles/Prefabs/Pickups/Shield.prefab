@@ -61,8 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de75127da5bdba94ca9ff3cf76dea87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitCounter: 3
-  target: {fileID: 0}
+  hitCounter: 7
 --- !u!1 &8651878452047420927
 GameObject:
   m_ObjectHideFlags: 0

@@ -78,7 +78,8 @@ public class PlayerUIController : MonoBehaviour
     }
     public void ResetKillstreak()
     {
-        killstreak_SpriteRenderer.sprite = killstreak_Sprites[0];
+        killstreak = 0;
+        killstreak_SpriteRenderer.sprite = killstreak_Sprites[killstreak];
     }
     public void ResetHealthbar()
     {

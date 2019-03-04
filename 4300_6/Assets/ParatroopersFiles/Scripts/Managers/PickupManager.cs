@@ -45,36 +45,43 @@ public class PickupManager : MonoBehaviour
     {
         int player = tag == "Player1" ? 0 : 1;
         GameManager.Instance.Players[player].ModifyHealth(healthPickupValue);
+        SoundManager.Instance.PlaySound("pickup");
     }
     public void Pickup_Shield(string tag)
     {
         int player = tag == "Player1" ? 0 : 1;
         Instantiate(shieldPrefab).GetComponent<Shield>().target = GameManager.Instance.Players[player].gameObject;
+        SoundManager.Instance.PlaySound("pickup");
     }
     public void Pickup_Speedup(string tag)
     {
         int player = tag == "Player1" ? 0 : 1;
         GameManager.Instance.Players[player].SpeedBulletsUp();
+        SoundManager.Instance.PlaySound("pickup");
     }
     public void Pickup_Shotgun(string tag)
     {
         int player = tag == "Player1" ? 0 : 1;
         GameManager.Instance.Players[player].SwitchToWeapon(Weapon.SHOTGUN);
+        SoundManager.Instance.PlaySound("shotgun_reloading");
     }
     public void Pickup_Sniper(string tag)
     {
         int player = tag == "Player1" ? 0 : 1;
         GameManager.Instance.Players[player].SwitchToWeapon(Weapon.SNIPER);
+        SoundManager.Instance.PlaySound("shotgun_reloading");
     }
     public void Pickup_Bazooka(string tag)
     {
         int player = tag == "Player1" ? 0 : 1;
         GameManager.Instance.Players[player].SwitchToWeapon(Weapon.BAZOOKA);
+        SoundManager.Instance.PlaySound("shotgun_reloading");
     }
     public void Pickup_Minigun(string tag)
     {
         int player = tag == "Player1" ? 0 : 1;
         GameManager.Instance.Players[player].SwitchToWeapon(Weapon.MINIGUN);
+        SoundManager.Instance.PlaySound("shotgun_reloading");
     }
     #endregion
 

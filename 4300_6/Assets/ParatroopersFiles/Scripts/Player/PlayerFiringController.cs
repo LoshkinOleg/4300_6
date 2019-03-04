@@ -351,16 +351,26 @@ public class PlayerFiringController : MonoBehaviour
                         // Cast a hitscan. Apply sniper hit mechanics if a player is hit.
                         if (PlayerManager.IsLeftPlayer)
                         {
-                            if (Physics2D.Raycast(PlayerManager.ArmsTransform.transform.position + PlayerManager.ArmsTransform.transform.right, PlayerManager.ArmsTransform.transform.right).collider.gameObject.tag == "Player2")
+                            GameObject hit = Physics2D.Raycast(PlayerManager.ArmsTransform.transform.position + PlayerManager.ArmsTransform.transform.right, PlayerManager.ArmsTransform.transform.right).collider.gameObject;
+                            if (hit.tag == "Player2")
                             {
                                 GameManager.Instance.Players[1].SniperHit();
+                            }
+                            else if (hit.tag == "Player2Shield")
+                            {
+                                hit.GetComponent<Shield>().Hit(PlayerManager.WeaponsData[2].damage);
                             }
                         }
                         else
                         {
-                            if (Physics2D.Raycast(PlayerManager.ArmsTransform.transform.position + PlayerManager.ArmsTransform.transform.right, PlayerManager.ArmsTransform.transform.right).collider.gameObject.tag == "Player1")
+                            GameObject hit = Physics2D.Raycast(PlayerManager.ArmsTransform.transform.position + PlayerManager.ArmsTransform.transform.right, PlayerManager.ArmsTransform.transform.right).collider.gameObject;
+                            if (hit.tag == "Player1")
                             {
                                 GameManager.Instance.Players[0].SniperHit();
+                            }
+                            else if (hit.tag == "Player1Shield")
+                            {
+                                hit.GetComponent<Shield>().Hit(PlayerManager.WeaponsData[2].damage);
                             }
                         }
                     }

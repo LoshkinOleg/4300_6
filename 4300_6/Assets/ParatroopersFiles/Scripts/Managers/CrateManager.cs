@@ -15,7 +15,7 @@ public class CrateManager : MonoBehaviour
 
     // Private variables
     const float HORIZONTAL_BUFFER = 0.5f;
-    const float CRATE_VERTICAL_SIZE = 2f;
+    const float CRATE_VERTICAL_SIZE = 3f;
     float timer;
 
     // Public properties

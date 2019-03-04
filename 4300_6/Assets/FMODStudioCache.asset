@@ -30,11 +30,12 @@ MonoBehaviour:
   - {fileID: 114214013657650894}
   - {fileID: 114496743637608856}
   - {fileID: 114013600924862114}
+  - {fileID: 114828577913004348}
   MasterBanks:
   - {fileID: 114633999199224158}
   StringsBanks:
   - {fileID: 114968974961322694}
-  stringsBankWriteTime: 636871338378006739
+  stringsBankWriteTime: 636873217549325945
   cacheVersion: 3
 --- !u!114 &114013600924862114
 MonoBehaviour:
@@ -915,11 +916,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: C:\Users\Dante\Desktop\FinalProject\4300_7\FMODProject\TheParatroopersSounds\Build\Desktop\Master
     Bank.bank
-  lastModified: 636871338377966692
+  lastModified: 636873217549285951
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 3821504
+    Value: 3826784
   Exists: 1
 --- !u!114 &114649494268871502
 MonoBehaviour:
@@ -1194,6 +1195,29 @@ MonoBehaviour:
   MinDistance: 0
   MaxDistance: 0
   Length: 302
+--- !u!114 &114828577913004348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/pickup
+  guid: 1bd8ba0a3ea6d54eaf21bdb0dcd0e6ba
+  Banks:
+  - {fileID: 114633999199224158}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 333
 --- !u!114 &114855496267803220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1340,9 +1364,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: C:\Users\Dante\Desktop\FinalProject\4300_7\FMODProject\TheParatroopersSounds\Build\Desktop\Master
     Bank.strings.bank
-  lastModified: 636871338378006739
+  lastModified: 636873217549325945
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 1346
+    Value: 1394
   Exists: 1

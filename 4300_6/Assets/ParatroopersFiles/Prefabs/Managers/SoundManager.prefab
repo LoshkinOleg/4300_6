@@ -59,6 +59,7 @@ MonoBehaviour:
   - event:/sniper_fire
   - event:/shotgun_reloading
   - event:/music
+  - event:/pickup
 --- !u!114 &8915974241945718233
 MonoBehaviour:
   m_ObjectHideFlags: 0

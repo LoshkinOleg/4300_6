@@ -47,7 +47,7 @@ MonoBehaviour:
   chanceForPickupToSpawnPerSecond: 25
   _speedupPickupTime: 7
   _speedupMultiplier: 2
-  healthPickupValue: 0
+  healthPickupValue: 7
   _pickupSpeedLimit: 1.5
   pickupSpawnCooldown: 1
   pickupPrefab_health: {fileID: 7561157662321798908, guid: 87587c9e6aca77842b521a6eb9550562,

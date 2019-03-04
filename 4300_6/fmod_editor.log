@@ -8,66 +8,13 @@
 [WRN] SystemI::init                            : Output requires a sample rate of 44100Hz, resampling will occur.
 [LOG] Thread::initThread                       : Init FMOD stream thread. Priority: 2, Stack Size: 65536, Semaphore: No, Sleep Time: 10, Looping: Yes.
 [LOG] Thread::initThread                       : Init FMOD mixer thread. Priority: 3, Stack Size: 49152, Semaphore: No, Sleep Time: 0, Looping: Yes.
-[LOG] AsyncManager::init                       : manager 00000000485D2BE8 isAsync 0 updatePeriod 0.02
+[LOG] AsyncManager::init                       : manager 0000000042872DA8 isAsync 0 updatePeriod 0.02
 [LOG] AsyncManager::init                       : done
 [LOG] PlaybackSystem::init                     : 
 [LOG] Thread::initThread                       : Init FMOD Studio sample load thread. Priority: 0, Stack Size: 65536, Semaphore: No, Sleep Time: 1, Looping: No.
 [LOG] PlaybackSystem::init                     : done
 [LOG] Thread::initThread                       : Init FMOD Studio bank load thread. Priority: 0, Stack Size: 65536, Semaphore: No, Sleep Time: 1, Looping: No.
 [LOG] Manager::init                            : done.
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] SoundI::release                          : Hide_by_Noiz_Complaint (000000002227E468)
-[LOG] SoundI::release                          :     Hide_by_Noiz_Complaint (000000003E674D18)
-[LOG] SoundI::release                          :     Hide_by_Noiz_Complaint (000000002227E618)
-[LOG] SoundI::release                          :  (0000000052A6BD48)
-[LOG] SoundI::release                          :     missile_launch_0 (000000003E674018)
-[LOG] SoundI::release                          :  (0000000048FA5638)
-[LOG] SoundI::release                          :     missile_launch_1 (000000003E675058)
-[LOG] SoundI::release                          :  (0000000048FA5D68)
-[LOG] SoundI::release                          :     missile_launch_2 (000000002225ECA8)
-[LOG] SoundI::release                          :  (0000000052A6B4A8)
-[LOG] SoundI::release                          :     missile_explosion (000000003E675398)
-[LOG] SoundI::release                          :  (0000000052A6B1C8)
-[LOG] SoundI::release                          :     minigun_fire (000000003E675878)
-[LOG] SoundI::release                          :  (0000000048FA5918)
-[LOG] SoundI::release                          :     minigun_slowdown (000000002225F328)
-[LOG] SoundI::release                          :  (0000000048FA5ED8)
-[LOG] SoundI::release                          :     minigun_spinup (000000002225D788)
-[LOG] SoundI::release                          :  (0000000052A6BEB8)
-[LOG] SoundI::release                          :     out_of_ammo (000000003E675538)
-[LOG] SoundI::release                          :  (0000000048FA6D38)
-[LOG] SoundI::release                          :     parachute_closed (000000003E6751F8)
-[LOG] SoundI::release                          :  (0000000048FA61B8)
-[LOG] SoundI::release                          :     parachute_open (000000003E674358)
-[LOG] SoundI::release                          :  (0000000048FA6608)
-[LOG] SoundI::release                          :     silenced_pistol_fire (000000003E673E78)
-[LOG] SoundI::release                          :  (0000000048FA5358)
-[LOG] SoundI::release                          :     player_hit (000000003E6741B8)
-[LOG] SoundI::release                          :  (0000000048FA5BF8)
-[LOG] SoundI::release                          :     shotgun_fire (000000002225D928)
-[LOG] SoundI::release                          :  (0000000048FA57A8)
-[LOG] SoundI::release                          :     sniper_fire (000000002225DAC8)
-[LOG] SoundI::release                          :  (0000000052A6B338)
-[LOG] SoundI::release                          :     shotgun_reloading (000000003E674EB8)
-[LOG] Thread::callback                         : FMOD Studio update thread finished.
-[LOG] Thread::callback                         : FMOD Studio bank load thread finished.
-[LOG] Profile::disconnectAll                   : Profiler disconnecting all clients
-[LOG] Thread::callback                         : FMOD Studio sample load thread finished.
-[LOG] LiveUpdate::release                      : 
-[LOG] LiveUpdate::reset                        : Reset connection (reason Disconnected)
-[LOG] Thread::callback                         : FMOD stream thread finished.
-[LOG] Thread::callback                         : FMOD mixer thread finished.
-[LOG] Profile::disconnectAll                   : Profiler disconnecting all clients
-[LOG] SystemI::close                           : Closed.
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
@@ -81,6 +28,4 @@
 [LOG] LiveUpdate::reset                        : Reset connection (reason Disconnected)
 [LOG] Thread::callback                         : FMOD stream thread finished.
 [LOG] Thread::callback                         : FMOD mixer thread finished.
-[LOG] Thread::callback                         : FMOD nonblocking thread (0) finished.
-[LOG] Thread::callback                         : FMOD file thread finished.
 [LOG] SystemI::close                           : Closed.

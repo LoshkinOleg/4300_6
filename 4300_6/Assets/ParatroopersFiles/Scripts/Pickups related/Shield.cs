@@ -33,6 +33,12 @@ public class Shield : MonoBehaviour
     GameObject _target = null;
     bool leftPlayerIsTarget;
 
+    // Public methods
+    public void Hit(int damage)
+    {
+        hitCounter -= damage;
+    }
+
     // Inherited methods
     private void OnTriggerEnter2D(Collider2D collision)
     {
