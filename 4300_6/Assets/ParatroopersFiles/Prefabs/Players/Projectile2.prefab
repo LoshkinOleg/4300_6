@@ -165,7 +165,7 @@ MonoBehaviour:
   speed: 0
   type: 0
   visualFeedbackLifetime: 0
-  explosionRadius: 1.5
+  explosionRadius: 2.5
   rocketRotationPerFrameAmplitude: 7
   spriteRenderer: {fileID: 1463932393237087463}
   projectile_Sprites:
@@ -173,6 +173,6 @@ MonoBehaviour:
   - {fileID: 21300004, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
   - {fileID: 21300006, guid: b84fa0c68d14c1c4980f5d440454b65a, type: 3}
   projectileDestruction_Sprites:
-  - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
+  - {fileID: 21300000, guid: 058a95ee10ce7cb45afbf356c8d75df8, type: 3}
   - {fileID: 21300000, guid: a56de675f5239a5478b4ca2de5f1e6b2, type: 3}
-  - {fileID: 21300000, guid: 84a9562b928c44f48bfb15a2226df537, type: 3}
+  - {fileID: 21300000, guid: f02afd9b9f5fd1348a12507ed4612621, type: 3}

@@ -45,23 +45,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chanceForPickupToSpawnPerSecond: 25
-  _speedupPickupTime: 5
+  _speedupPickupTime: 7
   _speedupMultiplier: 2
   healthPickupValue: 0
   _pickupSpeedLimit: 1.5
-  pickupPrefab_health: {fileID: 4323740266736981398, guid: efc55e80c45aec542973b950ee90b145,
+  pickupSpawnCooldown: 1
+  pickupPrefab_health: {fileID: 7561157662321798908, guid: 87587c9e6aca77842b521a6eb9550562,
     type: 3}
-  pickupPrefab_shield: {fileID: 4323740266736981398, guid: 6b921af5812bd7843a06b7cf154209cc,
+  pickupPrefab_shield: {fileID: 7561157662321798908, guid: 1adb5831b7e5a154395d29627413d9d0,
     type: 3}
-  pickupPrefab_speedup: {fileID: 7561157662321798908, guid: 4317c9fbbab34c643822382841d5ae01,
+  pickupPrefab_speedup: {fileID: 7561157662321798908, guid: 4a402ead17e353a4eb5d7b77d6be3ebd,
     type: 3}
-  pickupPrefab_shotgun: {fileID: 7561157662321798908, guid: eaa6a01523042bf4791f5d8e21e51187,
+  pickupPrefab_shotgun: {fileID: 7561157662321798908, guid: fdff5a2fe1613a04da2759bf04ec6107,
     type: 3}
-  pickupPrefab_sniper: {fileID: 7561157662321798908, guid: bbac4cc0eb70b00449933f2bd6afb6d7,
+  pickupPrefab_sniper: {fileID: 7561157662321798908, guid: 20b9134d5b6ac2c4ab90bada1ed90225,
     type: 3}
   pickupPrefab_bazooka: {fileID: 7561157662321798908, guid: bfae03f4f2538eb49a1ea0448ec12671,
     type: 3}
-  pickupPrefab_minigun: {fileID: 7561157662321798908, guid: 06f73669171118b44b887eb8d95c4418,
+  pickupPrefab_minigun: {fileID: 7561157662321798908, guid: a5e2856d30280884bbc1801b84a8d84c,
     type: 3}
   shieldPrefab: {fileID: 8651878451569179181, guid: ea18ee35e489c2344937411df52d6af1,
     type: 3}
@@ -79,5 +80,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _crateSpeedLimit: 1
   chanceToSpawnCratePerSecond: 20
+  spawnCooldown: 1
   cratePrefab: {fileID: 6194907134823173452, guid: 43e36453f6ec19245a34bb326ae71f4d,
     type: 3}

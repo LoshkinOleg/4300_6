@@ -68,12 +68,12 @@ SpriteRenderer:
   m_SortingLayerID: 1842296729
   m_SortingLayer: -3
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300002, guid: 1883df380eff3b6439b35f86ff25e135, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1883df380eff3b6439b35f86ff25e135, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.53, y: 0.3}
+  m_Size: {x: 0.64, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -147,12 +147,12 @@ SpriteRenderer:
   m_SortingLayerID: 1842296729
   m_SortingLayer: -3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
-  m_Color: {r: 0.54371816, g: 0.7075472, b: 0.44388574, a: 1}
-  m_FlipX: 1
+  m_Sprite: {fileID: 21300000, guid: 637feef3ea89f45419e98bdffe99cd38, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.32, y: 1.24}
+  m_Size: {x: 2.48, y: 2.33}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -183,7 +183,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880138148661917815}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.621, y: -0.244, z: 0}
+  m_LocalPosition: {x: 0.729, y: -0.234, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3382648638257323775}
@@ -261,8 +261,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698037264770673967}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.138, y: -0.068, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3382648638257323775}
@@ -305,12 +305,12 @@ SpriteRenderer:
   m_SortingLayerID: 1842296729
   m_SortingLayer: -3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300002, guid: f190c1f6af7eae24d826c724f0c096ea, type: 3}
+  m_Sprite: {fileID: 21300002, guid: 9404b2a77323f984198f00fbceeb3e93, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.89, y: 0.28}
+  m_Size: {x: 0.98, y: 0.61}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -450,7 +450,7 @@ SpriteRenderer:
   m_SortingLayerID: 1842296729
   m_SortingLayer: -3
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: e676cc45d0dfaa74d991fb8b41cb997a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 06a5768c7f613c447a005bf1359fb23e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -556,6 +556,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isLeftPlayer: 0
   startingWeapon: 0
+  startingHealth: 10
   _frontArmTransform: {fileID: 5149609634305365850}
   _backArmTransform: {fileID: 3378503120185329881}
   _firingAndReloadingFX_Transform: {fileID: 8221788827991801502}
@@ -581,11 +582,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7195df6c68d44e47b7fbda53765e67f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stunDuration: 0.5
+  _playerManager: {fileID: 0}
+  stunDuration: 0.65
   _stunForceMultiplier: 250
   _projectileHitStunWindow: 0.25
   stunDragValue: 4
-  _playerManager: {fileID: 0}
 --- !u!114 &6476255565809335451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,10 +599,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b9c6d6af2a10cd4bb2823b9997687e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerManager: {fileID: 0}
   _playerSpeedLimit: 5
   screenEdgeBuffer: 1
   bufferForceMultiplier: 35
-  playerManager: {fileID: 0}
 --- !u!114 &6704930890737359362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,9 +615,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bedf68312b0312741a996559cfc54ab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerManager: {fileID: 0}
   airborneHorizontalMovementForceMultiplier: 20
   groundHorizontalVelocity: 3
-  _playerManager: {fileID: 0}
 --- !u!114 &1059125894382690669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,9 +678,12 @@ MonoBehaviour:
   healthbar_Sprites:
   - {fileID: 21300000, guid: 348d4058ecc163d4f8ba9425c1aa5b1d, type: 3}
   - {fileID: 21300000, guid: ca63b913723fc8c4f9994ac175f01a9b, type: 3}
-  life_Sprites:
-  - {fileID: 21300000, guid: f82011fad8e71d54ba6063be5c64d53b, type: 3}
-  - {fileID: 21300000, guid: 831efbfb5ea06ea47bc26c7a942bd2ae, type: 3}
+  killstreak_Sprites:
+  - {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
+  - {fileID: 21300000, guid: 0670bc6fe9c6fbb42b979562009f38e1, type: 3}
+  - {fileID: 21300002, guid: 0670bc6fe9c6fbb42b979562009f38e1, type: 3}
+  - {fileID: 21300004, guid: 0670bc6fe9c6fbb42b979562009f38e1, type: 3}
+  - {fileID: 21300006, guid: 0670bc6fe9c6fbb42b979562009f38e1, type: 3}
 --- !u!114 &3412155908828574073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -694,23 +698,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerManager: {fileID: 0}
   frontArmPositions:
-  - {x: 0.02, y: 0, z: 0}
-  - {x: 0.01, y: -0.01, z: 0}
-  - {x: 0.01, y: 0, z: 0}
-  - {x: 0.01, y: 0, z: 0}
-  - {x: 0.01, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   backArmPositions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0.24, y: -0.01, z: 0}
-  - {x: 0.19, y: 0.01, z: 0}
+  - {x: 0.1, y: 0, z: 0}
+  - {x: 0.06, y: 0.03, z: 0}
   - {x: 0, y: 0, z: 0}
-  - {x: 0.14, y: -0.07, z: 0}
+  - {x: 0, y: 0, z: 0}
   firingAndReloadingFX_positions:
-  - {x: 0.44, y: 0.05, z: 0}
-  - {x: 0.63, y: -0.02, z: 0}
-  - {x: 0.7, y: -0.01, z: 0}
-  - {x: 0.45, y: 0.04, z: 0}
-  - {x: 0.62, y: -0.25, z: 0}
+  - {x: 0.47, y: 0.05, z: 0}
+  - {x: 0.69, y: 0, z: 0}
+  - {x: 0.77, y: 0, z: 0}
+  - {x: 0.42, y: 0.05, z: 0}
+  - {x: 0.73, y: -0.23, z: 0}
   firingAndReloadingFX_lifetime: 0.3
   catridgeSpinForceRange:
   - 0
@@ -728,30 +732,31 @@ MonoBehaviour:
   _bazookaDestructionFeedbackLifetime: 0.5
   parachuteDeployementTime: 0.2
   stunEffectVerticalOffset: 0.6
+  hitHighlightDuration: 0.3
   parachute_SpriteRenderer: {fileID: 8664007867377175912}
   frontArm_SpriteRenderer: {fileID: 3074605618154261513}
   backArm_SpriteRenderer: {fileID: 2102914195002567310}
   firingAndReloadingFX_SpriteRenderer: {fileID: 8303971960879997617}
   blank_Sprite: {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
   frontArm_Sprites:
-  - {fileID: 21300002, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
-  - {fileID: 21300006, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
-  - {fileID: 21300008, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
-  - {fileID: 21300004, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
-  - {fileID: 21300000, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
+  - {fileID: 21300004, guid: 72968d5dd411439469a18a9e691c34d7, type: 3}
+  - {fileID: 21300006, guid: 72968d5dd411439469a18a9e691c34d7, type: 3}
+  - {fileID: 21300008, guid: 72968d5dd411439469a18a9e691c34d7, type: 3}
+  - {fileID: 21300002, guid: 72968d5dd411439469a18a9e691c34d7, type: 3}
+  - {fileID: 21300000, guid: 72968d5dd411439469a18a9e691c34d7, type: 3}
   backArm_Sprites:
-  - {fileID: 21300000, guid: f190c1f6af7eae24d826c724f0c096ea, type: 3}
-  - {fileID: 21300002, guid: f190c1f6af7eae24d826c724f0c096ea, type: 3}
+  - {fileID: 21300000, guid: 9404b2a77323f984198f00fbceeb3e93, type: 3}
+  - {fileID: 21300002, guid: 9404b2a77323f984198f00fbceeb3e93, type: 3}
   reloadingArm_Sprites:
-  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
-  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
-  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
+  - {fileID: 21300000, guid: 62abf31860ce8de4bb658678d7d973f8, type: 3}
+  - {fileID: 21300002, guid: 62abf31860ce8de4bb658678d7d973f8, type: 3}
+  - {fileID: 21300004, guid: 62abf31860ce8de4bb658678d7d973f8, type: 3}
   firingAndReloadingFX_Sprites:
   - {fileID: 21300000, guid: 2d733951632c61b48a3d4712f3e854d1, type: 3}
-  - {fileID: 21300000, guid: 35ec5ed6f668a6747925dd1775db4e52, type: 3}
+  - {fileID: 21300000, guid: 52d2d6bef8094e043b95fe97855f238b, type: 3}
   parachute_Sprites:
-  - {fileID: 21300000, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
-  - {fileID: 21300002, guid: 89e19e7fbd1588a48bf592bed4a23f95, type: 3}
+  - {fileID: 21300000, guid: 637feef3ea89f45419e98bdffe99cd38, type: 3}
+  - {fileID: 21300002, guid: 637feef3ea89f45419e98bdffe99cd38, type: 3}
   catridge_Sprites:
   - {fileID: 21300002, guid: 7bb0e76910f4b4f4fbeeb6dc8f671575, type: 3}
   - {fileID: 21300000, guid: 7bb0e76910f4b4f4fbeeb6dc8f671575, type: 3}
@@ -829,9 +834,9 @@ SpriteRenderer:
   m_SortingLayerID: 1842296729
   m_SortingLayer: -3
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: 673577a70e4ba2a4faeea078bb5d2111, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cfe097ed9bf41064d8c05bc6adab22d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.68, y: 0.64}
@@ -865,7 +870,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8801712592679848232}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.008, y: -0.004, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3382648638257323775}
@@ -908,12 +913,12 @@ SpriteRenderer:
   m_SortingLayerID: 1842296729
   m_SortingLayer: -3
   m_SortingOrder: 4
-  m_Sprite: {fileID: 21300000, guid: a0453bc64e60027498d993dc99f2bfe2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 72968d5dd411439469a18a9e691c34d7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.89, y: 0.28}
+  m_Size: {x: 2.24, y: 1.04}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
