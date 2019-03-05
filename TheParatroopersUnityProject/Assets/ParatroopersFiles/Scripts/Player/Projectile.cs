@@ -13,7 +13,6 @@ public class Projectile : MonoBehaviour
 
     // Inspector variables
     [SerializeField] float explosionRadius = 1.5f;
-    [SerializeField] float rocketRotationPerFrameAmplitude = 7;
 
     // References
     [SerializeField] SpriteRenderer spriteRenderer = null;
@@ -23,7 +22,6 @@ public class Projectile : MonoBehaviour
     CircleCollider2D bulletCollider = null;
 
     // Private variables
-    float x; // x variable in the Cos(x) function. Used to create a sinusoidal movement for the rocket projectile.
     bool isPlayingDestructionAnimation = false;
     #endregion
 
@@ -85,6 +83,11 @@ public class Projectile : MonoBehaviour
         GameManager.Instance.ScreenShake.ShakeScreen(type);
         SoundManager.Instance.PlaySound("bazooka_hit");
     }
+    IEnumerator SwitchToMissileLayer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        gameObject.layer = 17;
+    }
     #endregion
 
     // Inherited methods
@@ -106,6 +109,11 @@ public class Projectile : MonoBehaviour
                 transform.position = GameManager.Instance.Players[1].transform.position;
             }
             StartCoroutine(DestroyBullet());
+        }
+
+        if (type == Weapon.BAZOOKA) // Make missile collide with anything.
+        {
+            StartCoroutine(SwitchToMissileLayer());
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -151,18 +159,7 @@ public class Projectile : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (type == Weapon.BAZOOKA)
-        {
-            if (!isPlayingDestructionAnimation) // Not currently self destroying
-            {
-                // Apply sinusoidal rotation. Note: Mathf.Cos(2*x*Mathf.PI + Mathf.PI) is a cos function with a frequency of 1[Hz], an amplitude of 1, whose incept is at -1[y].
-                transform.rotation *= Quaternion.Euler(0,0, Mathf.Cos(2*x*Mathf.PI + Mathf.PI) * rocketRotationPerFrameAmplitude);
-
-                // Move the projectile.
-                bulletRigidbody2D.velocity = transform.right * speed;
-            }
-        }
-        else if (type != Weapon.SNIPER)
+        if (type != Weapon.SNIPER)
         {
             if (!isPlayingDestructionAnimation)
             {
@@ -170,8 +167,6 @@ public class Projectile : MonoBehaviour
                 bulletRigidbody2D.velocity = transform.right * speed;
             }
         }
-
-        x += Time.fixedDeltaTime;
     }
     #endregion
 

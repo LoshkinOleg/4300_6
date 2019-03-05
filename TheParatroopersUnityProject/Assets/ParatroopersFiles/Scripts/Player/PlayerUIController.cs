@@ -15,9 +15,8 @@ public class PlayerUIController : MonoBehaviour
     [SerializeField] float uiHighlightLifetime = 0.3f;
 
     // References
+    [SerializeField] KillstreakController killstreakController = null;
     [SerializeField] Sprite[] healthbar_Sprites = new Sprite[2]; // 0: red bar, 1: yellow bar
-    [SerializeField] Sprite[] killstreak_Sprites = new Sprite[5]; // 0: blank sprite, 1: private, 2: corp, 3: sergent, 4: commander
-    SpriteRenderer killstreak_SpriteRenderer = null;
     Image[] healthbars_Images = null;
 
     // Private variables
@@ -55,12 +54,10 @@ public class PlayerUIController : MonoBehaviour
         if (PlayerManager.IsLeftPlayer)
         {
             healthbars_Images = controller.Player1_healthbars;
-            killstreak_SpriteRenderer = controller.Player1_killstreak_SpriteRenderer;
         }
         else
         {
             healthbars_Images = controller.Player2_healthbars;
-            killstreak_SpriteRenderer = controller.Player2_killstreak_SpriteRenderer;
         }
     }
     public void HighlightHealthBar(int damage)
@@ -74,12 +71,12 @@ public class PlayerUIController : MonoBehaviour
         {
             killstreak = 4;
         }
-        killstreak_SpriteRenderer.sprite = killstreak_Sprites[killstreak];
+        killstreakController.DisplayKillstreak(killstreak);
     }
     public void ResetKillstreak()
     {
         killstreak = 0;
-        killstreak_SpriteRenderer.sprite = killstreak_Sprites[killstreak];
+        killstreakController.DisplayKillstreak(killstreak);
     }
     public void ResetHealthbar()
     {

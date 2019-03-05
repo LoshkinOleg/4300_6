@@ -652,6 +652,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4605935383632986509}
   - component: {fileID: 6926810722481963558}
+  - component: {fileID: 4447211892514910518}
   m_Layer: 5
   m_Name: LeftPlayerKillstreak_Sprite
   m_TagString: Untagged
@@ -675,7 +676,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -882, y: 410.00003}
+  m_AnchoredPosition: {x: -860, y: 398}
   m_SizeDelta: {x: 0.3022, y: 0.3009}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &6926810722481963558
@@ -715,17 +716,29 @@ SpriteRenderer:
   m_SortingLayerID: 1702784059
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f82011fad8e71d54ba6063be5c64d53b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.56, y: 0.64}
+  m_Size: {x: 0.64, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4447211892514910518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073391628297897897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9777060afc5922048a30947c7bfe117f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2967830594961987530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1315,7 +1328,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &136480803292508837
@@ -1398,7 +1411,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00012207031, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0.00024414062}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5763888613042285975
@@ -1829,6 +1842,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6317958543083086775}
   - component: {fileID: 3805464451379622935}
+  - component: {fileID: 5987407967717795652}
   m_Layer: 5
   m_Name: RightPlayerKillstreak_Sprite
   m_TagString: Untagged
@@ -1852,7 +1866,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 882.0014, y: 410.00067}
+  m_AnchoredPosition: {x: 860, y: 398}
   m_SizeDelta: {x: 0.3022, y: 0.3009}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &3805464451379622935
@@ -1892,17 +1906,29 @@ SpriteRenderer:
   m_SortingLayerID: 1702784059
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f82011fad8e71d54ba6063be5c64d53b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.56, y: 0.64}
+  m_Size: {x: 0.64, y: 0.64}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5987407967717795652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5303809792937574073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9777060afc5922048a30947c7bfe117f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5378483125630122363
 GameObject:
   m_ObjectHideFlags: 0
