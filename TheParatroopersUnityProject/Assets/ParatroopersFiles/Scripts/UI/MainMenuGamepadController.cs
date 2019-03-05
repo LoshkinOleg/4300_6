@@ -21,11 +21,11 @@ public class MainMenuGamepadController : MonoBehaviour
         if (!creditsAreOpen && !howToPlayIsOpen) // If we're in main menu.
         {
             // If we're selecting a button.
-            if (InputManager.ActiveDevice.LeftStick.Up.WasPressed || InputManager.ActiveDevice.RightStick.Up.WasPressed || InputManager.ActiveDevice.DPadUp.WasPressed)
+            if (InputManager.ActiveDevice.LeftStick.Up.WasPressed || InputManager.ActiveDevice.RightStick.Up.WasPressed || InputManager.ActiveDevice.DPadUp.WasPressed || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
                 mainMenuSelectedButton = mainMenuSelectedButton - 1 <= 0 ? 0 : mainMenuSelectedButton - 1;
             }
-            else if (InputManager.ActiveDevice.LeftStick.Down.WasPressed || InputManager.ActiveDevice.RightStick.Down.WasPressed || InputManager.ActiveDevice.DPadDown.WasPressed)
+            else if (InputManager.ActiveDevice.LeftStick.Down.WasPressed || InputManager.ActiveDevice.RightStick.Down.WasPressed || InputManager.ActiveDevice.DPadDown.WasPressed || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
                 mainMenuSelectedButton = mainMenuSelectedButton + 1 >= 3 ? 3 : mainMenuSelectedButton + 1;
             }
@@ -41,7 +41,7 @@ public class MainMenuGamepadController : MonoBehaviour
         }
 
         // If there was a submit input.
-        if (InputManager.ActiveDevice.Action1.WasPressed || InputManager.ActiveDevice.Action2.WasPressed || InputManager.ActiveDevice.Action3.WasPressed || InputManager.ActiveDevice.Action4.WasPressed)
+        if (InputManager.ActiveDevice.AnyButtonWasPressed || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
             if (!creditsAreOpen && !howToPlayIsOpen) // If we're in main menu.
             {

@@ -18,7 +18,7 @@ public class ScoreMenuGamepadController : MonoBehaviour
 
     private void Update()
     {
-        if (InputManager.ActiveDevice.AnyButtonWasPressed)
+        if (InputManager.ActiveDevice.AnyButtonWasPressed || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
             eventSystem.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
         }
