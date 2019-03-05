@@ -17,6 +17,13 @@ public class PlayerPhysicsHandler : MonoBehaviour
     // References
     Rigidbody2D playerRigidbody = null;
     CapsuleCollider2D playerCollider = null;
+
+    // Private variables
+    bool moveToRespawn;
+    float lerp_journeyLength;
+    float lerp_startTime;
+    float lerp_speed;
+    Vector3 lerp_startingPosition;
     #endregion
 
     // Public properties
@@ -212,6 +219,19 @@ public class PlayerPhysicsHandler : MonoBehaviour
     {
         return playerCollider.IsTouching(collider);
     }
+    public void DisableCollisions()
+    {
+        playerRigidbody.simulated = false;
+    }
+    public void MoveToRespawn()
+    {
+        lerp_journeyLength = Vector3.Distance(new Vector3(),transform.position); // Respawn is at (0,0,0)
+        lerp_startTime = Time.time;
+        lerp_speed = lerp_journeyLength; // v = d/t, here d is journeyLength and t is 1 second.
+        lerp_startingPosition = transform.position;
+
+        moveToRespawn = true;
+    }
     #endregion
 
     // Private methods
@@ -265,8 +285,24 @@ public class PlayerPhysicsHandler : MonoBehaviour
     #region Inherited methods
     private void FixedUpdate()
     {
-        ApplyBufferForces();
-        ApplySpeedLimit();
+        if (moveToRespawn)
+        {
+            float distanceCovered = (Time.time - lerp_startTime) * lerp_speed;
+            float journeyFraction = distanceCovered / lerp_journeyLength;
+            transform.position = Vector3.Lerp(lerp_startingPosition, new Vector3(), journeyFraction);
+
+            if (Vector3.Distance(transform.position, new Vector3()) <= 0.05f)
+            {
+                playerRigidbody.simulated = true;
+                playerRigidbody.velocity = new Vector2();
+                moveToRespawn = false;
+            }
+        }
+        else
+        {
+            ApplyBufferForces();
+            ApplySpeedLimit();
+        }
     }
     #endregion
 }

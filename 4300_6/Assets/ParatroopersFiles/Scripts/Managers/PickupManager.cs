@@ -50,7 +50,7 @@ public class PickupManager : MonoBehaviour
     public void Pickup_Shield(string tag)
     {
         int player = tag == "Player1" ? 0 : 1;
-        Instantiate(shieldPrefab).GetComponent<Shield>().target = GameManager.Instance.Players[player].gameObject;
+        Instantiate(shieldPrefab).GetComponent<Shield>().Init(GameManager.Instance.Players[player]);
         SoundManager.Instance.PlaySound("pickup");
     }
     public void Pickup_Speedup(string tag)

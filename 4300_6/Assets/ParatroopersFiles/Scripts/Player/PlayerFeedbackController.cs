@@ -45,6 +45,7 @@ public class PlayerFeedbackController : MonoBehaviour
     [SerializeField] GameObject catridgePrefab = null;
     [SerializeField] GameObject ammoLeftPrefab = null;
     [SerializeField] GameObject stunEffectPrefab = null;
+    [SerializeField] GameObject respawnBubblePrefab = null;
 
     // Private variables
     float muzzleFlashTimer;
@@ -297,6 +298,10 @@ public class PlayerFeedbackController : MonoBehaviour
     {
         SoundManager.Instance.PlaySound("player_hit");
     }
+    public void DisplayRespawnBubble(float time)
+    {
+        Instantiate(respawnBubblePrefab, transform.position, new Quaternion()).GetComponent<RespawnBubbleController>().Init(gameObject.transform, time);
+    }
     #endregion
 
     // Private methods
@@ -335,9 +340,19 @@ public class PlayerFeedbackController : MonoBehaviour
 
         yield return new WaitForSeconds(highlightTime);
 
-        for (int i = 0; i < sprites.Length; i++)
+        if (PlayerManager.IsSpeedup)
         {
-            sprites[i].color = initialColor[i];
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i].color = initialColor[i];
+            }
+        }
+        else
+        {
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i].color = Color.white;
+            }
         }
     }
     #endregion

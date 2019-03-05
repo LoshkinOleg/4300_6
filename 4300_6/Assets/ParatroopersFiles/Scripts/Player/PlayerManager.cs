@@ -42,6 +42,11 @@ public class PlayerManager : MonoBehaviour
     // Private variables
     int _health = 10;
     bool _parachuteIsOpen;
+    int _shieldCounter;
+    const float RESPAWN_TIME = 1f;
+    Shield _currentShield = null;
+    List<Shield> shields = new List<Shield>();
+    int score;
     #endregion
 
     // Public properties
@@ -83,6 +88,8 @@ public class PlayerManager : MonoBehaviour
     public SpriteRenderer FrontArm_SpriteRenderer => _frontArm_SpriteRenderer;
     public SpriteRenderer BackArm_SpriteRenderer => _backArm_SpriteRenderer;
     public SpriteRenderer FiringAndReloadingFX_SpriteRenderer => _firingAndReloadingFX_SpriteRenderer;
+    public int ShieldCounter => _shieldCounter;
+    public Shield CurrentShield => _currentShield;
     // Movement controller
     public PlayerMovementController.MovementMode CurrentMovementMode
     {
@@ -100,6 +107,7 @@ public class PlayerManager : MonoBehaviour
     public int CurrentAmmo => firingController.CurrentAmmo;
     public bool HasRecentlyShot => firingController.HasRecentlyShot;
     public PlayerFiringController.MinigunStage CurrentMinigunStage => firingController.CurrentMinigunStage;
+    public bool IsSpeedup => firingController.IsSpeedup;
     // Animation and Orientation controller
     public Transform ArmsTransform => orientationController.ArmsTransform;
     // Physics handler
@@ -238,7 +246,22 @@ public class PlayerManager : MonoBehaviour
             GameManager.Instance.Players[0].IncrementKillstreak();
         }
         uiController.ResetKillstreak(); // Reset own killstreak.
+
+        // Increment opponent's score.
+        if (IsLeftPlayer)
+        {
+            GameManager.Instance.Players[1].AddScore();
+        }
+        else
+        {
+            GameManager.Instance.Players[0].AddScore();
+        }
+
         Respawn();
+    }
+    public void AddScore()
+    {
+        score += 100;
     }
     public void ToggleParachute()
     {
@@ -253,6 +276,25 @@ public class PlayerManager : MonoBehaviour
     public void ResetInputs()
     {
         inputHandler.ResetInputs();
+    }
+    public void IncrementShieldCount(Shield shield)
+    {
+        _shieldCounter++;
+        shields.Add(shield);
+        _currentShield = shield;
+    }
+    public void DecrementShieldCount(Shield shield)
+    {
+        _shieldCounter--;
+        shields.Remove(shield);
+        if (shields.Count - 1 > 0)
+        {
+            _currentShield = shields[shields.Count - 1];
+        }
+        else
+        {
+            _currentShield = null;
+        }
     }
     // Firing controller
     public void SpeedBulletsUp()
@@ -341,7 +383,10 @@ public class PlayerManager : MonoBehaviour
     #region Private methods
     void Respawn()
     {
-        transform.position = new Vector3(0, 0, 0);
+        feedbackController.DisplayRespawnBubble(RESPAWN_TIME);
+        physicsHandler.DisableCollisions();
+        inputHandler.DisableInputsForSeconds(RESPAWN_TIME);
+        physicsHandler.MoveToRespawn();
     }
     #endregion
 
@@ -399,6 +444,10 @@ public class PlayerManager : MonoBehaviour
         {
             Kill();
         }
+    }
+    private void OnDestroy()
+    {
+        GameManager.Instance.GiveScore(score, this);
     }
     #endregion
 }

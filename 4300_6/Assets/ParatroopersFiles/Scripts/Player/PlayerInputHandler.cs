@@ -18,6 +18,7 @@ public class PlayerInputHandler : MonoBehaviour
     bool _tryingToOpenParachute;
     bool _tryingToFire;
     InputDevice _gamepad = null;
+    bool _hasControl = true;
     #endregion
 
     // Public properties
@@ -88,10 +89,20 @@ public class PlayerInputHandler : MonoBehaviour
         _tryingToFire = false;
         _tryingToOpenParachute = false;
     }
+    public void DisableInputsForSeconds(float time)
+    {
+        _hasControl = false;
+        StartCoroutine(ResetHasControl(time));
+    }
     #endregion
 
     // Private methods
     #region Private methods
+    IEnumerator ResetHasControl(float time)
+    {
+        yield return new WaitForSeconds(time);
+        _hasControl = true;
+    }
     void UpdateInputs()
     {
         // Handle gamepad controls
@@ -105,30 +116,33 @@ public class PlayerInputHandler : MonoBehaviour
                 }
                 else
                 {
-                    // Handle analog sticks inputs.
-                    _horizontalInput = _gamepad.LeftStick.X;
-                    _verticalInput = _gamepad.LeftStick.Y;
-                    _aimingHorizontalInput = _gamepad.RightStick.X;
-                    _aimingVerticalInput = _gamepad.RightStick.Y;
+                    if (_hasControl)
+                    {
+                        // Handle analog sticks inputs.
+                        _horizontalInput = _gamepad.LeftStick.X;
+                        _verticalInput = _gamepad.LeftStick.Y;
+                        _aimingHorizontalInput = _gamepad.RightStick.X;
+                        _aimingVerticalInput = _gamepad.RightStick.Y;
 
-                    // Handle parachute inputs toggling in applicable movement modes.
-                    if (_gamepad.LeftBumper.WasPressed)
-                    {
-                         TryingToOpenParachute = true;
-                    }
-                    if (_gamepad.LeftBumper.WasReleased)
-                    {
-                        TryingToOpenParachute = false;
-                    }
+                        // Handle parachute inputs toggling in applicable movement modes.
+                        if (_gamepad.LeftBumper.WasPressed)
+                        {
+                            TryingToOpenParachute = true;
+                        }
+                        if (_gamepad.LeftBumper.WasReleased)
+                        {
+                            TryingToOpenParachute = false;
+                        }
 
-                    // Handle firing inputs.
-                    if (_gamepad.RightBumper.WasPressed)
-                    {
-                        _tryingToFire = true;
-                    }
-                    if (_gamepad.RightBumper.WasReleased)
-                    {
-                        _tryingToFire = false;
+                        // Handle firing inputs.
+                        if (_gamepad.RightBumper.WasPressed)
+                        {
+                            _tryingToFire = true;
+                        }
+                        if (_gamepad.RightBumper.WasReleased)
+                        {
+                            _tryingToFire = false;
+                        }
                     }
                 }
             }
@@ -147,49 +161,52 @@ public class PlayerInputHandler : MonoBehaviour
                     }
                     else
                     {
-                        if (Input.GetKey(KeyCode.A))
+                        if (_hasControl)
                         {
-                            _horizontalInput = -1;
-                        }
-                        else if (Input.GetKey(KeyCode.D))
-                        {
-                            _horizontalInput = 1;
-                        }
-                        else
-                        {
-                            _horizontalInput = 0;
-                        }
-                        if (Input.GetKey(KeyCode.W))
-                        {
-                            _aimingVerticalInput = 1;
-                        }
-                        else if (Input.GetKey(KeyCode.S))
-                        {
-                            _aimingVerticalInput = -1;
-                        }
-                        else
-                        {
-                            _aimingVerticalInput = 0;
-                        }
+                            if (Input.GetKey(KeyCode.A))
+                            {
+                                _horizontalInput = -1;
+                            }
+                            else if (Input.GetKey(KeyCode.D))
+                            {
+                                _horizontalInput = 1;
+                            }
+                            else
+                            {
+                                _horizontalInput = 0;
+                            }
+                            if (Input.GetKey(KeyCode.W))
+                            {
+                                _aimingVerticalInput = 1;
+                            }
+                            else if (Input.GetKey(KeyCode.S))
+                            {
+                                _aimingVerticalInput = -1;
+                            }
+                            else
+                            {
+                                _aimingVerticalInput = 0;
+                            }
 
-                        // Handle parachute inputs toggling in applicable movement modes.
-                        if (Input.GetKeyDown(KeyCode.Space))
-                        {
-                            TryingToOpenParachute = true;
-                        }
-                        if (Input.GetKeyUp(KeyCode.Space))
-                        {
-                            TryingToOpenParachute = false;
-                        }
+                            // Handle parachute inputs toggling in applicable movement modes.
+                            if (Input.GetKeyDown(KeyCode.Space))
+                            {
+                                TryingToOpenParachute = true;
+                            }
+                            if (Input.GetKeyUp(KeyCode.Space))
+                            {
+                                TryingToOpenParachute = false;
+                            }
 
-                        // Handle firing inputs.
-                        if (Input.GetKeyDown(KeyCode.LeftControl))
-                        {
-                            _tryingToFire = true;
-                        }
-                        if (Input.GetKeyUp(KeyCode.LeftControl))
-                        {
-                            _tryingToFire = false;
+                            // Handle firing inputs.
+                            if (Input.GetKeyDown(KeyCode.LeftControl))
+                            {
+                                _tryingToFire = true;
+                            }
+                            if (Input.GetKeyUp(KeyCode.LeftControl))
+                            {
+                                _tryingToFire = false;
+                            }
                         }
                     }
                 }
@@ -201,49 +218,52 @@ public class PlayerInputHandler : MonoBehaviour
                     }
                     else
                     {
-                        if (Input.GetKey(KeyCode.LeftArrow))
+                        if (_hasControl)
                         {
-                            _horizontalInput = -1;
-                        }
-                        else if (Input.GetKey(KeyCode.RightArrow))
-                        {
-                            _horizontalInput = 1;
-                        }
-                        else
-                        {
-                            _horizontalInput = 0;
-                        }
-                        if (Input.GetKey(KeyCode.UpArrow))
-                        {
-                            _aimingVerticalInput = 1;
-                        }
-                        else if (Input.GetKey(KeyCode.DownArrow))
-                        {
-                            _aimingVerticalInput = -1;
-                        }
-                        else
-                        {
-                            _aimingVerticalInput = 0;
-                        }
+                            if (Input.GetKey(KeyCode.LeftArrow))
+                            {
+                                _horizontalInput = -1;
+                            }
+                            else if (Input.GetKey(KeyCode.RightArrow))
+                            {
+                                _horizontalInput = 1;
+                            }
+                            else
+                            {
+                                _horizontalInput = 0;
+                            }
+                            if (Input.GetKey(KeyCode.UpArrow))
+                            {
+                                _aimingVerticalInput = 1;
+                            }
+                            else if (Input.GetKey(KeyCode.DownArrow))
+                            {
+                                _aimingVerticalInput = -1;
+                            }
+                            else
+                            {
+                                _aimingVerticalInput = 0;
+                            }
 
-                        // Handle parachute inputs toggling in applicable movement modes.
-                        if (Input.GetKeyDown(KeyCode.Keypad0))
-                        {
-                            TryingToOpenParachute = true;
-                        }
-                        if (Input.GetKeyUp(KeyCode.Keypad0))
-                        {
-                            TryingToOpenParachute = false;
-                        }
+                            // Handle parachute inputs toggling in applicable movement modes.
+                            if (Input.GetKeyDown(KeyCode.Keypad0))
+                            {
+                                TryingToOpenParachute = true;
+                            }
+                            if (Input.GetKeyUp(KeyCode.Keypad0))
+                            {
+                                TryingToOpenParachute = false;
+                            }
 
-                        // Handle firing inputs.
-                        if (Input.GetKeyDown(KeyCode.KeypadPlus))
-                        {
-                            _tryingToFire = true;
-                        }
-                        if (Input.GetKeyUp(KeyCode.KeypadPlus))
-                        {
-                            _tryingToFire = false;
+                            // Handle firing inputs.
+                            if (Input.GetKeyDown(KeyCode.KeypadPlus))
+                            {
+                                _tryingToFire = true;
+                            }
+                            if (Input.GetKeyUp(KeyCode.KeypadPlus))
+                            {
+                                _tryingToFire = false;
+                            }
                         }
                     }
                 }

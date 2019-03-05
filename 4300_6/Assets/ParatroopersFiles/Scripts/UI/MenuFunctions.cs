@@ -67,13 +67,18 @@ public class MenuFunctions : MonoBehaviour
 
     public void GoToMainMenu()
     {
-        GameManager.Instance.TogglePause();
         SceneManager.LoadScene("MainMenu");
     }
 
     public void Resume()
     {
         GameManager.Instance.TogglePause();
+    }
+
+    public void GoToScore()
+    {
+        GameManager.Instance.TogglePause();
+        SceneManager.LoadScene("Score");
     }
 
     private void Start()

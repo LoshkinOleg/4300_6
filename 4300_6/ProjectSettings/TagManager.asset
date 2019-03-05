@@ -16,6 +16,8 @@ TagManager:
   - Player1Shield
   - Player2Shield
   - PausePanel
+  - Player1Score
+  - Player2Score
   layers:
   - Default
   - TransparentFX

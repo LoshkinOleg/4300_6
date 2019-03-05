@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using InControl;
 using UnityEngine.EventSystems;
+using TMPro;
 
 // /!\ Is setup in OnSceneChange(), not in Start()! /!\
 
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
     ScreenShake _screenShake = null;
     GameObject _floatingTextFeedbackUI = null;
     GameObject pausePanel = null;
+    TMP_Text[] scoreTexts = new TMP_Text[2];
 
     // Prefabs
     [SerializeField] GameObject level1Managers = null;
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
     const float _GAME_VIEW_VERTICAL_DISTANCE_IN_METERS = 10f;
     string currentScene;
     List<InputDevice> devicesBeingUsed = new List<InputDevice>();
+    int[] scores = new int[2];
     bool _isPaused;
     #endregion
 
@@ -53,6 +56,17 @@ public class GameManager : MonoBehaviour
         foreach (var item in Players)
         {
             item.ResetInputs();
+        }
+    }
+    public void GiveScore(int score, PlayerManager player)
+    {
+        if (player == Players[0])
+        {
+            scores[0] = score;
+        }
+        else
+        {
+            scores[1] = score;
         }
     }
     #endregion
@@ -125,6 +139,17 @@ public class GameManager : MonoBehaviour
                     pausePanel.SetActive(false);
                 }
                 break;
+            case "Score":
+                {
+                    scoreTexts[0] = GameObject.FindGameObjectWithTag("Player1Score").GetComponent<TMP_Text>();
+                    scoreTexts[1] = GameObject.FindGameObjectWithTag("Player2Score").GetComponent<TMP_Text>();
+
+                    for (int i = 0; i < scoreTexts.Length; i++)
+                    {
+                        scoreTexts[i].text = scores[i].ToString();
+                    }
+                }
+                break;
             default:
                 {
                     Debug.LogError("Unknown scene passed to OnSceneChange: " + scene.name);
@@ -187,6 +212,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         currentScene = SceneManager.GetActiveScene().name;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     private void Update()
     {

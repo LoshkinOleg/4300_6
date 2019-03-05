@@ -289,7 +289,7 @@ GameObject:
   - component: {fileID: 123594523}
   - component: {fileID: 123594522}
   m_Layer: 5
-  m_Name: ToMainMenu_Button
+  m_Name: Forfeit_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -356,7 +356,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 94770114}
-        m_MethodName: GoToMainMenu
+        m_MethodName: GoToScore
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2472,7 +2472,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: To Main Menu
+  m_text: Forfeit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b2e7c600656e0e34881da5a4fe98e341, type: 2}
   m_sharedMaterial: {fileID: 21139233669227854, guid: b2e7c600656e0e34881da5a4fe98e341,
@@ -2542,10 +2542,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 994511256}
-    characterCount: 12
+    characterCount: 7
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 3
+    spaceCount: 0
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -2643,57 +2643,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 757692163130730270, guid: 9b8362348ff340b479dfc35385aa736c,
+    - target: {fileID: 3412155908828574073, guid: 9b8362348ff340b479dfc35385aa736c,
         type: 3}
-      propertyPath: startingWeapon
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6519716473086683122, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: killstreak_Sprites.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6519716473086683122, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: killstreak_Sprites.Array.data[0]
+      propertyPath: respawnBubblePrefab
       value: 
-      objectReference: {fileID: 21300000, guid: 3711e76d7cc2c6545993963102d0aba4,
-        type: 3}
-    - target: {fileID: 6519716473086683122, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: killstreak_Sprites.Array.data[1]
-      value: 
-      objectReference: {fileID: 21300000, guid: 0670bc6fe9c6fbb42b979562009f38e1,
-        type: 3}
-    - target: {fileID: 6519716473086683122, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: killstreak_Sprites.Array.data[2]
-      value: 
-      objectReference: {fileID: 21300002, guid: 0670bc6fe9c6fbb42b979562009f38e1,
-        type: 3}
-    - target: {fileID: 6519716473086683122, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: killstreak_Sprites.Array.data[3]
-      value: 
-      objectReference: {fileID: 21300004, guid: 0670bc6fe9c6fbb42b979562009f38e1,
-        type: 3}
-    - target: {fileID: 6519716473086683122, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: killstreak_Sprites.Array.data[4]
-      value: 
-      objectReference: {fileID: 21300006, guid: 0670bc6fe9c6fbb42b979562009f38e1,
-        type: 3}
-    - target: {fileID: 6519716473086683122, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: healthbar_Sprites.Array.data[0]
-      value: 
-      objectReference: {fileID: 21300000, guid: 348d4058ecc163d4f8ba9425c1aa5b1d,
-        type: 3}
-    - target: {fileID: 6519716473086683122, guid: 9b8362348ff340b479dfc35385aa736c,
-        type: 3}
-      propertyPath: healthbar_Sprites.Array.data[1]
-      value: 
-      objectReference: {fileID: 21300000, guid: ca63b913723fc8c4f9994ac175f01a9b,
+      objectReference: {fileID: 9072584558959718563, guid: a8a87e9e13b3f4048bda6b5603dad4d6,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b8362348ff340b479dfc35385aa736c, type: 3}
@@ -3154,6 +3108,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3412155908828574073, guid: 35b4e12891c3f9f4e944fd94d38a64d5,
+        type: 3}
+      propertyPath: respawnBubblePrefab
+      value: 
+      objectReference: {fileID: 9072584558959718563, guid: a8a87e9e13b3f4048bda6b5603dad4d6,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35b4e12891c3f9f4e944fd94d38a64d5, type: 3}
 --- !u!4 &1651691902 stripped

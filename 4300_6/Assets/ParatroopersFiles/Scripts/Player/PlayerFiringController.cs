@@ -203,17 +203,13 @@ public class PlayerFiringController : MonoBehaviour
             _currentMinigunStage = value;
         }
     }
-    #endregion
-
-    // Private properties
-    #region Private properties
-    bool IsSpeedup
+    public bool IsSpeedup
     {
         get
         {
             return _isSpeedup;
         }
-        set
+        private set
         {
             if (value)
             {
